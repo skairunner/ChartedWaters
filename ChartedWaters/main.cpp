@@ -1,6 +1,8 @@
-#include "Engine.h"
 #include "town.h"
 #include <iostream>
+
+// dependancies: SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)
+// temporarily copied away.
 
 using namespace std;
 
@@ -19,7 +21,7 @@ int main(int argc,char *argv[])
   TestTown.addItems(2, 800);
 
   bool quit = false;
-  char chr;
+  char chr[100];
   Ship myShip;
   myShip.setName(string("Santa Maria"));
   myShip.addMoney(15000);
@@ -30,13 +32,16 @@ int main(int argc,char *argv[])
     cout << "Ship name: " << myShip.getName() << endl;
     cout << "You have: " << myShip.getMoney() << " ducats.\n" << "Tax rate is " << TestTown.getTaxRate() * 100.0f << "%.\n";
     cout << TestTown.returnListOfItems();
-    cout << "\nb for buy, s for sell: ";
+    cout << "\n>> ";
     cin >> chr;
-    if (chr == 'b')
+
+    if (chr[0] == 'b')
       {
       int ID, howMany;
-      cout << "ID, how many?  ";
-      cin >> ID >> howMany;
+      cout << "Product ID?  ";
+      cin >> ID;
+      cout << "How many?  ";
+      cin >> howMany;
       int error = TestTown.buyItems(myShip, ID, howMany);
       switch (error)
         {
@@ -58,7 +63,7 @@ int main(int argc,char *argv[])
         }
       cout << endl;
       }
-    else if (chr == 's')
+    else if (chr[0] == 's')
       {
       int ID, howMany;
       cout << "ID, how many?";
@@ -78,7 +83,7 @@ int main(int argc,char *argv[])
         break;
         }
       }
-    else if (chr == 'i')
+    else if (chr[0] == 'i')
       {
       cout << myShip.returnListOfItems() << endl;
       }
