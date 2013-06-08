@@ -1,0 +1,25 @@
+#pragma once
+#include <string>
+#include "goods.h"
+
+class Ship
+  {
+  public:
+    Ship();
+    void setName(const std::string& newName);
+    std::string getName();
+    bool addMoney(const int& amount); // false if the total money would go under 0.
+    void addItem(const Item& item, const int& numberOf, const int& averagePrice);
+    bool removeItem(const int ItemID, const int& numberOf); // return false in case there are not enough items to remove.
+    int getNumberOfItems(const int& ID);
+    int getPurchasePriceOf(const int& ID);
+    int getMoney();
+    std::vector<std::string> returnListOfItems();
+
+  private:
+    void removeFromList(const int& itemID);
+    std::string shipName;
+    int ducats;
+    int storage;
+    std::vector<LedgerItem> itemList;
+  };
