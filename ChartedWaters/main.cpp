@@ -19,6 +19,7 @@ int main(int argc,char *argv[])
   Town TestTown(string("Barcelona"), 0.05);
   TestTown.addItems(1, 1000);
   TestTown.addItems(2, 800);
+  TestTown.addItems(3, 6000);
 
   bool quit = false;
   char chr[100];

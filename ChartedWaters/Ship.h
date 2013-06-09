@@ -17,7 +17,7 @@ class Ship
     std::vector<std::string> returnListOfItems();
 
   private:
-    void removeFromList(const int& itemID);
+    bool removeFromList(const int& itemID);
     std::string shipName;
     int ducats;
     int storage;

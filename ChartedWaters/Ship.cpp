@@ -99,7 +99,16 @@ int Ship::getPurchasePriceOf(const int& ID)
   return it->getAveragePrice();
   }
 
-void Ship::removeFromList(const int& itemID)
+bool Ship::removeFromList(const int& itemID)
   {
-
+  int counter = 0;
+  for (; counter < itemList.size(); counter++)
+    if (itemID == itemList[counter].getID())
+      break;
+  if (counter == itemList.size())
+    return false;
+  for (int it = counter + 1; it < itemList.size(); it++)
+    itemList[it-1] = itemList[it];
+  itemList.pop_back();
+  return true;
   }

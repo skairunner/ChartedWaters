@@ -39,6 +39,9 @@
     <ClCompile Include="town.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="A_star_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="A_star_test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

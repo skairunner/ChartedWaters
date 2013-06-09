@@ -81,6 +81,7 @@ int Town::buyItems(Ship& ship, const int& ID, int numberOf)
   ship.addItem(Item(ID), numberOf, it->getPrice() * (1 + taxRate));
   ship.addMoney(-price);
   it->addItem(-numberOf);
+  it->addDemand(numberOf);
   lastTransaction = price;
   numberOfLastTransaction = numberOf;
   unitPurchasePriceOfSell = 0;
@@ -107,8 +108,8 @@ int Town::sellItems(Ship& ship, const int& ID, int numberOf)
   bool success = ship.removeItem(ID, numberOf);
   if (!success)
     return twNOT_ENOUGH_ITEMS;
-  addItems(ID, numberOf);
   int earned = numberOf * getPriceOf(ID) * (1 - taxRate);
+  addItems(ID, numberOf);
   ship.addMoney(earned);
   lastTransaction = earned;
   numberOfLastTransaction = numberOf;

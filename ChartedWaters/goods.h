@@ -5,7 +5,7 @@
 
 // These are item archetypes, so to speak. They shouldn't hold any variables other than price.
 
-enum ItemIDs {IID_NULL = 0, IID_FRIED_CHICKEN, IID_COOKED_LLAMA_CHOPS};
+enum ItemIDs {IID_NULL = 0, IID_FRIED_CHICKEN, IID_COOKED_LLAMA_CHOPS, IID_CHICKEN_CHEESE};
 
 class ItemDictionary
   {
@@ -52,6 +52,7 @@ class EconomyItem: public Item
     int howMany();
     void addItem(const int& howMany);
     void setDemand(const int& equi);
+    void addDemand(const int& increased);
 
   private:
     int supply; // this is how many of me I have!

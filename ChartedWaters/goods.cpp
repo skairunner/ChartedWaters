@@ -15,14 +15,17 @@ ItemDictionary::ItemDictionary()
   ItemNames[IID_NULL] = std::string("Invalid item/null");
   ItemNames[IID_FRIED_CHICKEN] = std::string("Fried chicken");
   ItemNames[IID_COOKED_LLAMA_CHOPS] = std::string("Cooked llama chops");
+  ItemNames[IID_CHICKEN_CHEESE] = std::string("Chicken-cheese");
 
   BasePrice[IID_NULL] = 0;
   BasePrice[IID_FRIED_CHICKEN] = 100;
   BasePrice[IID_COOKED_LLAMA_CHOPS] = 100;
+  BasePrice[IID_CHICKEN_CHEESE] = 16;
 
   DecayRates[IID_NULL] = std::pair<double, double>(0, 0);
   DecayRates[IID_FRIED_CHICKEN] = std::pair<double, double>(0.1, 0.1);
   DecayRates[IID_COOKED_LLAMA_CHOPS] = std::pair<double, double>(0.1, 0.1);
+  DecayRates[IID_CHICKEN_CHEESE] = std::pair<double, double>(0.1, 0.1);
   }
 
 string ItemDictionary::findItemName(const int& ID)
@@ -149,6 +152,11 @@ void EconomyItem::addItem(const int& howMany)
 void EconomyItem::setDemand(const int& equi)
   {
   demand = equi;
+  }
+
+void EconomyItem::addDemand(const int& increased)
+  {
+  demand += increased;
   }
 
 ///////////////////////
