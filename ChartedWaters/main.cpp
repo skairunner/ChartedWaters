@@ -1,5 +1,6 @@
 #include "town.h"
 #include <iostream>
+#include "Engine.h"
 
 // dependancies: SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)
 // temporarily copied away.
@@ -15,7 +16,7 @@ ostream& operator<<(ostream& o, vector<string> right)
 
 int main(int argc,char *argv[])
   {
-  cout << "Controls: b - buy, s - sell, -1 for \"how many\" means \"buy as much as I can\", and i - inventory.\n\n\n";
+  /*cout << "Controls: b - buy, s - sell, -1 for \"how many\" means \"buy as much as I can\", and i - inventory.\n\n\n";
   Town TestTown(string("Barcelona"), 0.05);
   TestTown.addItems(1, 1000);
   TestTown.addItems(2, 800);
@@ -47,7 +48,7 @@ int main(int argc,char *argv[])
       switch (error)
         {
       case twSUCCESS:
-        cout << "Bought " << TestTown.numberOfLastTransaction << " " << ItemDict.findItemName(ID) << " for " << TestTown.lastTransaction << endl;
+        cout << "Bought " << TestTown.numberOfLastTransaction << " " << ItemDict.findItemName(ID) << " for " << TestTown.lastTransaction << " ducats" << endl;
         break;
       case twNO_SUCH_ITEM:
         cout << "Invalid item ID.\n";
@@ -76,7 +77,7 @@ int main(int argc,char *argv[])
         cout << "You don't have that many items.\n";
         break;
       case twSUCCESS:
-        cout << TestTown.numberOfLastTransaction << " " << ItemDict.findItemName(ID) << " sold for " << TestTown.lastTransaction;
+        cout << TestTown.numberOfLastTransaction << " " << ItemDict.findItemName(ID) << " sold for " << TestTown.lastTransaction << " ducats.";
         cout << "\nNet revenue " << TestTown.lastTransaction - TestTown.unitPurchasePriceOfSell*TestTown.numberOfLastTransaction << " ducats.\n";
         break;
       default:
@@ -89,12 +90,12 @@ int main(int argc,char *argv[])
       cout << myShip.returnListOfItems() << endl;
       }
     cout << "\n\n\n";
-    }
+    }*/
   
-  /*CursesEngine.Init("yis!","resources/asciisquare.bmp",64,40);
+  CursesEngine.Init("yis!","resources/asciisquare.bmp",64,40);
   CursesEngine.Start();
   CursesEngine.End();
-  return 0;*/
+  return 0;
   cin.ignore(1);
   return 0;
 }
