@@ -50,13 +50,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\libtcod-1.5.1\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\libtcod-1.5.1\include;C:\libnoise;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\libtcod-1.5.1\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libnoise.lib;SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\libtcod-1.5.1\lib;C:\libnoise\bin;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,15 +68,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\libtcod-1.5.1\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\libtcod-1.5.1\include;C:\libnoise\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\libtcod-1.5.1\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libnoise.lib;SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\libtcod-1.5.1\lib;C:\libnoise\lib;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -89,6 +89,7 @@
     <ClCompile Include="TCODEngine.cpp" />
     <ClCompile Include="TCODTools.cpp" />
     <ClCompile Include="town.cpp" />
+    <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A_star_test.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="TCODEngine.h" />
     <ClInclude Include="TCODTools.h" />
     <ClInclude Include="town.h" />
+    <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

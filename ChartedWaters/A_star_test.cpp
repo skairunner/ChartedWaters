@@ -26,7 +26,9 @@ Map::Map(int width1, int height1)
   grid.reserve(sizeof(cell) * width * height);
   for (int ycounter = 0; ycounter < height; ycounter++)
     for (int xcounter = 0; xcounter < width; xcounter++)
+      {
       grid.push_back(cell(xcounter, ycounter));
+      }
   null.null = true;
   }
 
@@ -149,7 +151,7 @@ vector<coord> Map::pathfind(const int& x1, const int& y1, const int& x2, const i
   neighbors.clear();
   while (openset.size() != 0)
     {
-    cout << "e";
+ //   cout << "e";
     node current = findLowestF(openset);
     // Push current onto closed, and pop current from open.
     closedset[current.position] = current;

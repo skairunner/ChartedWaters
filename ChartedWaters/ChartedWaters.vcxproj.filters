@@ -42,6 +42,9 @@
     <ClCompile Include="A_star_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="worldMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="A_star_test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="worldMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

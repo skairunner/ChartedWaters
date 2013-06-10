@@ -92,7 +92,7 @@ int main(int argc,char *argv[])
     cout << "\n\n\n";
     }*/
   
-  CursesEngine.Init("yis!","resources/asciisquare.bmp",64,40);
+  CursesEngine.Init("yis!","resources/asciisquare.bmp",128,64);
   CursesEngine.Start();
   CursesEngine.End();
   return 0;
