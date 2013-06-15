@@ -2,6 +2,14 @@
 #include <string>
 #include "goods.h"
 
+struct LedgerItemTuple
+  {
+  std::string itemID;
+  std::string ItemName;
+  std::string numberOfItems;
+  std::string averagePurchasePrice;
+  };
+
 class Ship
   {
   public:
@@ -14,13 +22,17 @@ class Ship
     int getNumberOfItems(const int& ID);
     int getPurchasePriceOf(const int& ID);
     int getMoney();
-    std::vector<std::string> returnListOfItems();
+    int getTotalStorageUsed();
+    int getMaxStorage();
+    std::vector<LedgerItemTuple> returnListOfItems();
 
   private:
+
     bool removeFromList(const int& itemID);
     std::string shipName;
     int ducats;
     int storage;
+    int maxstorage;
     std::vector<LedgerItem> itemList;
     std::pair<int, int> position;
   };

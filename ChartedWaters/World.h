@@ -15,12 +15,14 @@ class World
     World(const int& w, const int& h);
     std::string getCityName(const coord& coords); // Return empty string if there is no such town.
     void regen();
+    Ship& getPlayerShip();
 
   private:
     NameFactory nameFactory;
     WorldMapClass WorldMap;
     std::map<coord, Town> cityList;
     std::vector<Ship> shipList;
+    Ship PlayerShip;
     int width, height;
   };
 

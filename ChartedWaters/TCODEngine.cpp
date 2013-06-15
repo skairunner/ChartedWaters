@@ -57,14 +57,14 @@ void TCODEngine::DoInput()
 			{
 				if(currentstate)
 					currentstate->KeyDown(ev.key.keysym.sym,ev.key.keysym.unicode);
-				KeyDown(ev.key.keysym.sym,ev.key.keysym.unicode);
+				else KeyDown(ev.key.keysym.sym,ev.key.keysym.unicode);
 				break;
 			}
 			case SDL_KEYUP:
 			{
 				if(currentstate)
 					currentstate->KeyUp(ev.key.keysym.sym,ev.key.keysym.unicode);
-				KeyUp(ev.key.keysym.sym,ev.key.keysym.unicode);
+				else KeyUp(ev.key.keysym.sym,ev.key.keysym.unicode);
 				break;
 			}
 			case SDL_QUIT:
@@ -76,28 +76,28 @@ void TCODEngine::DoInput()
 			{
 				if(currentstate)
 					currentstate->MouseMoved(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
-				MouseMoved(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
+				else MouseMoved(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
 				break;
 			}
 			case SDL_MOUSEBUTTONUP:
 			{
 				if(currentstate)
 					currentstate->MouseButtonUp(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
-				MouseButtonUp(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
+				else MouseButtonUp(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
 				break;
 			}
 			case SDL_MOUSEBUTTONDOWN:
 			{
 				if(currentstate)
 					currentstate->MouseButtonDown(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
-				MouseButtonDown(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
+				else MouseButtonDown(ev.button.button,ev.motion.x,ev.motion.y,ev.motion.xrel,ev.motion.yrel);
 				break;
 			}
 			case SDL_VIDEORESIZE:
 			{
 				if(currentstate)
 					currentstate->Resize(ev.resize.w,ev.resize.h);
-				Resize(ev.resize.w,ev.resize.h);
+				else Resize(ev.resize.w,ev.resize.h);
 			}
 			case SDL_ACTIVEEVENT:
 			{
@@ -108,14 +108,14 @@ void TCODEngine::DoInput()
 						minimized=false;
 						if(currentstate)
 							currentstate->WindowActive();
-						WindowActive();
+						else WindowActive();
 					}
 					else
 					{
 						minimized=true;
 						if(currentstate)
 							currentstate->WindowInactive();
-						WindowInactive();
+						else WindowInactive();
 					}
 				}
 				break;
@@ -135,9 +135,10 @@ void TCODEngine::DoUpdate()
       PushState(currentstate->nextState);
       }
     }
-  Update();
+  
   if(currentstate)
 		currentstate->Update();
+  else Update();
 }
 void TCODEngine::DoRender()
 {
@@ -174,7 +175,9 @@ void TCODEngine::PopState()
 {
 cout << "Popped state.\n";
 	currentstate->End();
+  delete StateQueue.back();
 	StateQueue.pop_back();
+
 	if(StateQueue.size())
 		currentstate=StateQueue[StateQueue.size()-1];
 	else

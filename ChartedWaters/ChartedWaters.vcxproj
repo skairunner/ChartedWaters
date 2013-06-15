@@ -84,9 +84,11 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="goods.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainGameState.cpp" />
+    <ClCompile Include="State_MainGame.cpp" />
     <ClCompile Include="nameFactory.cpp" />
     <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="State_ShipStatus.cpp" />
+    <ClCompile Include="State_stringIn.cpp" />
     <ClCompile Include="TCODEngine.cpp" />
     <ClCompile Include="TCODTools.cpp" />
     <ClCompile Include="town.cpp" />
@@ -98,9 +100,11 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="goods.h" />
-    <ClInclude Include="MainGameState.h" />
+    <ClInclude Include="State_MainGame.h" />
     <ClInclude Include="nameFactory.h" />
     <ClInclude Include="Ship.h" />
+    <ClInclude Include="State_ShipStatus.h" />
+    <ClInclude Include="State_stringIn.h" />
     <ClInclude Include="TCODEngine.h" />
     <ClInclude Include="TCODTools.h" />
     <ClInclude Include="town.h" />

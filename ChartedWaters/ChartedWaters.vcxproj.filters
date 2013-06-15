@@ -27,9 +27,6 @@
     <ClCompile Include="TCODTools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainGameState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="goods.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,6 +48,15 @@
     <ClCompile Include="nameFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="State_ShipStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State_MainGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State_stringIn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -60,9 +66,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="goods.h">
@@ -87,6 +90,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nameFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_ShipStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_MainGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_stringIn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

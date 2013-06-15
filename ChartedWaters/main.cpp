@@ -102,8 +102,13 @@ int main(int argc,char *argv[])
 
  /* srand(time(0));
   NameFactory nf(rand());
-  for (int counter = 0; counter < 10; counter++)
-    cout << nf.getName() << endl;*/
+  string name;
+  for (int counter = 0; counter < 20; counter++)
+    {
+    name = nf.getName();
+    name[0] = toupper(name[0]);
+    cout << name << endl;
+    }*/
 
   cin.ignore(1);
   return 0;

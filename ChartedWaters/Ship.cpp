@@ -4,7 +4,7 @@
 using namespace std;
 
 Ship::Ship()
-  : ducats(0)
+  : ducats(0), storage(0), maxstorage(10)
   {
 
   }
@@ -17,6 +17,7 @@ string Ship::getName()
 void Ship::setName(const string& newName)
   {
   shipName = newName;
+  shipName[0] = toupper(shipName[0]);
   }
 
 bool Ship::addMoney(const int& amount)
@@ -41,6 +42,8 @@ void Ship::addItem(const Item& item, const int& numberOf, const int& averagePric
     itemList.push_back(LedgerItem(item, numberOf, averagePrice));
     it = itemList.end() - 1;
     }
+
+  storage += numberOf;
   }
 
 int Ship::getMoney()
@@ -56,19 +59,20 @@ int Ship::getNumberOfItems(const int& ID)
   return 0; // if it's not in the list.
   }
 
-vector<string> Ship::returnListOfItems()
+vector<LedgerItemTuple> Ship::returnListOfItems()
   {
-  vector<string> returnVal;
-  string buffer;
+  vector<LedgerItemTuple> returnVal;
+  LedgerItemTuple buffer;
   for (auto it = itemList.begin(); it < itemList.end(); it++)
     {
-    buffer.assign(to_string((long double)it->getID()));
-    buffer += " " + it->getName();
-    buffer = buffer + "    Purchased at " + to_string((long double)it->getAveragePrice()) + " ducats    x" + to_string((long double)it->howMany()) + "\n";
+    buffer.itemID = to_string((long double)it->getID());
+    buffer.ItemName = it->getName();
+    buffer.averagePurchasePrice = to_string((long double)it->getAveragePrice());
+    buffer.numberOfItems = to_string((long double)it->howMany());
     returnVal.push_back(buffer);
     }
-  if(returnVal.size() == 0)
-    returnVal.push_back(string("Nothing to see here!"));
+ /* if(returnVal.size() == 0)
+    returnVal.push_back(string("Nothing to see here!"));*/
 
   return returnVal;
   }
@@ -84,7 +88,8 @@ bool Ship::removeItem(const int ItemID, const int& numberOf)
   bool result = it->removeItems(numberOf);
   if (it->howMany() == 0)
     removeFromList(ItemID);
-
+  if (result) // if it succeeded
+    storage -= numberOf;
   return result;
   }
 
@@ -111,4 +116,14 @@ bool Ship::removeFromList(const int& itemID)
     itemList[it-1] = itemList[it];
   itemList.pop_back();
   return true;
+  }
+
+int Ship::getTotalStorageUsed()
+  {
+  return storage;
+  }
+
+int Ship::getMaxStorage()
+  {
+  return maxstorage;
   }

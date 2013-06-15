@@ -5,6 +5,8 @@ World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(rand())
   {
   regen();
+  PlayerShip = Ship();
+  PlayerShip.setName(nameFactory.getName());
   }
 
 void World::regen()
@@ -16,6 +18,11 @@ void World::regen()
     {
     cityList[*it] = Town(nameFactory.getName(), 0.05f, WorldMap.ref(it->first, it->second).isInZOC);
     }
+  }
+
+Ship& World::getPlayerShip()
+  {
+  return PlayerShip;
   }
 
 /////

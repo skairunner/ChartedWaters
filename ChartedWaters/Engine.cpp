@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "TCODTools.h"
 #include "World.h"
+#include "State_ShipStatus.h"
 #include <string>
 
 Engine CursesEngine;
@@ -14,6 +15,7 @@ TCODConsole* ZOCscreen;
 TCODConsole* tooltip;
 bool redo = true;
 typedef pair<int, int> coord;
+GameState* newState;
 
 /*
 void drawMap(TCODConsole* map, TCODConsole* cities, TCODConsole* ZOC, WorldMapClass* wm)
@@ -81,11 +83,20 @@ Renderer::getCityBitmap(cityscreen, TheWorld);
 ZOCscreen = new TCODConsole(128, 64);
 tooltip = new TCODConsole(30, 1);
 
+Ship& ship = TheWorld.getPlayerShip();
+ship.addMoney(13370);
+ship.addItem(Item(3), 90, 500);
+ship.addItem(Item(1), 52, 200);
+ship.addItem(Item(2), 110, 300);
+ship.addItem(Item(3), 10, 350);
 
 	return true;
 }
 void Engine::Update()
 {
+if (!newState)
+  delete newState;
+
 if (redo)
   {
   TheWorld.regen();
@@ -141,6 +152,11 @@ void Engine::KeyDown(const int &key,const int &unicode)
 {
 if (key == SDLK_RIGHT)
   redo = true;
+if (key == SDLK_s)
+  {
+  newState = new State_ShipStatus(TheWorld.getPlayerShip());
+  PushState(newState);
+  }
 }
 
 void Engine::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)
