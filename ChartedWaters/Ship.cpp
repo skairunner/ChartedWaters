@@ -4,7 +4,7 @@
 using namespace std;
 
 Ship::Ship()
-  : ducats(0), storage(0), maxstorage(10)
+  : ducats(0), storage(0), maxstorage(10), speed(1), character(127), waveResistance(6)
   {
 
   }
@@ -126,4 +126,38 @@ int Ship::getTotalStorageUsed()
 int Ship::getMaxStorage()
   {
   return maxstorage;
+  }
+
+void Ship::setPosition(const std::pair<int, int>& newPos)
+  {
+  position = newPos;
+  }
+
+int Ship::getSpeed()
+  {
+  return speed;
+  }
+
+pair<int, int> Ship::getPosition()
+  {
+  return position;
+  }
+
+void Ship::setPath(const std::vector<std::pair<int, int>>& ppath)
+  {
+  if (ppath.size() > 0)
+    {
+    path.clear();
+    path.reserve(sizeof(pair<int, int>) * ppath.size());
+    for (auto it = ppath.rbegin(); it < ppath.rend(); it++)
+      path.push_back(*it);
+    }
+  }
+
+void Ship::updatePos()
+  {
+  if (path.size() > 0){
+    setPosition(path.back());
+    path.pop_back();
+    }
   }

@@ -13,59 +13,28 @@ TCODConsole* cityscreen;
 TCODConsole* mapscreen;
 TCODConsole* ZOCscreen;
 TCODConsole* tooltip;
+TCODConsole* PlayerShip;
+TCODConsole* PathScreen;
+
 bool redo = true;
 typedef pair<int, int> coord;
 GameState* newState;
-
-/*
-void drawMap(TCODConsole* map, TCODConsole* cities, TCODConsole* ZOC, WorldMapClass* wm)
-  {
-  for (int ycounter = 0; ycounter < wm->getHeight(); ycounter++)
-    for (int xcounter = 0; xcounter < wm->getWidth(); xcounter++)
-      {
-      int character = 219;
-      auto it = wm->ref(xcounter, ycounter);
-      if (it.altitude > 0)
-        {
-        TCODColor fore = TCODColor::green;
-        TCODColor back = TCODColor::black;
-        if (it.moisture < thresholdMoisture)
-          {
-          fore = sandBrown;
-          }
-        if (it.isCoastal)
-          {
-          character = 178;
-          fore = coastalSand;
-          back = TCODColor::black;
-          }
-        else
-          back = fore;
-        if (it.isInZOC)
-          {
-          ZOC->putCharEx(xcounter, ycounter, it.isInZOC + 48, findFactionColor(it.isInZOC), TCODColor::white);
-          //character = it.isInZOC + 48;
-          }
-        
-
-
-        map->putCharEx(xcounter, ycounter, character, TCODColor::lerp(fore, TCODColor::black, it.altitude/40.0f), back);
-        }
-      else
-        map->putCharEx(xcounter, ycounter, 178, TCODColor::lerp(TCODColor::blue, TCODColor::black, -1 * it.altitude / 40.0f), TCODColor::darkBlue);
-      }
-    for (auto it = wm->cities.begin(); it < wm->cities.end(); it++)
-      {
-      TCODColor citycolor = findFactionColor(wm->ref(it->first, it->second).isInZOC);
-      cities->putCharEx(it->first % wm->getWidth(), it->second, 99, citycolor, TCODColor::black);
-      }
-  }
-  */
+bool mouseClick = false;
+bool pressedPeriod = false;
 
 bool Engine::EngineInit()
 {
 TheWorld.regen();
 TheWorld.regen();
+
+PlayerShip = new TCODConsole(1, 1);
+auto shippos = TheWorld.getPlayerShip().getPosition();
+PlayerShip->putCharEx(0, 0, TheWorld.getPlayerShip().character, TCODColor::red, TCODColor::black);
+
+PathScreen = new TCODConsole(128, 64);
+PathScreen->clear();
+PathScreen->setKeyColor(TCODColor::magenta);
+PathScreen->setDefaultBackground(TCODColor::magenta);
 
 mapscreen = new TCODConsole(128, 64);
 mapscreen->clear();
@@ -90,6 +59,7 @@ ship.addItem(Item(1), 52, 200);
 ship.addItem(Item(2), 110, 300);
 ship.addItem(Item(3), 10, 350);
 
+
 	return true;
 }
 void Engine::Update()
@@ -113,6 +83,22 @@ if (name.size() > 0)
   name.front() -= 32; 
 tooltip->clear();
 tooltip->print(0, 0, name.c_str());
+
+if (mouseClick)
+  {
+  mouseClick = false;
+  auto it = TheWorld.pathfinder->path(TheWorld.getPlayerShip().getPosition(), coord(mouseX, mouseY), 6);
+  TheWorld.getPlayerShip().setPath(it);
+  PathScreen->clear();
+  for (auto iterator = it.begin(); iterator < it.end(); iterator++)
+    PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
+  }
+if (pressedPeriod)
+  {
+  TheWorld.getPlayerShip().updatePos();
+  pressedPeriod = false;
+  }
+
 // Write the tooltip!
 //tooltip->clear();
 //tooltip->print(0, 0, to_string((long double)worldmap->ref(mouseX, mouseY).owner).c_str());
@@ -125,6 +111,9 @@ TCODConsole::blit(mapscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 1.0f);
 //TCODConsole::blit(ZOCscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(cityscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
+coord playerpos = TheWorld.getPlayerShip().getPosition();
+TCODConsole::blit(PathScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
+TCODConsole::blit(PlayerShip, 0, 0, 0, 0, root, playerpos.first, playerpos.second, 1.0f, 0.0f);
 }
 
 void Engine::EngineEnd()
@@ -157,6 +146,10 @@ if (key == SDLK_s)
   newState = new State_ShipStatus(TheWorld.getPlayerShip());
   PushState(newState);
   }
+if (unicode == '.')
+  {
+  pressedPeriod = true;
+  }
 }
 
 void Engine::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)
@@ -172,4 +165,7 @@ void Engine::MouseButtonUp(const int &iButton,const int &iX,const int &iY,const 
 
 void Engine::MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)
 {
-  }
+if (iButton == SDL_BUTTON_LEFT)
+  mouseClick = true;
+
+}

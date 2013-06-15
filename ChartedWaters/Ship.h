@@ -25,9 +25,20 @@ class Ship
     int getTotalStorageUsed();
     int getMaxStorage();
     std::vector<LedgerItemTuple> returnListOfItems();
+    int getSpeed(); // Later should be used to calculate speed from sails.
+    void setPosition(const std::pair<int, int>& newPos);
 
+    void setPath(const std::vector<std::pair<int, int>>& ppath);
+    void updatePos(); // If a day went by.
+
+    std::pair<int, int> getPosition();
+
+    int character; // default 127, a triangle
+    int waveResistance;
+    std::vector<std::pair<int,int>> path;
   private:
-
+    int speed; // Tiles per day. Default 1.
+    
     bool removeFromList(const int& itemID);
     std::string shipName;
     int ducats;

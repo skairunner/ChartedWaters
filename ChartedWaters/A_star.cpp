@@ -1,79 +1,71 @@
-#include "A_star_test.h"
+#include "A_star.h"
 #include <cmath>
-#include <iostream>
 
 using namespace std;
 
 cell::cell(const int& xx, const int& yy)
-  : xy(coord(xx, yy)), null(false), accessible(true), north(1), south(1), east(1), west(1), addedCost(0)
-  {}
+  : xy(coord(xx, yy)), shallowCost(0), deepCost(0), accessible(true), null(false)
+  {
+
+  }
 
 node::node()
-  : position(coord(-1, -1)), cameFrom(coord(-1, -1)), g_score(0), f_score(0), start(false)
-  {}
+  : position(coord(-1,-1)), cameFrom(coord(-1,-1)), g_score(0), f_score(0), start(false)
+  {
+
+  }
 
 node::node(const coord& crd)
-  : position(crd), cameFrom(coord(-1, -1)), g_score(0), f_score(0), start(false)
-  {}
+  : position(crd), cameFrom(coord(-1,-1)), g_score(0), f_score(0), start(false)
+  {
+
+  }
 
 node::node(const coord& crd, const double& gscore, const double& fscore, bool isStart)
-  : position(crd), cameFrom(coord(-1,-1)), g_score(gscore), f_score(fscore), start(isStart)
-  {}
-
-Map::Map(int width1, int height1)
-  : width(width1), height(height1)
+  : position(crd), g_score(gscore), f_score(fscore), start(isStart)
   {
+
+  }
+
+PathMap::PathMap(WorldMapClass& wmc)
+  :width(wmc.getWidth()), height(wmc.getHeight())
+  {
+  null.null = true;
   grid.reserve(sizeof(cell) * width * height);
+
   for (int ycounter = 0; ycounter < height; ycounter++)
     for (int xcounter = 0; xcounter < width; xcounter++)
       {
-      grid.push_back(cell(xcounter, ycounter));
+      cell buffer;
+      buffer.xy = coord(xcounter, ycounter);
+      auto it = wmc.ref(xcounter, ycounter);
+      if (it.altitude > 0 && !it.isCoastal) //If it is a inland tile
+        buffer.accessible = false;
+      else if (it.altitude > -3) // shallow
+        buffer.shallowCost = -it.altitude / 2;
+      else
+        buffer.deepCost = -it.altitude / 10.0f;
+
+      grid.push_back(buffer);
       }
-  null.null = true;
   }
 
-double Map::heuristic(const coord& xy1, const coord& xy2)
+cell& PathMap::ref(const int& x, const int& y)
   {
-
-  const double scalingFactor = 1; //// making this larger can make the pathfinding faster, at the cost of
-
-  double H = sqrt(pow(xy1.first - xy2.first,(double)2) + pow((double)(xy1.second, xy2.second), 2));
-
-  return H * scalingFactor;
+  if (y >= 0 && y < height)
+    {
+    if (x >= 0 && x < width)
+      return grid[x + y * width];
+    else if (x < 0)
+      return grid[width + x % width + y * width];
+    else
+      return grid[x % width + y * width];
+    }
+  else
+    return null;
   }
 
-double Map::costTo(const coord& c1, const coord& c2)
-  {
-  double xcost = 0;
-  double ycost = 0;
-  if (c1 == c2)
-    return 0;
-  int xDist = c2.first - c1.first;
-  int yDist = c2.second - c1.second;
-  if (xDist == -1)
-    xcost = ref(c1.first, c2.second).west;
-  else if (xDist == 1)
-    xcost = ref(c1.first, c2.second).east;
-  else if (xDist == 0)
-    ;
-  else
-    cerr << "Something wrong happened in the cost function\n";
-
-  if (yDist == -1)
-    ycost = ref(c1.first, c2.second).north;
-  else if (yDist == 1)
-    ycost = ref(c1.first, c2.second).south;
-  else if (yDist == 0)
-    ;
-  else
-    cerr << "Something wrong happened in the cost function\n";
-
-  double cost = sqrt(xcost * xcost + ycost * ycost);
-
-  return cost + ref(c1.first, c1.second).addedCost;    
-  }
-
-vector<cell> Map::findNeighborList(const coord& current)
+std::vector<cell> PathMap::findNeighborList(const coord& current)
   {
   // Check all eight directions.
   vector<cell> output;
@@ -113,38 +105,25 @@ vector<cell> Map::findNeighborList(const coord& current)
   return output;
   }
 
-node& Map::findLowestF(std::map<coord, node>& input)
+
+Pather::Pather(PathMap& mmap)
+  :map(mmap)
   {
-  auto it = input.begin();
-  for (auto it2 = input.begin(); it2 != input.end(); it2++)
-    {
-    if ( it->second.f_score > it2->second.f_score )
-      it = it2;
-    }
-  return it->second;
+
   }
 
-cell& Map::ref(const int& x, const int& y)
+cell& PathMap::ref(const coord& xy)
   {
-   if (y >= 0 && y < height)
-    {
-    if (x >= 0 && x < width)
-      return grid[x + y * width];
-    else if (x < 0)
-      return grid[width + x % width + y * width];
-    else
-      return grid[x % width + y * width];
-    }
-  else
-    return null;
+  return ref(xy.first, xy.second);
   }
 
-vector<coord> Map::pathfind(const int& x1, const int& y1, const int& x2, const int& y2)
+vector<coord> Pather::path(const coord& starting, const coord& destination, const double waveResistance)
   {
-  coord start(x1, y1);
-  coord dest(x2, y2);
-  map<coord, node> closedset;
-  map<coord, node> openset;
+  std::map<coord, node> closedset;
+  std::map<coord, node> openset;
+
+  coord start = starting;
+  coord dest = destination;
   openset[start] = node(start, 0, heuristic(start, dest), true);
 
   vector<cell> neighbors;
@@ -160,10 +139,10 @@ vector<coord> Map::pathfind(const int& x1, const int& y1, const int& x2, const i
       return reconstructPath(closedset, dest);
 
     openset.erase(current.position);
-    neighbors = findNeighborList(current.position);
+    neighbors = map.findNeighborList(current.position);
     for (auto it = neighbors.begin(); it < neighbors.end(); it++)
       {
-      double tentative_g = current.g_score + costTo(current.position, it->xy);
+      double tentative_g = current.g_score + costTo(it->xy, waveResistance);
       // if it's in the closedset, AND (since it exists there should be a value) the existing value is cheaper.
       auto neighborInClosedSet = closedset.find(it->xy);
       if (neighborInClosedSet != closedset.end() && tentative_g >= neighborInClosedSet->second.g_score)
@@ -190,7 +169,51 @@ vector<coord> Map::pathfind(const int& x1, const int& y1, const int& x2, const i
   return vector<coord>(); // empty = fail
   }
 
-vector<coord> Map::reconstructPath(map<coord, node> paths, const coord& dest)
+double Pather::costTo(const coord& c2, const int& waveResistance)
+  {
+  double cost = 0;
+  cost += map.ref(c2).shallowCost;
+  cost += map.ref(c2).deepCost * (double)(16 - waveResistance) / 16;
+
+  return cost;
+  }
+
+double Pather::heuristic(const coord& xy1, const coord& xy2)
+  {
+  const double scalingFactor = 1; //// making this larger can make the pathfinding faster, at the cost of accuracy
+
+  double dY = xy1.second - xy2.second;
+  dY *= dY; // dY^2
+
+  // Now, for dX...
+  // first, "normal" distance.
+  double XNormal = xy1.first - xy2.first;
+  XNormal = abs(XNormal);
+  //Then edge distance.
+  double XEdge = map.width - XNormal; // 0, x1, x2, edge. 
+
+  XEdge *= XEdge;
+  XNormal *= XNormal;
+
+  double H = XNormal > XEdge ? XEdge : XNormal; // Take shorter.
+  H += dY;
+  H = sqrt(H);
+  
+  return H * scalingFactor * (1.001f); // 1.001f is an optimizing tie-breaker.
+  }
+
+node& Pather::findLowestF(std::map<coord, node>& input)
+  {
+  auto it = input.begin();
+  for (auto it2 = input.begin(); it2 != input.end(); it2++)
+    {
+    if ( it->second.f_score > it2->second.f_score )
+      it = it2;
+    }
+  return it->second;
+  }
+
+std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const coord& dest)
   {
   vector<coord> output;
   if (paths.find(dest) != paths.end()) // if in the map

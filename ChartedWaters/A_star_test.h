@@ -10,6 +10,7 @@ struct cell
   cell(const int& xx = -1, const int& yy = -1);
   coord xy;
   double north, south, east, west; // the cost to go in that direction.
+  double addedCost; // any extra cost
   bool accessible;
   bool null;
   };
@@ -25,7 +26,7 @@ struct node
   bool start;
   };
 
-class Map // A Map has edges that connect to each other west-east. North and south and impassable.
+class Map // A Map has edges that connect to each other west-east. North and south are impassable.
   {
   public:
     Map(int width1, int height1);
@@ -34,8 +35,8 @@ class Map // A Map has edges that connect to each other west-east. North and sou
 
   private:
     std::vector<cell> grid;
-    double heuristic(const coord& xy1, const coord& xy2);
-    double costTo(const coord& c1, const coord& c2);
+    virtual double heuristic(const coord& xy1, const coord& xy2);
+    virtual double costTo(const coord& c1, const coord& c2);
     node& findLowestF(std::map<coord, node>& input);
     std::vector<cell> findNeighborList(const coord& current);
     std::vector<coord> reconstructPath(std::map<coord, node> paths, const coord& dest);

@@ -2,10 +2,7 @@
 #include <vector>
 #include "include/noise.h"
 #include <random>
-//#include <boost/random/mersenne_twister.hpp>
-//#include <boost/random/uniform_int_distribution.hpp>
 
-//using namespace boost::random;
 typedef std::pair<int, int> coord;
 
 struct maptile
@@ -46,7 +43,7 @@ class WorldMapClass
 class randomBoat // randomly walks.
   {
   public:
-    randomBoat(const coord& dim, const int& ffaction = 1, unsigned long int seed = 0, const coord& start = coord(-1, -1));
+    randomBoat(const coord& dim, const int& ffaction = 1, unsigned long int seed = 1243523642, const coord& start = coord(-1, -1));
     void setSeed(unsigned long int seed);
     int faction;
     coord startingPosition;

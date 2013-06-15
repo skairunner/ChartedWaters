@@ -5,8 +5,20 @@ World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(rand())
   {
   regen();
+  pathmap = new PathMap(WorldMap);
+  pathfinder = new Pather(*pathmap);
+
   PlayerShip = Ship();
   PlayerShip.setName(nameFactory.getName());
+  randomBoat rb(coord(w, h));
+  rb.setRandomPosUntilSea(WorldMap);
+  PlayerShip.setPosition(rb.currentPosition);
+  }
+
+World::~World()
+  {
+  delete pathfinder;
+  delete pathmap;
   }
 
 void World::regen()
@@ -34,8 +46,12 @@ Ship& World::getPlayerShip()
 void Renderer::getTerrainBitmap(TCODConsole* map, World& world)
   {
   const double thresholdMoisture = 0;
-  const TCODColor sandcolor = TCODColor(193, 177, 127);
-  const TCODColor coastalBrown = TCODColor(231,194,141);
+  const TCODColor sandcolor = TCODColor(123, 107, 57);
+  const TCODColor coastalBrown = TCODColor(141,124, 71);
+
+  // Originals
+  /*const TCODColor sandcolor = TCODColor(193, 177, 127);
+  const TCODColor coastalBrown = TCODColor(231,194,141);*/
 
   for (int ycounter = 0; ycounter < world.height; ycounter++)
     for (int xcounter = 0; xcounter < world.width; xcounter++)
@@ -44,7 +60,7 @@ void Renderer::getTerrainBitmap(TCODConsole* map, World& world)
       auto it = world.WorldMap.ref(xcounter, ycounter);
       if (it.altitude > 0)
         {
-        TCODColor fore = TCODColor::green;
+        TCODColor fore = TCODColor::desaturatedGreen;
         TCODColor back;
 
         if (it.moisture < thresholdMoisture)
