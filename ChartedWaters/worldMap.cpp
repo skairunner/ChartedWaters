@@ -24,6 +24,7 @@ void WorldMapClass::gen()
   noise::module::Perlin altitude;
   moisture.SetSeed(rand());
   altitude.SetSeed(rand());
+
   vector<float> buffer(w * h, 0);
   double zoom = 0.07;
   // altitude!
@@ -70,8 +71,15 @@ void WorldMapClass::gen()
 
 maptile& WorldMapClass::ref(const int& x, const int& y)
   {
-  if (x >= 0 && y >= 0 && x < w && y < h)
-    return grid[x + y * w];
+  if (y >= 0 && y < h)
+    {
+    if (x >= 0 && x < w)
+      return grid[x + y * w];
+    else if (x < 0)
+      return grid[w + x % w + y * w];
+    else
+      return grid[x % w + y * w];
+    }
   else
     return null;
   }
@@ -91,75 +99,58 @@ void WorldMapClass::setCoastFlags()
   for ( int ycounter = 0; ycounter < h; ycounter++)
     for (int xcounter = 0; xcounter < w; xcounter++)
       {
-      auto thisCell = ref(xcounter, ycounter);
-      if (thisCell.isCoastal)
-        continue;
-      if (thisCell.altitude <= 0) // if this is a sea tile
-        {
-        if (ref(xcounter -1, ycounter+1).altitude > 0 && !ref(xcounter-1, ycounter+1).isNull) // If land and not null
-          ref(xcounter-1, ycounter+1).isCoastal = true;
-        if (ref(xcounter, ycounter+1).altitude > 0 && !ref(xcounter, ycounter+1).isNull) // If land and not null
-          ref(xcounter, ycounter+1).isCoastal = true;
-        if (ref(xcounter+1, ycounter+1).altitude > 0 && !ref(xcounter+1, ycounter+1).isNull) // If land and not null
-          ref(xcounter+1, ycounter+1).isCoastal = true;
-        continue;
-        }
-      else // this is a land tile
-        {
-        if (ref(xcounter-1, ycounter).altitude == 0 && !ref(xcounter-1, ycounter).isNull) // if the tile behind is sea
-          ref(xcounter, ycounter).isCoastal = true;
-        else if (ref(xcounter+1, ycounter).altitude == 0 && !ref(xcounter+1, ycounter).isNull) // tile ahead is sea
-          ref(xcounter, ycounter).isCoastal = true;
-        else if (ref(xcounter+1, ycounter+1).altitude == 0 && !ref(xcounter+1, ycounter+1).isNull) // tile ahead+below is sea
-          ref(xcounter, ycounter).isCoastal = true;
-        else if (ref(xcounter, ycounter+1).altitude == 0 && !ref(xcounter, ycounter+1).isNull) // tile below is sea
-          ref(xcounter, ycounter).isCoastal = true;
-        else if (ref(xcounter-1, ycounter+1).altitude == 0 && !ref(xcounter-1, ycounter+1).isNull) // tile below and behind is sea
-          ref(xcounter, ycounter).isCoastal = true;
-        }
+      setCoastal(xcounter, ycounter);
       }
   }
 
-void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCities)
-  { // Faction's
-  randomBoat f(coord(w, h), faction); f.setRandomPosUntilSea(*this);
+bool WorldMapClass::setCoastal(const int& xcounter, const int& ycounter)
+  {
+  if (ref(xcounter, ycounter).altitude <= 0 || ref(xcounter, ycounter).isCoastal)
+    return true;
+  bool success;
+  for (int y = ycounter - 1; y < ycounter + 2; y++)
+    for (int x = xcounter - 1; x < xcounter + 2; x++)
+      {
+      if (x == xcounter && y == ycounter)
+        continue;
+      if (ref(x, y).altitude <= 0)
+        {
+        ref(xcounter, ycounter).isCoastal = true;
+        return true;
+        }
+      }
+    return false;
+  }
+
+void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCities, const unsigned long int& seed)
+  { // Set faction cities.
+  int tries = 0;
+  randomBoat f(coord(w, h), faction, seed); 
+  f.setRandomPosUntilSea(*this);
   bool result = f.explore(*this);
   int num_cities = numberOfCities;
   do {
+    tries++;
     result = f.explore(*this);
-    num_cities -= result;
     if (result)
-      cities.push_back(f.currentPosition);
+      num_cities -= result;
+    if (tries > numberOfCities * numberOfCities)
+      return;
+
     } while (num_cities > 0); // 
   }
 
 void WorldMapClass::setCityFlags()
   {
-  /// Let's have four factions right now.
-  const int number = 4;
-  setFactionsCity(1, number);
-  setFactionsCity(2, number);
-  setFactionsCity(3, number);
-  setFactionsCity(4, number);
-  setFactionsCity(5, number);
-  setFactionsCity(6, number);
-  setFactionsCity(7, number);
-
-  setFactionsCity(1, number);
-  setFactionsCity(2, number);
-  setFactionsCity(3, number);
-  setFactionsCity(4, number);
-  setFactionsCity(5, number);
-  setFactionsCity(6, number);
-  setFactionsCity(7, number);
-
-  setFactionsCity(1, number);
-  setFactionsCity(2, number);
-  setFactionsCity(3, number);
-  setFactionsCity(4, number);
-  setFactionsCity(5, number);
-  setFactionsCity(6, number);
-  setFactionsCity(7, number);  
+  const int number = 15;
+  auto it = 112345620;//time(0);
+  setFactionsCity(1, number, it++);
+  setFactionsCity(2, number, it++);
+  setFactionsCity(3, number, it++);
+  setFactionsCity(4, number, it++);
+  setFactionsCity(5, number, it++);
+  setFactionsCity(6, number, it++);
+  setFactionsCity(7, number, it++);
   }
 
 
@@ -169,9 +160,10 @@ void WorldMapClass::setCityFlags()
 //////
 ////////
 
-randomBoat::randomBoat(const coord& dim, const int& ffaction, const coord& start)
+randomBoat::randomBoat(const coord& dim, const int& ffaction,const unsigned long int seed, const coord& start)
   : startingPosition(start), faction(ffaction)
   {
+  gen.seed(seed);
   if (start == coord(-1, -1))
     setRandomPos(dim);
   }
@@ -189,23 +181,38 @@ void randomBoat::setRandomPosUntilSea(WorldMapClass& wm)
     setRandomPos(coord(wm.w, wm.h));
   }
 
+void randomBoat::setSeed(unsigned long int seed)
+  {
+  gen.seed(seed);
+  }
+
 bool randomBoat::explore(WorldMapClass& wm)
   {
   uniform_int_distribution<> dist(50, 100);
   int moves = dist(gen);
+  int failures = 0;
   while (moves > 0)
     {
     bool result = tryMove(wm); /// discount failed moves
     auto it = wm.ref(currentPosition.first, currentPosition.second);
+
     if (it.isCoastal && it.isInZOC == 0)
       {
       wm.ref(currentPosition.first, currentPosition.second).isCity = true;
-      markZOC(wm);
+      wm.cities.push_back(currentPosition);
+      int cityCode = wm.cities.size();
+      markZOC(wm, cityCode);
       
       return true;
       }
+
     if (!result)
+      {
       moves++;
+      failures++;
+      if (failures > 20)
+        return false;
+      }
     moves--;
     }
 
@@ -230,8 +237,9 @@ void randomBoat::recursiveZOC(const int& x,const int& y, WorldMapClass& wm, doub
     }
   }
 
-void randomBoat::markZOC(WorldMapClass& wm)
+void randomBoat::markZOC(WorldMapClass& wm, int cityCode)
   {
+  // Set faction
   wm.ref(currentPosition.first-1, currentPosition.second-1).isInZOC = faction;
   wm.ref(currentPosition.first, currentPosition.second-1).isInZOC = faction;
   wm.ref(currentPosition.first+1, currentPosition.second-1).isInZOC = faction;
@@ -242,11 +250,27 @@ void randomBoat::markZOC(WorldMapClass& wm)
   wm.ref(currentPosition.first, currentPosition.second+1).isInZOC = faction;
   wm.ref(currentPosition.first+1, currentPosition.second+1).isInZOC = faction;
 
+  // Set owner
+  wm.ref(currentPosition.first-1, currentPosition.second-1).owner = cityCode;
+  wm.ref(currentPosition.first, currentPosition.second-1).owner = cityCode;
+  wm.ref(currentPosition.first+1, currentPosition.second-1).owner = cityCode;
+  wm.ref(currentPosition.first-1, currentPosition.second).owner = cityCode;
+  wm.ref(currentPosition.first, currentPosition.second).owner = cityCode;
+  wm.ref(currentPosition.first+1, currentPosition.second).owner = cityCode;
+  wm.ref(currentPosition.first-1, currentPosition.second+1).owner = cityCode;
+  wm.ref(currentPosition.first, currentPosition.second+1).owner = cityCode;
+  wm.ref(currentPosition.first+1, currentPosition.second+1).owner = cityCode;
+
   // 
   wm.ref(currentPosition.first+2, currentPosition.second).isInZOC = faction;
   wm.ref(currentPosition.first-2, currentPosition.second).isInZOC = faction;
-  wm.ref(currentPosition.first, currentPosition.second-2).isInZOC = faction;
   wm.ref(currentPosition.first, currentPosition.second+2).isInZOC = faction;
+  wm.ref(currentPosition.first, currentPosition.second-2).isInZOC = faction;
+
+  wm.ref(currentPosition.first+2, currentPosition.second).owner = cityCode;
+  wm.ref(currentPosition.first-2, currentPosition.second).owner = cityCode;
+  wm.ref(currentPosition.first, currentPosition.second+2).owner = cityCode;
+  wm.ref(currentPosition.first, currentPosition.second-2).owner = cityCode;
  // recursiveZOC(currentPosition.first, currentPosition.second, wm, 5);
   }
 
@@ -265,7 +289,7 @@ bool randomBoat::tryMove(WorldMapClass& wm) // return true if succeeded.
   do {
     vertical = dist(gen) - 1;
     horizontal = dist(gen) - 1;
-  } while (vertical == 0 && horizontal == 0 && (vertical == originY || horizontal == originX)); //While invalid & not in the direction of origin
+  } while (vertical == 0 && horizontal == 0 && (vertical == originY || horizontal == originX)); //While invalid & in the direction of origin
 
   auto it = wm.ref(currentPosition.first + horizontal, currentPosition.second + vertical);
   if (!it.isNull && (it.isCoastal || it.altitude < 0))

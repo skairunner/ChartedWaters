@@ -85,10 +85,12 @@
     <ClCompile Include="goods.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGameState.cpp" />
+    <ClCompile Include="nameFactory.cpp" />
     <ClCompile Include="Ship.cpp" />
     <ClCompile Include="TCODEngine.cpp" />
     <ClCompile Include="TCODTools.cpp" />
     <ClCompile Include="town.cpp" />
+    <ClCompile Include="World.cpp" />
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -97,10 +99,12 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="goods.h" />
     <ClInclude Include="MainGameState.h" />
+    <ClInclude Include="nameFactory.h" />
     <ClInclude Include="Ship.h" />
     <ClInclude Include="TCODEngine.h" />
     <ClInclude Include="TCODTools.h" />
     <ClInclude Include="town.h" />
+    <ClInclude Include="World.h" />
     <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

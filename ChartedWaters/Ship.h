@@ -22,4 +22,5 @@ class Ship
     int ducats;
     int storage;
     std::vector<LedgerItem> itemList;
+    std::pair<int, int> position;
   };

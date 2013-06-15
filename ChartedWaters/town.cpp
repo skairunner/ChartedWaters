@@ -7,8 +7,8 @@ Town::Town()
 
   }
 
-Town::Town(const string& newName, const double& tax)
-  : TownName(newName), taxRate(tax)
+Town::Town(const std::string& newName, const double& tax, const int& ffaction)
+  : TownName(newName), taxRate(tax), faction(ffaction)
   {
   }
 
@@ -125,4 +125,9 @@ double Town::getTaxRate()
 void Town::setTaxRate(const double& newTaxRate)
   {
   taxRate = newTaxRate;
+  }
+
+int Town::getFactionID()
+  {
+  return faction;
   }

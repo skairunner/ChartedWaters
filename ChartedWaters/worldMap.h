@@ -10,9 +10,10 @@ typedef std::pair<int, int> coord;
 
 struct maptile
   {
-  maptile(): moisture(0), altitude(0), isCity(false), isCoastal(false), isNull(false), isInZOC(0) {}
+  maptile(): owner(0), moisture(0), altitude(0), isCity(false), isCoastal(false), isNull(false), isInZOC(0){}
   float moisture;
   float altitude;
+  int owner;
   int isInZOC;
   int isCity;
   bool isCoastal;
@@ -35,16 +36,18 @@ class WorldMapClass
   private:
     void setCoastFlags();
     void setCityFlags();
+    bool setCoastal(const int& xcounter, const int& ycounter);
     int w, h;
     maptile null;
     std::vector<maptile> grid;
-    void setFactionsCity(const int& faction, const int& numberOfCities);
+    void setFactionsCity(const int& faction, const int& numberOfCities, const unsigned long int& seed);
   };
 
 class randomBoat // randomly walks.
   {
   public:
-    randomBoat(const coord& dim, const int& ffaction = 1, const coord& start = coord(-1, -1));
+    randomBoat(const coord& dim, const int& ffaction = 1, unsigned long int seed = 0, const coord& start = coord(-1, -1));
+    void setSeed(unsigned long int seed);
     int faction;
     coord startingPosition;
     coord currentPosition;
@@ -52,7 +55,7 @@ class randomBoat // randomly walks.
     bool tryMove(WorldMapClass& wm); // Return false if you can't move.
     void setRandomPosUntilSea(WorldMapClass& wm);
   private:
-    void markZOC(WorldMapClass& wm);
+    void markZOC(WorldMapClass& wm, int cityCode);
     void recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double budget);
     void setRandomPos(const coord& dimensions); 
     

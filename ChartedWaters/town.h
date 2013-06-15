@@ -9,11 +9,13 @@ class Town
   {
   public:
     Town();
-    Town(const std::string& newName, const double& tax);
+    Town(const std::string& newName, const double& tax, const int& ffaction = 0);
     std::string getName();
     int buyItems(Ship& ship, const int& ID, int numberOf); // if numberOf = -1, buy all items possible with the money.
     int sellItems(Ship& ship, const int& ID, int numberOf);
     void addItems(const int& ID, const int& numberOf);
+    int getFactionID();
+
     std::vector<std::string> returnListOfItems();
     int getPriceOf(const int& ID);
     double getTaxRate();
@@ -27,4 +29,5 @@ class Town
     std::vector<EconomyItem> itemlist;
     std::string TownName;
     double taxRate;
+    int faction;
   };

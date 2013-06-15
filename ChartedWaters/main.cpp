@@ -1,6 +1,9 @@
 #include "town.h"
 #include <iostream>
 #include "Engine.h"
+#include "nameFactory.h"
+#include <time.h>
+#include <cstdlib>
 
 // dependancies: SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)
 // temporarily copied away.
@@ -92,10 +95,16 @@ int main(int argc,char *argv[])
     cout << "\n\n\n";
     }*/
   
-  CursesEngine.Init("yis!","resources/asciisquare.bmp",128,64);
+  CursesEngine.Init("Charted Waters","resources/asciisquare.bmp",128,64);
   CursesEngine.Start();
   CursesEngine.End();
   return 0;
+
+ /* srand(time(0));
+  NameFactory nf(rand());
+  for (int counter = 0; counter < 10; counter++)
+    cout << nf.getName() << endl;*/
+
   cin.ignore(1);
   return 0;
 }
