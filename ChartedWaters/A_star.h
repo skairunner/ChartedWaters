@@ -34,6 +34,7 @@ class PathMap
   cell& ref(const int& x, const int& y);
   cell& ref(const coord& xy);
   std::vector<cell> findNeighborList(const coord& current);
+  std::pair<int,int> getDimensions();
 
   private:
     cell null;
@@ -46,11 +47,12 @@ class Pather
   {
   public:
     Pather();
-    Pather(PathMap& mmap);
+    Pather(WorldMapClass& wmc);
     std::vector<coord> path(const coord& starting, const coord& destination, const double waveResistance); // Each path must not change the internal state.
-    
+    PathMap map; // ref to the map it paths on.
+
   private:
-    PathMap& map; // ref to the map it paths on.
+    
     double heuristic(const coord& xy1, const coord& xy2);
     double costTo(const coord& c2, const int& waveResistance);
     node& findLowestF(std::map<coord, node>& input);

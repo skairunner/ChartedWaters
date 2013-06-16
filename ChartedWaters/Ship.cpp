@@ -149,8 +149,11 @@ void Ship::setPath(const std::vector<std::pair<int, int>>& ppath)
     {
     path.clear();
     path.reserve(sizeof(pair<int, int>) * ppath.size());
-    for (auto it = ppath.rbegin(); it < ppath.rend(); it++)
+
+    for (auto it = ppath.rbegin(); it < ppath.rend()-1; it++) // Skip the last, as it's 0,0.
+      {
       path.push_back(*it);
+      }
     }
   }
 

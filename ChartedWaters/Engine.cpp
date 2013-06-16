@@ -15,6 +15,7 @@ TCODConsole* ZOCscreen;
 TCODConsole* tooltip;
 TCODConsole* PlayerShip;
 TCODConsole* PathScreen;
+TCODConsole* AccessibleScreen;
 
 bool redo = true;
 typedef pair<int, int> coord;
@@ -46,8 +47,11 @@ cityscreen->clear();
 cityscreen->setKeyColor(TCODColor::magenta);
 cityscreen->setDefaultBackground(TCODColor::magenta);
 
+AccessibleScreen = new TCODConsole(128,64);
+
 Renderer::getTerrainBitmap(mapscreen, TheWorld);
 Renderer::getCityBitmap(cityscreen, TheWorld);
+Renderer::getAccessBitmap(AccessibleScreen, TheWorld.pathfinder->map);
 
 ZOCscreen = new TCODConsole(128, 64);
 tooltip = new TCODConsole(30, 1);
@@ -73,9 +77,12 @@ if (redo)
   ZOCscreen->clear();
   cityscreen->clear();
   mapscreen->clear();
+  AccessibleScreen->clear();
+  PathScreen->clear();
   redo = false;
   Renderer::getTerrainBitmap(mapscreen, TheWorld);
   Renderer::getCityBitmap(cityscreen, TheWorld);
+  Renderer::getAccessBitmap(AccessibleScreen, TheWorld.pathfinder->map);
   }
 
 std::string name = Renderer::findCityName(coord(mouseX, mouseY), TheWorld);
@@ -90,7 +97,7 @@ if (mouseClick)
   auto it = TheWorld.pathfinder->path(TheWorld.getPlayerShip().getPosition(), coord(mouseX, mouseY), 6);
   TheWorld.getPlayerShip().setPath(it);
   PathScreen->clear();
-  for (auto iterator = it.begin(); iterator < it.end(); iterator++)
+  for (auto iterator = it.begin(); iterator < it.end()-1; iterator++)
     PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
   }
 if (pressedPeriod)
@@ -112,6 +119,7 @@ TCODConsole::blit(mapscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 1.0f);
 TCODConsole::blit(cityscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 coord playerpos = TheWorld.getPlayerShip().getPosition();
+TCODConsole::blit(AccessibleScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(PathScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(PlayerShip, 0, 0, 0, 0, root, playerpos.first, playerpos.second, 1.0f, 0.0f);
 }

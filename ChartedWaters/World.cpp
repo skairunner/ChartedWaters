@@ -5,20 +5,18 @@ World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(rand())
   {
   regen();
-  pathmap = new PathMap(WorldMap);
-  pathfinder = new Pather(*pathmap);
+  pathfinder = new Pather(WorldMap);
 
   PlayerShip = Ship();
   PlayerShip.setName(nameFactory.getName());
-  randomBoat rb(coord(w, h));
-  rb.setRandomPosUntilSea(WorldMap);
-  PlayerShip.setPosition(rb.currentPosition);
+ /* randomBoat rb(coord(w, h));
+  rb.setRandomPosUntilSea(WorldMap);*/
+  PlayerShip.setPosition(coord(0,0));
   }
 
 World::~World()
   {
   delete pathfinder;
-  delete pathmap;
   }
 
 void World::regen()
@@ -30,6 +28,9 @@ void World::regen()
     {
     cityList[*it] = Town(nameFactory.getName(), 0.05f, WorldMap.ref(it->first, it->second).isInZOC);
     }
+
+  delete pathfinder;
+  pathfinder = new Pather(WorldMap);
   }
 
 Ship& World::getPlayerShip()
@@ -58,7 +59,7 @@ void Renderer::getTerrainBitmap(TCODConsole* map, World& world)
       {
       int character = 219;
       auto it = world.WorldMap.ref(xcounter, ycounter);
-      if (it.altitude > 0)
+      if (it.altitude >= 0)
         {
         TCODColor fore = TCODColor::desaturatedGreen;
         TCODColor back;
@@ -93,6 +94,17 @@ void Renderer::getCityBitmap(TCODConsole* cities, World& world)
 
       TCODColor citycolor = findFactionColor(it->second.getFactionID());
       cities->putCharEx(coordx % world.width, coordy, 99, citycolor, TCODColor::lerp(citycolor, TCODColor::black, 0.7f));
+      }
+  }
+
+void Renderer::getAccessBitmap(TCODConsole* accessmap, PathMap& pm)
+  {
+  coord dimensions = pm.getDimensions();
+  for (int ycounter = 0; ycounter < dimensions.second; ycounter++)
+    for (int xcounter = 0; xcounter < dimensions.first; xcounter++)
+      {
+      if(!pm.ref(xcounter, ycounter).accessible)
+        accessmap->putCharEx(xcounter, ycounter, 249, TCODColor::red, TCODColor::black);
       }
   }
 

@@ -1,5 +1,6 @@
 #include "A_star.h"
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 
@@ -31,8 +32,9 @@ PathMap::PathMap(WorldMapClass& wmc)
   :width(wmc.getWidth()), height(wmc.getHeight())
   {
   null.null = true;
-  grid.reserve(sizeof(cell) * width * height);
+  grid.reserve(sizeof(cell) * width * height + 1);
 
+  
   for (int ycounter = 0; ycounter < height; ycounter++)
     for (int xcounter = 0; xcounter < width; xcounter++)
       {
@@ -41,10 +43,12 @@ PathMap::PathMap(WorldMapClass& wmc)
       auto it = wmc.ref(xcounter, ycounter);
       if (it.altitude > 0 && !it.isCoastal) //If it is a inland tile
         buffer.accessible = false;
-      else if (it.altitude > -3) // shallow
-        buffer.shallowCost = -it.altitude / 2;
-      else
-        buffer.deepCost = -it.altitude / 10.0f;
+      else if (it.isCoastal) // If coastal
+        buffer.shallowCost = 3;
+      else if (it.altitude > -3 && it.altitude <= 0) // shallow
+        buffer.shallowCost = 1 + abs(it.altitude) / 2;
+      else if (it.altitude <= -3)
+        buffer.deepCost = abs(it.altitude) / 10.0f;
 
       grid.push_back(buffer);
       }
@@ -67,8 +71,10 @@ cell& PathMap::ref(const int& x, const int& y)
 
 std::vector<cell> PathMap::findNeighborList(const coord& current)
   {
-  // Check all eight directions.
   vector<cell> output;
+  if (!ref(current).accessible) // First, if the tile I am in isn't accessible, there are no neighbors.
+    return output;
+  // Check all eight directions.
   // topleft
   auto it = ref(current.first - 1, current.second - 1);
   if (!it.null && it.accessible)
@@ -105,9 +111,13 @@ std::vector<cell> PathMap::findNeighborList(const coord& current)
   return output;
   }
 
+coord PathMap::getDimensions()
+  {
+  return coord(width, height);
+  }
 
-Pather::Pather(PathMap& mmap)
-  :map(mmap)
+Pather::Pather(WorldMapClass& wmc)
+  : map(wmc)
   {
 
   }
@@ -130,7 +140,7 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
   neighbors.clear();
   while (openset.size() != 0)
     {
- //   cout << "e";
+    cout << "e";
     node current = findLowestF(openset);
     // Push current onto closed, and pop current from open.
     closedset[current.position] = current;
@@ -172,15 +182,16 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
 double Pather::costTo(const coord& c2, const int& waveResistance)
   {
   double cost = 0;
-  cost += map.ref(c2).shallowCost;
-  cost += map.ref(c2).deepCost * (double)(16 - waveResistance) / 16;
+  /*cost += map.ref(c2).shallowCost;
+  cost += map.ref(c2).deepCost * (double)(16 - waveResistance) / 16;*/
+  cost = 1;
 
   return cost;
   }
 
 double Pather::heuristic(const coord& xy1, const coord& xy2)
   {
-  const double scalingFactor = 1; //// making this larger can make the pathfinding faster, at the cost of accuracy
+  const double scalingFactor = 2; //// making this larger can make the pathfinding faster, at the cost of accuracy
 
   double dY = xy1.second - xy2.second;
   dY *= dY; // dY^2
@@ -216,8 +227,9 @@ node& Pather::findLowestF(std::map<coord, node>& input)
 std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const coord& dest)
   {
   vector<coord> output;
-  if (paths.find(dest) != paths.end()) // if in the map
+  if (paths.find(dest) != paths.end() && paths.find(dest)->second.cameFrom != dest ) // if in the map and it doesn't lead to itself
     {
+    cout << "r";
     auto it = reconstructPath(paths, paths.find(dest)->second.cameFrom);
     output.reserve(output.size() + it.size());
     output.insert(output.end(), it.begin(), it.end());

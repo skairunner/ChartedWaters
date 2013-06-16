@@ -23,7 +23,6 @@ class World
   private:
     NameFactory nameFactory;
     WorldMapClass WorldMap;
-    PathMap *pathmap;
     
     std::map<coord, Town> cityList;
     std::vector<Ship> shipList;
@@ -38,7 +37,7 @@ class Renderer // Accesses World and returns bitmaps.
     static void getCityBitmap(TCODConsole* cities, World& world);
     static TCODColor findFactionColor(const int& faction);
     static std::string findCityName(const coord& coords, World& world);
-    
+    static void getAccessBitmap(TCODConsole* accessmap, PathMap& pm);
   private:
 
   };
