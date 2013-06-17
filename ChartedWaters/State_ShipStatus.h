@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
 #include "Ship.h"
+#include "goods.h"
 
 class State_ShipStatus : public GameState
   // Displays ship stuff.
@@ -16,9 +17,9 @@ class State_ShipStatus : public GameState
     //
     virtual void RecoverFromPush();
 		virtual void Resize(int new_w,int new_h);
-		virtual void WindowActive();
-		virtual void WindowInactive();
-		virtual void KeyUp(const int &key,const int &unicode);
+    virtual void WindowActive();
+    virtual void WindowInactive();
+    virtual void KeyUp(const int &key,const int &unicode);
 		virtual void KeyDown(const int &key,const int &unicode);
 		virtual void MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
 		virtual void MouseButtonUp(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
@@ -27,6 +28,12 @@ class State_ShipStatus : public GameState
     TCODConsole* console;
 
   private:
+    int selector;
+    bool redraw;
+    void redrawList();
+    void invertLine(const int& line);
     Ship& refToShip;
     std::string newname;
+    std::string header();
+    std::string assembleOutput(const LedgerItemTuple& tuple);
   };

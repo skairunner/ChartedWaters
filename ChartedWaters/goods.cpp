@@ -12,6 +12,30 @@ using namespace std;
 //////////
 ///////////////////////
 
+void JSONToItem::readItems(ItemDictionary& dict)
+  {
+  string index;
+  Json::Value root;
+  Json::Reader reader;
+  index = slurp(string("resources/index.json"));
+  bool parsingSuccess = reader.parse(index, root);
+  if (!parsingSuccess)
+    {
+    cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
+    cin.ignore();
+    return;
+    }
+  int counter = 0;
+
+  Json::Value list = root["files"];
+  while (!list[counter].isNull())
+    {
+    slurpItems(string("resources/") + list[counter].asString(), dict);
+    cout << endl;
+    counter++;
+    }
+  }
+
 void JSONToItem::readItems()
   {
   string index;
@@ -30,13 +54,41 @@ void JSONToItem::readItems()
   Json::Value list = root["files"];
   while (!list[counter].isNull())
     {
-    slurpItems(string("resources/") + list[counter].asString());
+    slurpItemsAndPrint(string("resources/") + list[counter].asString());
     cout << endl;
     counter++;
     }
   }
 
-void JSONToItem::slurpItems(const std::string& filename)
+void JSONToItem::slurpItems(const std::string& filename, ItemDictionary& dict)
+  {
+  string itemlist;
+  Json::Value root;
+  Json::Reader reader;
+  itemlist = slurp(filename);
+  bool parsingSuccess = reader.parse(itemlist, root);
+  if (!parsingSuccess)
+    {
+    cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
+    cin.ignore();
+    return;
+    }
+  int counter = 0;
+
+  while (!root[counter].isNull())
+    {
+    Json::Value item = root[counter];
+    
+    string ID = item["ID"].asString();
+    dict.ItemNames[ID] = item["name"].asString();
+    dict.BasePrice[ID] = item["base price"].asInt();
+    if (!item["desc"].isNull())
+      dict.ItemDesc[ID] = item["dest"].asString();
+    counter++;
+    }
+  }
+
+void JSONToItem::slurpItemsAndPrint(const std::string& filename)
   {
   string itemlist;
   Json::Value root;
@@ -109,23 +161,56 @@ string JSONToItem::slurp(const string& filename)
 
 ItemDictionary::ItemDictionary()
   {
+  categories.push_back(string("Food"));
+  categories.push_back(string("Raw materials"));
+  categories.push_back(string("Other"));
+  categories.push_back(string("Luxury items"));
 
+  types.push_back(string("Alcohol"));
+  types.push_back(string("Foodstuffs"));
+  types.push_back(string("Seasonings"));
+  types.push_back(string("Livestock"));
+  types.push_back(string("Luxury food"));
+
+  types.push_back(string("Textiles"));
+  types.push_back(string("Fabric"));
+  types.push_back(string("Dyes"));
+  types.push_back(string("Ores"));
+  types.push_back(string("Industrial goods"));
+
+  types.push_back(string("Medicine"));
+  types.push_back(string("Sundries"));
+  types.push_back(string("Weapons"));
+  types.push_back(string("Firearms"));
+  types.push_back(string("Crafts"));
+
+  types.push_back(string("Artwork"));
+  types.push_back(string("Spices"));
+  types.push_back(string("Precious metals"));
+  types.push_back(string("Fragrances"));
+  types.push_back(string("Jewellery"));
+  types.push_back(string("Precious stones"));
+
+  BasePrice[string("null")] = 0;
+  ItemNames[string("null")] = string("invalid item");
+  DecayRates[string("null")] = pair<double, double>(0, 0);
+  ItemDesc[string("null")] = string("No description.");
   }
 
 string ItemDictionary::findItemName(const std::string& ID)
   {
   auto it = ItemNames.find(ID);
   if (it == ItemNames.end())
-    return ItemNames[0];
+    return ItemNames[string("null")];
   else
     return it->second;
   }
 
-double ItemDictionary::findBasePrice(const std::string& ID)
+int ItemDictionary::findBasePrice(const std::string& ID)
   {
   auto it = BasePrice.find(ID);
   if (it == BasePrice.end())
-    return BasePrice[0];
+    return BasePrice[string("null")];
   else
     return it->second;
   }
@@ -134,7 +219,7 @@ pair<double, double> ItemDictionary::findDecayRates(const std::string& ID)
   {
   auto it = DecayRates.find(ID);
   if (it == DecayRates.end())
-    return DecayRates[0];
+    return DecayRates[string("null")];
   else
     return it->second;
   }

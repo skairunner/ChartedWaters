@@ -13,9 +13,12 @@ class JSONToItem
   {
   public:
     void readItems(); // reads the file names from index.json first.
+    void readItems(ItemDictionary& dict); // Reads items into an item dictionary.
+
   private:
     std::string slurp(const std::string& filename);
-    void slurpItems(const std::string& filename);
+    void slurpItemsAndPrint(const std::string& filename);
+    void slurpItems(const std::string& filename, ItemDictionary& dict);
   };
 
 class ItemDictionary
@@ -25,12 +28,21 @@ class ItemDictionary
    // ItemDictionary();
     ItemDictionary();
     std::string findItemName(const std::string& ID);
-    double findBasePrice(const std::string& ID);
+    int findBasePrice(const std::string& ID);
     std::pair<double, double> findDecayRates(const std::string& ID);
+    std::string findItemDesc(const std::string& ID);
+  //  std::string* findItemCategory(const std::string& ID);
+  //  std::string* findItemType(const std::string& ID);
+
   private:
+    std::vector<std::string> categories;
+    std::vector<std::string> types;
+
     std::map<std::string, std::string> ItemNames;
-    std::map<std::string, double> BasePrice;
-    std::map<std::string, std::pair<double, double>> DecayRates;
+    std::map<std::string, int> BasePrice;
+    std::map<std::string, std::string> ItemDesc;
+    std::map<std::string, std::pair<double, double>> DecayRates; // Implemented per item type, not per item.
+   // std::map<std::string, std::pair<std::string*,std::string*>> ItemCatAndType; // All category and type vars in Item reference this.
   };
 
 extern ItemDictionary ItemDict;
@@ -53,8 +65,8 @@ class Item
     std::string ID;
     std::string itemName;
 
-    std::string* category;
-    std::string* type;
+    //std::string* category;
+    //std::string* type;
 
     int basePrice;
     double decayRatePositive; // When the demand > supply

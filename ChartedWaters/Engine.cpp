@@ -3,6 +3,7 @@
 #include "World.h"
 #include "State_ShipStatus.h"
 #include <string>
+#include "State_shop.h"
 
 Engine CursesEngine;
 
@@ -25,8 +26,15 @@ bool pressedPeriod = false;
 
 bool Engine::EngineInit()
 {
+JSONToItem jsonParser;
+jsonParser.readItems(ItemDict); // Read items into dictionary.
+
 TheWorld.regen();
 TheWorld.regen();
+
+TheWorld.getPlayerShip().addItem(Item("food_friedchicken"), 50, ItemDict.findBasePrice(string("food_friedchicken")));
+TheWorld.getPlayerShip().addItem(Item("food_fruityloops"), 50, ItemDict.findBasePrice(string("food_fruityloops")));
+TheWorld.getPlayerShip().addItem(Item("luxury_carbonnano"), 7, 7391);
 
 PlayerShip = new TCODConsole(1, 1);
 auto shippos = TheWorld.getPlayerShip().getPosition();
@@ -145,14 +153,23 @@ void Engine::KeyDown(const int &key,const int &unicode)
 {
 if (key == SDLK_RIGHT)
   redo = true;
-if (key == SDLK_s)
+else if (key == SDLK_s)
   {
   newState = new State_ShipStatus(TheWorld.getPlayerShip());
   PushState(newState);
   }
-if (unicode == '.')
+else if (unicode == '.')
   {
   pressedPeriod = true;
+  }
+else if (key == SDLK_RETURN)
+  {
+  TheWorld.queryShop(TheWorld.getPlayerShip());
+  }
+else if (unicode == 'T') // Test shop
+  {
+  newState = new State_Shop(TheWorld.getFirstTown(), TheWorld.getPlayerShip());
+  PushState(newState);
   }
 }
 

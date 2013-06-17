@@ -2,16 +2,16 @@
 #include <cstdlib>
 
 World::World(const int& w, const int& h)
-  : width(w), height(h), WorldMap(w, h), nameFactory(rand())
+  : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true)
   {
   regen();
   pathfinder = new Pather(WorldMap);
 
   PlayerShip = Ship();
   PlayerShip.setName(nameFactory.getName());
- /* randomBoat rb(coord(w, h));
-  rb.setRandomPosUntilSea(WorldMap);*/
-  PlayerShip.setPosition(coord(0,0));
+  randomBoat rb(coord(w, h));
+  rb.setRandomPosUntilSea(WorldMap);
+  PlayerShip.setPosition(rb.currentPosition);
   }
 
 World::~World()
@@ -36,6 +36,28 @@ void World::regen()
 Ship& World::getPlayerShip()
   {
   return PlayerShip;
+  }
+
+void World::queryShop(Ship& ship)
+  {
+  auto it = cityList.find(ship.getPosition());
+  if (it == cityList.end())
+    return;
+  ////////////////// add interface
+  }
+
+Town& World::getFirstTown()
+  {
+  if (first)
+    {
+    Town& it = cityList.begin()->second;
+    it.addItems(std::string("luxury_remalle"), 35);
+    it.addItems(std::string("luxury_allspice"), 120);
+    it.addItems(std::string("food_cookedllamachops"), 190);
+    it.addItems(std::string("food_chickencheese"), 1269);
+    first = false;
+    }
+  return cityList.begin()->second;
   }
 
 /////

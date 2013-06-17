@@ -36,15 +36,10 @@ string slurp(const string& filename)
 
 int main(int argc,char *argv[])
   {  
-  JSONToItem jsonParser;
-  jsonParser.readItems();
- /* cout << firstItem["ID"].asCString() << " " << firstItem["category"].asCString() << " " 
-       << firstItem["type"].asCString() << " " << firstItem["name"].asCString() << " "
-       << firstItem["base price"].asInt() << " " << firstItem["desc"].asCString();*/
-  /*CursesEngine.Init("Charted Waters","resources/asciisquare.bmp",128,64);
+  CursesEngine.Init("Charted Waters","resources/asciisquare.bmp",128,64);
   CursesEngine.Start();
   CursesEngine.End();
-  return 0;*/
+  return 0;
 
   cin.ignore(1);
   return 0;

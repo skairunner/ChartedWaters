@@ -19,11 +19,14 @@ class World
     void regen();
     Ship& getPlayerShip();
     Pather *pathfinder;
+    void queryShop(Ship& ship);
+    Town& getFirstTown();
 
   private:
     NameFactory nameFactory;
     WorldMapClass WorldMap;
     
+    bool first;
     std::map<coord, Town> cityList;
     std::vector<Ship> shipList;
     Ship PlayerShip;

@@ -5,6 +5,15 @@
 
 enum TOWN_ERRORS {twSUCCESS = 1, twNO_SUCH_ITEM, twNOT_ENOUGH_MONEY, twNOT_ENOUGH_ITEMS};
 
+struct EconomyItemTuple
+  {
+  std::string itemID;
+  std::string ItemName;
+  std::string numberOfItems;
+  std::string BuyPrice;
+  std::string SellPrice;
+  };
+
 class Town
   {
   public:
@@ -16,7 +25,7 @@ class Town
     void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
 
-    std::vector<std::string> returnListOfItems();
+    std::vector<EconomyItemTuple> returnListOfItems();
     int getPriceOf(const std::string& ID);
     double getTaxRate();
     void setTaxRate(const double& newTaxRate);

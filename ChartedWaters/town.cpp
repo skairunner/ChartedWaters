@@ -4,12 +4,15 @@ using namespace std;
 Town::Town()
   :taxRate(0.05f)
   {
+  /// test items
+  
 
   }
 
 Town::Town(const std::string& newName, const double& tax, const int& ffaction)
   : TownName(newName), taxRate(tax), faction(ffaction)
   {
+  TownName[0] = toupper(TownName[0]);
   }
 
 string Town::getName()
@@ -17,22 +20,21 @@ string Town::getName()
   return TownName;
   }
 
-vector<string> Town::returnListOfItems()
+vector<EconomyItemTuple> Town::returnListOfItems()
   {
-  vector<string> returnVal;
-  string buffer;
-  returnVal.push_back(string("\t\t\tBuy\tSell\n"));
+  vector<EconomyItemTuple> returnVal;
+
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
-   // buffer.assign(to_string((long double)it->getID()));
-    buffer += " " + it->getName();
-    buffer += "    ~" + to_string((long double)(it->getPrice() * (1 + taxRate))) + " ducats    ~";
-    buffer += to_string((long double)(it->getPrice() * (1 - taxRate))) + " ducats    ";
-    buffer += "x" + to_string((long double)it->howMany()) + "\n";
+    EconomyItemTuple buffer;
+    buffer.itemID = it->getID();
+    buffer.ItemName = it->getName();
+    buffer.numberOfItems = to_string((long double)it->howMany());
+    buffer.BuyPrice = string("~") + to_string((long double)(it->getPrice() * (1 + taxRate)));
+    buffer.SellPrice = string("~") + to_string((long double)(it->getPrice() * (1 + taxRate)));
+
     returnVal.push_back(buffer);
     }
-  if(returnVal.size() == 0)
-    returnVal.push_back(string("Nothing to see here!"));
 
   return returnVal;
   }
