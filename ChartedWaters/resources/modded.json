@@ -1,0 +1,18 @@
+[
+	{
+		"ID" : "foodstuffs_tallowroast",
+		"category" : "Food",
+		"type" : "Luxury food",
+		"name" : "+Cat tallow roast+",
+		"base price" : 1200,
+		"desc" : "This is a fine +cat tallow roast+."	
+	},
+	{
+		"ID" : "other_tylenol",
+		"category" : "Other",
+		"type" : "Medicine",
+		"name" : "Tylenol",
+		"base price" : 10,
+		"desc" : "A single pill of tylenol. I wonder why they bother to put this into a crate..."	
+	}
+]

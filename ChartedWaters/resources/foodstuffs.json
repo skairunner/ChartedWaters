@@ -1,0 +1,35 @@
+// Test item file
+[
+	{
+		"ID" : "food_friedchicken",
+		"category" : "Food",
+		"type" : "Foodstuffs",
+		"name" : "Fried chicken",
+		"base price" : 100,
+		"desc" : "Chicken, fried to a crispy golden brown."
+	},
+	{
+		"ID" : "food_cookedllamachops",
+		"category" : "Food",
+		"type" : "Foodstuffs",
+		"name" : "Cooked llama chops",
+		"base price" : 120,
+		"desc" : "Cooked llama chops."
+	},
+	{
+		"ID" : "food_chickencheese",
+		"category" : "Food",
+		"type" : "Luxury food",
+		"name" : "Chicken-cheese",
+		"base price" : 12,
+		"desc" : "Is it chicken? Is it cheese? Whatever it is, it's darn tasty, and cheap, too."
+	},
+	{
+		"ID" : "food_fruityloops",
+		"category" : "Food",
+		"type" : "Luxury food",
+		"name" : "Fruity loops",
+		"base price" : 9
+	}
+
+]

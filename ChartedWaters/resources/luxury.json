@@ -1,0 +1,35 @@
+//Another test json file
+[	
+	{
+		"ID" : "luxury_allspice",
+		"category" : "Luxury",
+		"type" : "Spices",
+		"name" : "Allspice",
+		"base price" : 5600,
+		"desc" : "Like all the spices you knew, but /better/!"
+	},
+	{
+		"ID" : "luxury_leg",
+		"category" : "Luxury",
+		"type" : "Fragrances",
+		"name" : "Leg",
+		"base price" : 5600,
+		"desc" : "This is a luxurious leg."
+	},
+	{
+		"ID" : "luxury_remalle",
+		"category" : "Luxury",
+		"type" : "Artwork",
+		"name" : "Remalle",
+		"base price" : 19600,
+		"desc" : "This is a Remalle. He don't come cheap."
+	},
+	{
+		"ID" : "luxury_carbonnano",
+		"category" : "Luxury",
+		"type" : "Precious metals",
+		"name" : "Carbon nanotubes",
+		"base price" : 7391,
+		"desc" : "Tasty C60 carbon nanotubes!"
+	}
+]
