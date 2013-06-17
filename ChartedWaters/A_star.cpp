@@ -44,7 +44,7 @@ PathMap::PathMap(WorldMapClass& wmc)
       if (it.altitude > 0 && !it.isCoastal) //If it is a inland tile
         buffer.accessible = false;
       else if (it.isCoastal) // If coastal
-        buffer.shallowCost = 3;
+        buffer.shallowCost = 15;
       else if (it.altitude > -3 && it.altitude <= 0) // shallow
         buffer.shallowCost = 1 + abs(it.altitude) / 2;
       else if (it.altitude <= -3)
@@ -182,16 +182,16 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
 double Pather::costTo(const coord& c2, const int& waveResistance)
   {
   double cost = 0;
-  /*cost += map.ref(c2).shallowCost;
-  cost += map.ref(c2).deepCost * (double)(16 - waveResistance) / 16;*/
-  cost = 1;
+  cost += map.ref(c2).shallowCost;
+  cost += map.ref(c2).deepCost * (double)(16 - waveResistance) / 16;
+  //cost = 1;
 
   return cost;
   }
 
 double Pather::heuristic(const coord& xy1, const coord& xy2)
   {
-  const double scalingFactor = 2; //// making this larger can make the pathfinding faster, at the cost of accuracy
+  const double scalingFactor = 1; //// making this larger can make the pathfinding faster, at the cost of accuracy
 
   double dY = xy1.second - xy2.second;
   dY *= dY; // dY^2

@@ -4,7 +4,7 @@
 using namespace std;
 
 Ship::Ship()
-  : ducats(0), storage(0), maxstorage(10), speed(1), character(127), waveResistance(6)
+  : ducats(1000), storage(0), maxstorage(10), speed(1), character(127), waveResistance(6)
   {
 
   }
@@ -51,7 +51,7 @@ int Ship::getMoney()
   return ducats;
   }
 
-int Ship::getNumberOfItems(const int& ID)
+int Ship::getNumberOfItems(const std::string& ID)
   {
   for (auto it = itemList.begin(); it < itemList.end(); it++)
     if (ID == it->getID())
@@ -65,7 +65,7 @@ vector<LedgerItemTuple> Ship::returnListOfItems()
   LedgerItemTuple buffer;
   for (auto it = itemList.begin(); it < itemList.end(); it++)
     {
-    buffer.itemID = to_string((long double)it->getID());
+//    buffer.itemID = to_string((long double)it->getID());
     buffer.ItemName = it->getName();
     buffer.averagePurchasePrice = to_string((long double)it->getAveragePrice());
     buffer.numberOfItems = to_string((long double)it->howMany());
@@ -77,7 +77,7 @@ vector<LedgerItemTuple> Ship::returnListOfItems()
   return returnVal;
   }
 
-bool Ship::removeItem(const int ItemID, const int& numberOf)
+bool Ship::removeItem(const std::string& ItemID, const int& numberOf)
   {
   auto it = itemList.begin();
   for (; it < itemList.end(); it++)
@@ -93,7 +93,7 @@ bool Ship::removeItem(const int ItemID, const int& numberOf)
   return result;
   }
 
-int Ship::getPurchasePriceOf(const int& ID)
+int Ship::getPurchasePriceOf(const std::string& ID)
   {
   auto it = itemList.begin();
   for (; it < itemList.end(); it++)
@@ -104,7 +104,7 @@ int Ship::getPurchasePriceOf(const int& ID)
   return it->getAveragePrice();
   }
 
-bool Ship::removeFromList(const int& itemID)
+bool Ship::removeFromList(const std::string& itemID)
   {
   int counter = 0;
   for (; counter < itemList.size(); counter++)

@@ -11,13 +11,13 @@ class Town
     Town();
     Town(const std::string& newName, const double& tax, const int& ffaction = 0);
     std::string getName();
-    int buyItems(Ship& ship, const int& ID, int numberOf); // if numberOf = -1, buy all items possible with the money.
-    int sellItems(Ship& ship, const int& ID, int numberOf);
-    void addItems(const int& ID, const int& numberOf);
+    int buyItems(Ship& ship, const std::string& ID, int numberOf); // if numberOf = -1, buy all items possible with the money.
+    int sellItems(Ship& ship, const std::string& ID, int numberOf);
+    void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
 
     std::vector<std::string> returnListOfItems();
-    int getPriceOf(const int& ID);
+    int getPriceOf(const std::string& ID);
     double getTaxRate();
     void setTaxRate(const double& newTaxRate);
 

@@ -143,7 +143,7 @@ void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCitie
 void WorldMapClass::setCityFlags()
   {
   const int number = 15;
-  auto it = 112345620;//time(0);
+  auto it = time(0);
   setFactionsCity(1, number, it++);
   setFactionsCity(2, number, it++);
   setFactionsCity(3, number, it++);

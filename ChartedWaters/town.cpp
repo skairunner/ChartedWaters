@@ -24,7 +24,7 @@ vector<string> Town::returnListOfItems()
   returnVal.push_back(string("\t\t\tBuy\tSell\n"));
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
-    buffer.assign(to_string((long double)it->getID()));
+   // buffer.assign(to_string((long double)it->getID()));
     buffer += " " + it->getName();
     buffer += "    ~" + to_string((long double)(it->getPrice() * (1 + taxRate))) + " ducats    ~";
     buffer += to_string((long double)(it->getPrice() * (1 - taxRate))) + " ducats    ";
@@ -37,7 +37,7 @@ vector<string> Town::returnListOfItems()
   return returnVal;
   }
 
-void Town::addItems(const int& ID, const int& numberOf)
+void Town::addItems(const std::string& ID, const int& numberOf)
   {
   auto it = itemlist.begin();
   for (; it < itemlist.end(); it++)
@@ -50,7 +50,7 @@ void Town::addItems(const int& ID, const int& numberOf)
   itemlist.push_back(EconomyItem(ID, numberOf, numberOf));
   }
 
-int Town::buyItems(Ship& ship, const int& ID, int numberOf)
+int Town::buyItems(Ship& ship, const std::string& ID, int numberOf)
   {
   lastTransaction = 0;
   auto it = itemlist.begin();
@@ -88,7 +88,7 @@ int Town::buyItems(Ship& ship, const int& ID, int numberOf)
   return twSUCCESS;
   }
 
-int Town::getPriceOf(const int& ID)
+int Town::getPriceOf(const std::string& ID)
   {
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
@@ -98,7 +98,7 @@ int Town::getPriceOf(const int& ID)
   return -1; // since it does not exist.
   }
 
-int Town::sellItems(Ship& ship, const int& ID, int numberOf)
+int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)
   {
   lastTransaction = 0;
 

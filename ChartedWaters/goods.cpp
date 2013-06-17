@@ -1,8 +1,83 @@
 #include "goods.h"
 #include <cmath>
+#include <fstream>
+#include "json/json.h"
 
 ItemDictionary ItemDict;
 using namespace std;
+
+///////////////////////
+//////////
+//////////  JSONToItem
+//////////
+///////////////////////
+
+void JSONToItem::readItems()
+  {
+  string index;
+  Json::Value root;
+  Json::Reader reader;
+  index = slurp(string("resources/index.json"));
+  bool parsingSuccess = reader.parse(index, root);
+  if (!parsingSuccess)
+    {
+    cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
+    cin.ignore();
+    return;
+    }
+  int counter = 0;
+
+  Json::Value list = root["files"];
+  while (!list[counter].isNull())
+    {
+    slurpItems(string("resources/") + list[counter].asString());
+    cout << endl;
+    counter++;
+    }
+  }
+
+void JSONToItem::slurpItems(const std::string& filename)
+  {
+  string itemlist;
+  Json::Value root;
+  Json::Reader reader;
+  itemlist = slurp(filename);
+  bool parsingSuccess = reader.parse(itemlist, root);
+  if (!parsingSuccess)
+    {
+    cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
+    cin.ignore();
+    return;
+    }
+  int counter = 0;
+  cout << "In " << filename << "---------------------------\n";
+  while (!root[counter].isNull())
+    {
+    Json::Value item = root[counter];
+    
+    cout << item["name"].asString() << " (" << item["ID"].asString() << ")";
+    if (!item["desc"].isNull())
+      cout << " : " << item["desc"].asString();
+
+    cout << endl;
+    counter++;
+    }
+
+  }
+
+string JSONToItem::slurp(const string& filename)
+  {
+  fstream file(filename.c_str());
+  string output; output.clear();
+  string buffer; buffer.clear();
+  while (!file.eof())
+    {
+    getline(file, buffer);
+    output.append(buffer + string("\n"));
+    }
+  return output;
+  }
+
 
 ///////////////////////
 //////////
@@ -10,7 +85,7 @@ using namespace std;
 //////////
 ///////////////////////
 
-ItemDictionary::ItemDictionary()
+/*ItemDictionary::ItemDictionary()
   {
   ItemNames[IID_NULL] = std::string("Invalid item/null");
   ItemNames[IID_FRIED_CHICKEN] = std::string("Fried chicken");
@@ -26,9 +101,18 @@ ItemDictionary::ItemDictionary()
   DecayRates[IID_FRIED_CHICKEN] = std::pair<double, double>(0.1, 0.1);
   DecayRates[IID_COOKED_LLAMA_CHOPS] = std::pair<double, double>(0.1, 0.1);
   DecayRates[IID_CHICKEN_CHEESE] = std::pair<double, double>(0.1, 0.1);
+  }*/
+
+
+
+
+
+ItemDictionary::ItemDictionary()
+  {
+
   }
 
-string ItemDictionary::findItemName(const int& ID)
+string ItemDictionary::findItemName(const std::string& ID)
   {
   auto it = ItemNames.find(ID);
   if (it == ItemNames.end())
@@ -37,7 +121,7 @@ string ItemDictionary::findItemName(const int& ID)
     return it->second;
   }
 
-double ItemDictionary::findBasePrice(const int& ID)
+double ItemDictionary::findBasePrice(const std::string& ID)
   {
   auto it = BasePrice.find(ID);
   if (it == BasePrice.end())
@@ -46,7 +130,7 @@ double ItemDictionary::findBasePrice(const int& ID)
     return it->second;
   }
 
-pair<double, double> ItemDictionary::findDecayRates(const int& ID)
+pair<double, double> ItemDictionary::findDecayRates(const std::string& ID)
   {
   auto it = DecayRates.find(ID);
   if (it == DecayRates.end())
@@ -66,7 +150,7 @@ Item::Item()
   {
   }
 
-Item::Item(const int& newID)
+Item::Item(const std::string& newID)
   :ID(newID)
   {
   itemName = ItemDict.findItemName(newID);
@@ -91,7 +175,7 @@ bool Item::operator<(const Item& right) const
   else return false;
   }
 
-int Item::getID() const
+std::string Item::getID() const
   {
   return ID;
   }
@@ -114,7 +198,7 @@ double Item::getBasePrice() const
 //////////
 ///////////////////////
 
-EconomyItem::EconomyItem(const int& ID, const int& newSupply, const int& newDemand)
+EconomyItem::EconomyItem(const std::string& ID, const int& newSupply, const int& newDemand)
   : Item(ID), supply(newSupply), demand(newDemand)
   {
 
@@ -165,7 +249,7 @@ void EconomyItem::addDemand(const int& increased)
 //////////
 ///////////////////////
 
-LedgerItem::LedgerItem(const int& ID)
+LedgerItem::LedgerItem(const std::string& ID)
   :Item(ID), totalItems(0)
   {
 

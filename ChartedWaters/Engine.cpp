@@ -58,10 +58,6 @@ tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld.getPlayerShip();
 ship.addMoney(13370);
-ship.addItem(Item(3), 90, 500);
-ship.addItem(Item(1), 52, 200);
-ship.addItem(Item(2), 110, 300);
-ship.addItem(Item(3), 10, 350);
 
 
 	return true;

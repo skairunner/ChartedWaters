@@ -18,9 +18,9 @@ class Ship
     std::string getName();
     bool addMoney(const int& amount); // false if the total money would go under 0.
     void addItem(const Item& item, const int& numberOf, const int& averagePrice);
-    bool removeItem(const int ItemID, const int& numberOf); // return false in case there are not enough items to remove.
-    int getNumberOfItems(const int& ID);
-    int getPurchasePriceOf(const int& ID);
+    bool removeItem(const std::string& ItemID, const int& numberOf); // return false in case there are not enough items to remove.
+    int getNumberOfItems(const std::string& ID);
+    int getPurchasePriceOf(const std::string& ID);
     int getMoney();
     int getTotalStorageUsed();
     int getMaxStorage();
@@ -39,7 +39,7 @@ class Ship
   private:
     int speed; // Tiles per day. Default 1.
     
-    bool removeFromList(const int& itemID);
+    bool removeFromList(const std::string& itemID);
     std::string shipName;
     int ducats;
     int storage;
