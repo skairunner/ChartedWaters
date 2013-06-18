@@ -3,8 +3,8 @@
 
 using namespace std;
 
-state_StringIn::state_StringIn(int w, string& input)
-  :inputRef(input), width (w)
+state_StringIn::state_StringIn(int w, string& input, std::string& displaytext)
+  :inputRef(input), width (w), text(displaytext)
   {
   console = new TCODConsole(width+2, 4);
   }
@@ -27,7 +27,7 @@ void state_StringIn::Update()
 void state_StringIn::Render(TCODConsole *root)
   {
   console->clear();
-  console->print(1, 1, "Input:");
+  console->print(1, 1, text.c_str());
   console->print(1, 2, (string("> ") + buffer).c_str());
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
   TCODConsole::blit(console, 0, 0, 0, 0, root, 0, 0, 1, 1);

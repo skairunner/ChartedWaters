@@ -4,7 +4,7 @@
 class state_StringIn: public GameState
   {
   public:
-    state_StringIn(int w, std::string& input);
+    state_StringIn(int w, std::string& input, std::string& displaytext = std::string("Input:"));
     ~state_StringIn();
     virtual void Update();
     virtual void Render(TCODConsole *root);
@@ -26,5 +26,6 @@ class state_StringIn: public GameState
   private:
     std::string& inputRef;
     std::string buffer;
+    std::string text;
     int width;
   };

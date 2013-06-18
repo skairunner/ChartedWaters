@@ -96,6 +96,7 @@ void State_ShipStatus::invertLine(const int& line)
 
 bool State_ShipStatus::Init()
   {
+  console->clear();
   console->setDefaultForeground(TCODColor::white);
 
   int line = 1;
