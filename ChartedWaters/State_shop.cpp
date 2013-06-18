@@ -235,6 +235,7 @@ void State_Shop::Update()
         {
         cout << "<debug> Invalid argument: " << e.what() << endl;
         startbuy = false;
+        getPrompt = false;
         }
       }
   else if (startbuy)

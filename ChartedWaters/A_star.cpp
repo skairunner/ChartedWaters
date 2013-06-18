@@ -129,6 +129,11 @@ cell& PathMap::ref(const coord& xy)
 
 vector<coord> Pather::path(const coord& starting, const coord& destination, const double waveResistance)
   {
+  if (!map.ref(destination).accessible)
+    {
+    return vector<coord>(2, starting);
+    }
+
   std::map<coord, node> closedset;
   std::map<coord, node> openset;
 
@@ -176,7 +181,9 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
       }
     }
   // Since we exited the loop with nothing to show for it, you fail.
-  return vector<coord>(); // empty = fail
+
+  vector<coord> retval(2, starting);
+    return retval; // means the path stays in place.
   }
 
 double Pather::costTo(const coord& c2, const int& waveResistance)

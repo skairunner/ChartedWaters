@@ -51,6 +51,10 @@ Town& World::getFirstTown()
   if (first)
     {
     Town& it = cityList.begin()->second;
+    it.addItems(std::string("luxury_leg"), 9);
+    it.addItems(std::string("other_tylenol"), 992);
+    it.addItems(std::string("luxury_demonicmark"), 666);
+    it.addItems(std::string("food_tallowroast"), 400);
     it.addItems(std::string("luxury_remalle"), 35);
     it.addItems(std::string("luxury_allspice"), 120);
     it.addItems(std::string("food_cookedllamachops"), 190);

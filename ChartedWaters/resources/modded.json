@@ -1,6 +1,6 @@
 [
 	{
-		"ID" : "foodstuffs_tallowroast",
+		"ID" : "food_tallowroast",
 		"category" : "Food",
 		"type" : "Luxury food",
 		"name" : "+Cat tallow roast+",
@@ -14,5 +14,13 @@
 		"name" : "Tylenol",
 		"base price" : 10,
 		"desc" : "A single pill of tylenol. I wonder why they bother to put this into a crate..."	
+	},
+	{	
+		"ID" : "luxury_demonicmark",
+		"category" : "Luxury",
+		"type" : "Artwork",
+		"name" : "Demonic Mark",
+		"base price" : 666,
+		"desc" : "6666666666666666666666"
 	}
 ]

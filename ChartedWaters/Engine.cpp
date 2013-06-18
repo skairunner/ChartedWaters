@@ -65,7 +65,7 @@ ZOCscreen = new TCODConsole(128, 64);
 tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld.getPlayerShip();
-ship.addMoney(13370);
+ship.addMoney(65536);
 
 
 	return true;
@@ -89,9 +89,7 @@ if (redo)
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld.pathfinder->map);
   }
 
-std::string name = Renderer::findCityName(coord(mouseX, mouseY), TheWorld);
-if (name.size() > 0)
-  name.front() -= 32; 
+std::string name = Renderer::findCityName(coord(mouseX, mouseY), TheWorld); 
 tooltip->clear();
 tooltip->print(0, 0, name.c_str());
 
@@ -152,7 +150,7 @@ void Engine::KeyUp(const int &key,const int &unicode)
 void Engine::KeyDown(const int &key,const int &unicode)
 {
 if (key == SDLK_RIGHT)
-  redo = true;
+  ;//redo = true;
 else if (key == SDLK_s)
   {
   newState = new State_ShipStatus(TheWorld.getPlayerShip());
