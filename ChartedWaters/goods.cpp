@@ -348,12 +348,16 @@ LedgerItem::LedgerItem(const Item& item, const int& howMany, const int& averageP
 
 void LedgerItem::addItem(const int& howMany, const int& averagePrice)
   {
+  if (howMany == 0)
+    return;
   ledger.push_back(pair<int, int>(howMany, averagePrice));
   totalItems += howMany;
   }
 
 bool LedgerItem::removeItems(const int& howMany)
   {
+  if (howMany == 0)
+    return true;
   if (totalItems < howMany)
     return false;
   int counter = howMany;

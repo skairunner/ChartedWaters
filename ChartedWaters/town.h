@@ -28,10 +28,12 @@ class Town
     std::vector<EconomyItemTuple> returnListOfItems();
     int getPriceOf(const std::string& ID);
     double getTaxRate();
+    int getNumberOf(const std::string& ID);
+
     void setTaxRate(const double& newTaxRate);
 
-    int lastTransaction;
     int numberOfLastTransaction;
+    int lastTransaction;
     int unitPurchasePriceOfSell;
 
   private:

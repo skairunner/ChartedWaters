@@ -10,7 +10,7 @@ class state_StringIn: public GameState
     virtual void Render(TCODConsole *root);
     virtual void End();
     virtual bool Init();
-    //virtual void RecoverFromPush() {if (!nextState) delete nextState; pushSomething = false;}
+    virtual void RecoverFromPush(){ if (!nextState) delete nextState; pushSomething = false;}
     //
 		virtual void Resize(int new_w,int new_h);
 		virtual void WindowActive();

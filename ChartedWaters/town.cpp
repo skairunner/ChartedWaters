@@ -54,6 +54,8 @@ void Town::addItems(const std::string& ID, const int& numberOf)
 
 int Town::buyItems(Ship& ship, const std::string& ID, int numberOf)
   {
+  if (numberOf == 0)
+    return 0;
   lastTransaction = 0;
   auto it = itemlist.begin();
 
@@ -132,4 +134,14 @@ void Town::setTaxRate(const double& newTaxRate)
 int Town::getFactionID()
   {
   return faction;
+  }
+
+int Town::getNumberOf(const std::string& itemID)
+  {
+  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
+    if (it->getID() == itemID)
+      {
+      return it->howMany();
+      }
+  return -1;
   }
