@@ -99,7 +99,7 @@ if (mouseClick)
   auto it = TheWorld.pathfinder->path(TheWorld.getPlayerShip().getPosition(), coord(mouseX, mouseY), 6);
   TheWorld.getPlayerShip().setPath(it);
   PathScreen->clear();
-  for (auto iterator = it.begin(); iterator < it.end()-1; iterator++)
+  for (auto iterator = it.begin()+1; iterator < it.end(); iterator++)
     PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
   }
 if (pressedPeriod)
