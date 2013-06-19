@@ -22,7 +22,7 @@ string header() // The one that says ID ... name ... price ... numberof
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                      Price #");
+  returnval += string("Item name                  Bought at     Sell price #");
   return returnval;
   }
 
@@ -137,13 +137,13 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
   consoleLeft->print(1, line++, (string("Storage: ") + to_string((long double)refToShip.getTotalStorageUsed()) + string("/") +
                              to_string((long double)refToShip.getMaxStorage())).c_str());
   line++; // skip a line
-  auto list = refToShip.returnListOfItems();
+  inventory = refToShip.returnListOfItems();
   /// 
   consoleLeft->setDefaultForeground(TCODColor::yellow);
   consoleLeft->print(1, line++, header().c_str());
   consoleLeft->setDefaultForeground(TCODColor::white);
 
-  for (auto it = list.begin(); it < list.end(); it++)
+  for (auto it = inventory.begin(); it < inventory.end(); it++)
     {
     consoleLeft->print(1, line++, assembleOutput(*it).c_str());
     }
@@ -206,8 +206,14 @@ void State_Shop::RecoverFromPush()
 
 void State_Shop::Update()
   {
-  if (getPrompt && !promptResult.empty()) // If the player input something...
+  if (getPrompt  && startbuy) // If the player input something...
       {
+      if (promptResult.empty())
+      {
+      getPrompt = false;
+      startbuy = false;
+      goto exit;
+      }
       numberToTrade = 0;
       try {
         numberToTrade = stoi(promptResult);
@@ -285,11 +291,87 @@ void State_Shop::Update()
     calculatebuy = false;
     yesNo = false;
     }
+  else if (getPrompt && startsell)
+    {
+    if (promptResult.empty())
+      {
+      getPrompt = false;
+      startsell = false;
+      goto exit;
+      }
+    numberToTrade = 0;
+      try {
+        numberToTrade = stoi(promptResult);
+        string itemName = inventory.at(selector-6).ItemName;
+        itemIDToTrade = inventory.at(selector-6).itemID;
+        if (numberToTrade < 0)
+          {
+          numberToTrade = stoi(inventory.at(selector-6).numberOfItems);
+          }
+
+        int total = numberToTrade * refToTown.getPriceOf(itemIDToTrade) * (double)(1 - refToTown.getTaxRate());
+        
+        string print = string("Really sell ") + to_string((long double)numberToTrade) + string(" ") + itemName + string(" for ") + to_string((long double)total) + string(" ducats?");
+        nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
+        pushSomething = true;
+
+        promptResult.clear();
+        
+        getPrompt = false;
+        calculatesell = true;
+        startsell = false;
+        }
+      catch (invalid_argument e)
+        {
+        cout << "<debug> Invalid argument: " << e.what() << endl;
+        startbuy = false;
+        getPrompt = false;
+        }
+    }
   else if (startsell)
     {
-
-    startsell = false;
+    if (selector >= 6 && selector-6 < inventory.size()) 
+      {
+      promptResult.clear();
+      nextState = new state_StringIn(32, promptResult, string("Sell how many? (-1 is 'all')"));
+      pushSomething = true;
+      getPrompt = true;
+      }
+    else startsell = false;
     }
+  else if (calculatesell)
+    {
+    if (yesNo) // if said yes
+      {
+      int errors = refToTown.sellItems(refToShip, itemIDToTrade, numberToTrade);
+      string print;
+      switch (errors)
+        {
+      case twSUCCESS:
+        print = string("Successfully sold ") + to_string((long double)numberToTrade) + string(" ") + goods.at(selector-6).ItemName + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
+        nextState = new State_Prompt(print.size()+4, 4, print, throwawayBool);
+        pushSomething = true;
+        redrawLeft();
+        redrawRight();
+        break;
+      case twNOT_ENOUGH_ITEMS:
+        print = string("There aren't that many items to sell.");
+        nextState = new State_Prompt(print.size()+4, 4, print, throwawayBool);
+        pushSomething = true;
+        break;
+      case 0:
+        break;
+      default:
+        cout << "How did you get here? o_O Error is: " << errors << endl;
+        break;
+        }
+      }
+
+    calculatesell = false;
+    yesNo = false;
+    }
+
+  exit:;
   }
 
 

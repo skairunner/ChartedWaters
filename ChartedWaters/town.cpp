@@ -105,7 +105,8 @@ int Town::getPriceOf(const std::string& ID)
 int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)
   {
   lastTransaction = 0;
-
+  if (numberOf == 0)
+    return 0;
   if (numberOf < 0)
     numberOf = ship.getNumberOfItems(ID);
   unitPurchasePriceOfSell = ship.getPurchasePriceOf(ID);

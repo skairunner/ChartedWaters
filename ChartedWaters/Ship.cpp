@@ -65,7 +65,7 @@ vector<LedgerItemTuple> Ship::returnListOfItems()
   LedgerItemTuple buffer;
   for (auto it = itemList.begin(); it < itemList.end(); it++)
     {
-//    buffer.itemID = to_string((long double)it->getID());
+    buffer.itemID = it->getID();
     buffer.ItemName = it->getName();
     buffer.averagePurchasePrice = to_string((long double)it->getAveragePrice());
     buffer.numberOfItems = to_string((long double)it->howMany());

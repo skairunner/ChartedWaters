@@ -41,6 +41,7 @@ class State_Shop : public GameState
     Town& refToTown;
     Ship& refToShip;
     std::vector<EconomyItemTuple> goods;
+    std::vector<LedgerItemTuple> inventory;
     void redrawLeft();
     void redrawRight();
     void invertLine(const int& line, TCODConsole* console);

@@ -16,6 +16,12 @@ struct EconomyItemTuple
 
 class Town
   {
+  private:
+    std::vector<EconomyItem> itemlist;
+    std::string TownName;
+    double taxRate;
+    int faction;
+
   public:
     Town();
     Town(const std::string& newName, const double& tax, const int& ffaction = 0);
@@ -36,9 +42,5 @@ class Town
     int lastTransaction;
     int unitPurchasePriceOfSell;
 
-  private:
-    std::vector<EconomyItem> itemlist;
-    std::string TownName;
-    double taxRate;
-    int faction;
+  
   };

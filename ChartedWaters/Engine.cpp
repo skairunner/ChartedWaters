@@ -121,7 +121,7 @@ TCODConsole::blit(mapscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 1.0f);
 TCODConsole::blit(cityscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 coord playerpos = TheWorld.getPlayerShip().getPosition();
-TCODConsole::blit(AccessibleScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
+//TCODConsole::blit(AccessibleScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(PathScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(PlayerShip, 0, 0, 0, 0, root, playerpos.first, playerpos.second, 1.0f, 0.0f);
 }

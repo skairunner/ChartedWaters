@@ -45,7 +45,10 @@ void state_StringIn::KeyUp(const int &key,const int &unicode){}
 void state_StringIn::KeyDown(const int &key,const int &unicode)
   {
   if (key == SDLK_BACKSPACE)
-    buffer.pop_back();
+    {
+    if (buffer.size() != 0)
+      buffer.pop_back();
+    }
   else if (key == SDLK_RETURN)
     popMe = true;
   else if (key == SDLK_ESCAPE)

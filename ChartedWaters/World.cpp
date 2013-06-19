@@ -1,9 +1,13 @@
 #include "World.h"
 #include <cstdlib>
+#include <time.h>
 
 World::World(const int& w, const int& h)
-  : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true)
+  : width(w), height(h), WorldMap(w, h), nameFactory(312515), first(true)
   {
+  srand(time(0));
+  nameFactory = NameFactory(rand());
+
   regen();
   pathfinder = new Pather(WorldMap);
 
