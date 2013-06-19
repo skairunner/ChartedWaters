@@ -27,11 +27,19 @@ vector<EconomyItemTuple> Town::returnListOfItems()
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
     EconomyItemTuple buffer;
+    int temporary;
+    double secondtemp; // To change the raw floats into 'clean', 1-decimal point numbers.
     buffer.itemID = it->getID();
     buffer.ItemName = it->getName();
     buffer.numberOfItems = to_string((long double)it->howMany());
-    buffer.BuyPrice = string("~") + to_string((long double)(it->getPrice() * (1 + taxRate)));
-    buffer.SellPrice = string("~") + to_string((long double)(it->getPrice() * (1 + taxRate)));
+    temporary = (it->getPrice()) * (1 + taxRate) * 10;
+    secondtemp = temporary / 10.0f;
+    buffer.BuyPrice = string("~") + to_string((long double)secondtemp);
+    temporary = it->getPrice() * (1 - taxRate) * 10;
+    secondtemp = temporary / 10.0f;
+    buffer.SellPrice = string("~") + to_string((long double)secondtemp);
+    int percentage = (double)it->getPrice()/it->getBasePrice() * 100;
+    buffer.percentageOfBasePrice = to_string((long double)percentage) + string("%%");
 
     returnVal.push_back(buffer);
     }
@@ -49,7 +57,7 @@ void Town::addItems(const std::string& ID, const int& numberOf)
       return;
       }
   // since the item doesn't exist
-  itemlist.push_back(EconomyItem(ID, numberOf, numberOf));
+  itemlist.push_back(EconomyItem(ID, numberOf, numberOf * 1.1f));
   }
 
 int Town::buyItems(Ship& ship, const std::string& ID, int numberOf)

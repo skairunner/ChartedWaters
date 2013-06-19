@@ -12,6 +12,7 @@ struct EconomyItemTuple
   std::string numberOfItems;
   std::string BuyPrice;
   std::string SellPrice;
+  std::string percentageOfBasePrice;
   };
 
 class Town

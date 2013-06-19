@@ -20,6 +20,9 @@ class State_Shop : public GameState
     virtual void RecoverFromPush();
 
   private:
+    std::string assembleOutput(const LedgerItemTuple& tuple);
+    std::string assembleOutput(const EconomyItemTuple& tuple);
+
     TCODConsole* consoleLeft; // ship
     TCODConsole* consoleRight; // shop
     bool whichConsole; // false: left, true: right

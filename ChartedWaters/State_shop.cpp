@@ -22,7 +22,7 @@ string header() // The one that says ID ... name ... price ... numberof
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                  Bought at     Sell price #");
+  returnval += string("Item name                  Bought at  Sells at  #");
   return returnval;
   }
 
@@ -31,11 +31,11 @@ string shopHeader()
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                      Buy    Sell    #");
+  returnval += string("Item name                      Buy     Sell     #     %");
   return returnval;
   }
 
-string assembleOutput(const LedgerItemTuple& tuple)
+string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
   {
   /// i: item id, _: space, n:name, p: purchase price, m: how many
   /// ID
@@ -58,14 +58,25 @@ string assembleOutput(const LedgerItemTuple& tuple)
   if (tuple.averagePurchasePrice.size() < 5)
     for (int counter = 0; counter < 5 - tuple.averagePurchasePrice.size(); counter++)
       returnval += blank;
+
+  returnval += string("   ");
+
+  string sellprice = to_string((long double)refToTown.getPriceOf(itemIDToTrade) * (1.0f - refToTown.getTaxRate()));
+
+  returnval += string("~") + sellprice;
   
-  returnval += string(" x");
+  if (sellprice.size() < 6)
+    for (int counter = 0; counter < 6 - abs(log(refToTown.getPriceOf(itemIDToTrade) * (1.0f - refToTown.getTaxRate()))); counter++)
+      returnval += blank;
+
+  returnval += string("   x");
   returnval += tuple.numberOfItems;
+
 
   return returnval;
   }
 
-string assembleOutput(const EconomyItemTuple& tuple)
+string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   {
   /// i: item id, _: space, n:name, p: purchase price, m: how many
   /// ID
@@ -81,25 +92,32 @@ string assembleOutput(const EconomyItemTuple& tuple)
 
   returnval += blank;
 
-  if (tuple.BuyPrice.size() > 7)
+  if (tuple.BuyPrice.size() > 8)
     returnval += string("xxxxxx");
-  else returnval += tuple.BuyPrice.substr(0, 7);
+  else returnval += tuple.BuyPrice.substr(0, 8);
 
-  if (tuple.BuyPrice.size() < 7)
-    for (int counter = 0; counter < 7 - tuple.BuyPrice.size(); counter++)
+  if (tuple.BuyPrice.size() < 8)
+    for (int counter = 0; counter < 8 - tuple.BuyPrice.size(); counter++)
       returnval += blank;
 
-  if (tuple.SellPrice.size() > 7)
+  if (tuple.SellPrice.size() > 8)
     returnval += string("xxxxxx");
-  else returnval += tuple.SellPrice.substr(0, 7);
+  else returnval += tuple.SellPrice.substr(0, 8);
 
-  if (tuple.SellPrice.size() < 7)
-    for (int counter = 0; counter < 7 - tuple.SellPrice.size(); counter++)
+  if (tuple.SellPrice.size() < 8)
+    for (int counter = 0; counter < 8 - tuple.SellPrice.size(); counter++)
       returnval += blank;
+
+  
   
   returnval += string(" x");
   returnval += tuple.numberOfItems;
+  if (tuple.numberOfItems.size() < 4)
+    for (int counter = 0; counter < 4 - tuple.numberOfItems.size(); counter++)
+      returnval += blank;
 
+  returnval += blank;
+  returnval += tuple.percentageOfBasePrice;
   return returnval;
   }
 
@@ -373,8 +391,6 @@ void State_Shop::Update()
 
   exit:;
   }
-
-
 
 void State_Shop::KeyDown(const int &key,const int &unicode)
   {
