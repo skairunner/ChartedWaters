@@ -107,7 +107,8 @@ int Town::getPriceOf(const std::string& ID)
     if (it->getID() == ID)
       return it->getPrice();
     }
-  return -1; // since it does not exist.
+  // If it doesn't exist, return the price ...
+  return -1;
   }
 
 int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)

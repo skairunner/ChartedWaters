@@ -19,7 +19,8 @@ class World
     void regen();
     Ship& getPlayerShip();
     Pather *pathfinder;
-    void queryShop(Ship& ship);
+    bool queryShop(Ship& ship);
+    Town& getTown(Ship& ship);
     Town& getFirstTown();
 
   private:

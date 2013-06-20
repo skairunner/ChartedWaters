@@ -42,12 +42,18 @@ Ship& World::getPlayerShip()
   return PlayerShip;
   }
 
-void World::queryShop(Ship& ship)
+bool World::queryShop(Ship& ship)
   {
   auto it = cityList.find(ship.getPosition());
   if (it == cityList.end())
-    return;
-  ////////////////// add interface
+    return false;
+  else return true;
+  }
+
+Town& World::getTown(Ship& ship)
+  {
+  auto it = cityList.find(ship.getPosition());
+  return it->second;
   }
 
 Town& World::getFirstTown()

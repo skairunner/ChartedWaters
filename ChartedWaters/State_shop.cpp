@@ -178,7 +178,7 @@ void State_Shop::redrawRight()
   int line = 1;
   consoleRight->print(1, line++, (string("The city of ") + refToTown.getName()).c_str());
 
-  line++;
+  consoleRight->print(1, line++, (string("Tax rate is ") + to_string((long double)refToTown.getTaxRate() * 100) + string("%%")).c_str());
   line++;
   line++; // skip a line
   goods = refToTown.returnListOfItems();
@@ -395,7 +395,16 @@ void State_Shop::Update()
 void State_Shop::KeyDown(const int &key,const int &unicode)
   {
   if (key == SDLK_ESCAPE)
-    popMe = true;
+    {
+    if (refToShip.getMaxStorage() >= refToShip.getTotalStorageUsed())
+      popMe = true;
+    else // too many items!
+      {
+      string message("You have too many items.");
+      nextState = new State_Prompt(message.size()+4, 4, message, throwawayBool);
+      pushSomething = true;
+      }
+    }
   else if (key == SDLK_LEFT && whichConsole) // If the right side is selected, the left key swaps to the left.
     {
     whichConsole = false;

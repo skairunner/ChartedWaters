@@ -151,7 +151,7 @@ void Engine::KeyDown(const int &key,const int &unicode)
 {
 if (key == SDLK_RIGHT)
   ;//redo = true;
-else if (key == SDLK_s)
+else if (unicode == 'S')
   {
   newState = new State_ShipStatus(TheWorld.getPlayerShip());
   PushState(newState);
@@ -168,6 +168,15 @@ else if (unicode == 'T') // Test shop
   {
   newState = new State_Shop(TheWorld.getFirstTown(), TheWorld.getPlayerShip());
   PushState(newState);
+  }
+else if (unicode == 's') // Check for shop.
+  {
+ // auto pos = TheWorld.getPlayerShip().getPosition();
+  if (TheWorld.queryShop(TheWorld.getPlayerShip()));
+    {
+    newState = new State_Shop(TheWorld.getTown(TheWorld.getPlayerShip()), TheWorld.getPlayerShip());
+    PushState(newState);
+    }
   }
 }
 
