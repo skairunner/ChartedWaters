@@ -9,14 +9,22 @@ Engine CursesEngine;
 
 int mouseX, mouseY;
 
-World TheWorld(128,64);
+const int width = 256;
+const int height = 256;
+
+const int screenwidth = 128;
+const int screenheight = 64;
+int focusX = screenwidth/2;
+int focusY = screenheight/2;
+
+World TheWorld(width, height);
 TCODConsole* cityscreen;
 TCODConsole* mapscreen;
 TCODConsole* ZOCscreen;
 TCODConsole* tooltip;
-TCODConsole* PlayerShip;
 TCODConsole* PathScreen;
 TCODConsole* AccessibleScreen;
+TCODConsole* ShipScreen;
 
 bool redo = true;
 typedef pair<int, int> coord;
@@ -36,32 +44,32 @@ TheWorld.getPlayerShip().addItem(Item("food_friedchicken"), 50, ItemDict.findBas
 TheWorld.getPlayerShip().addItem(Item("food_fruityloops"), 50, ItemDict.findBasePrice(string("food_fruityloops")));
 TheWorld.getPlayerShip().addItem(Item("luxury_carbonnano"), 7, 7391);
 
-PlayerShip = new TCODConsole(1, 1);
-auto shippos = TheWorld.getPlayerShip().getPosition();
-PlayerShip->putCharEx(0, 0, TheWorld.getPlayerShip().character, TCODColor::red, TCODColor::black);
+ShipScreen = new TCODConsole(width, height);
 
-PathScreen = new TCODConsole(128, 64);
+
+PathScreen = new TCODConsole(width, height);
 PathScreen->clear();
 PathScreen->setKeyColor(TCODColor::magenta);
 PathScreen->setDefaultBackground(TCODColor::magenta);
 
-mapscreen = new TCODConsole(128, 64);
+mapscreen = new TCODConsole(width, height);
 mapscreen->clear();
 mapscreen->setKeyColor(TCODColor::magenta);
 mapscreen->setDefaultBackground(TCODColor::magenta);
 
-cityscreen = new TCODConsole(128, 64);
+cityscreen = new TCODConsole(width, height);
 cityscreen->clear();
 cityscreen->setKeyColor(TCODColor::magenta);
 cityscreen->setDefaultBackground(TCODColor::magenta);
 
-AccessibleScreen = new TCODConsole(128,64);
+AccessibleScreen = new TCODConsole(width, height);
 
 Renderer::getTerrainBitmap(mapscreen, TheWorld);
 Renderer::getCityBitmap(cityscreen, TheWorld);
 Renderer::getAccessBitmap(AccessibleScreen, TheWorld.pathfinder->map);
+Renderer::getShipBitmap(ShipScreen, TheWorld);
 
-ZOCscreen = new TCODConsole(128, 64);
+ZOCscreen = new TCODConsole(width, height);
 tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld.getPlayerShip();
@@ -106,6 +114,7 @@ if (pressedPeriod)
   {
   TheWorld.getPlayerShip().updatePos();
   pressedPeriod = false;
+  Renderer::getShipBitmap(ShipScreen, TheWorld);
   }
 
 // Write the tooltip!
@@ -116,14 +125,12 @@ if (pressedPeriod)
 void Engine::Render(TCODConsole *root)
 {
 root->setKeyColor(TCODColor::magenta);
-TCODConsole::blit(mapscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 1.0f);
-//TCODConsole::blit(ZOCscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
-TCODConsole::blit(cityscreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.5f);
+TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
+TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
-coord playerpos = TheWorld.getPlayerShip().getPosition();
-//TCODConsole::blit(AccessibleScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
-TCODConsole::blit(PathScreen, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
-TCODConsole::blit(PlayerShip, 0, 0, 0, 0, root, playerpos.first, playerpos.second, 1.0f, 0.0f);
+
+TCODConsole::blit(PathScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
+TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 }
 
 void Engine::EngineEnd()
@@ -147,10 +154,18 @@ void Engine::KeyUp(const int &key,const int &unicode)
 {
 }
 
+const int scrollspeed = 2;
+
 void Engine::KeyDown(const int &key,const int &unicode)
 {
 if (key == SDLK_RIGHT)
-  ;//redo = true;
+  focusX = focusX + scrollspeed <= width - screenwidth/2 ? focusX + scrollspeed : width - screenwidth /2;
+else if (key == SDLK_LEFT)
+  focusX = focusX - scrollspeed >= screenwidth /2 ? focusX - scrollspeed : screenwidth / 2;
+else if (key == SDLK_UP)
+  focusY = focusY - scrollspeed >= screenheight/2 ? focusY - scrollspeed : screenheight/2;
+else if (key == SDLK_DOWN)
+  focusY = focusY + scrollspeed <= height - screenheight/2 ? focusY + scrollspeed : height - screenheight /2;
 else if (unicode == 'S')
   {
   newState = new State_ShipStatus(TheWorld.getPlayerShip());
@@ -182,8 +197,8 @@ else if (unicode == 's') // Check for shop.
 
 void Engine::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)
 {
-mouseX = iX / 12;
-mouseY = iY / 12;
+mouseX = focusX + (iX / 12 - screenwidth/2);
+mouseY = focusY + (iY / 12 - screenheight/2);
 }
 
 void Engine::MouseButtonUp(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)

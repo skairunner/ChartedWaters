@@ -42,6 +42,7 @@ class Renderer // Accesses World and returns bitmaps.
     static TCODColor findFactionColor(const int& faction);
     static std::string findCityName(const coord& coords, World& world);
     static void getAccessBitmap(TCODConsole* accessmap, PathMap& pm);
+    static void getShipBitmap(TCODConsole* shipmap, World& world);
   private:
 
   };

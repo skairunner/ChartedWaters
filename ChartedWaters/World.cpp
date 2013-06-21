@@ -15,7 +15,7 @@ World::World(const int& w, const int& h)
   PlayerShip.setName(nameFactory.getName());
   randomBoat rb(coord(w, h));
   rb.setRandomPosUntilSea(WorldMap);
-  PlayerShip.setPosition(rb.currentPosition);
+  PlayerShip.setPosition(coord(0,0));
   }
 
 World::~World()
@@ -144,10 +144,24 @@ void Renderer::getAccessBitmap(TCODConsole* accessmap, PathMap& pm)
       }
   }
 
+void Renderer::getShipBitmap(TCODConsole* shipmap, World& world)
+  {
+  shipmap->clear();
+  for (auto it = world.shipList.begin(); it < world.shipList.end(); it++)
+    {
+    auto pos = it->getPosition();
+    shipmap->putCharEx(pos.first, pos.second, it->character, findFactionColor(it->faction), TCODColor::black);
+    }
+  Ship& ship = world.getPlayerShip();
+  auto pos = ship.getPosition();
+  shipmap->putCharEx(pos.first, pos.second, ship.character, findFactionColor(1), TCODColor::black);
+  }
+
 TCODColor Renderer::findFactionColor(const int& faction)
   {
   switch(faction) // Choose the city color
     {
+  case 0: return TCODColor::gold;break;
   case 1: return TCODColor::red; break;
   case 2: return TCODColor::sky; break;
   case 3: return TCODColor::orange; break;

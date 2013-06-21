@@ -31,7 +31,7 @@ string shopHeader()
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                      Buy     Sell     #     %");
+  returnval += string("Item name                      Buy     Sell      #     %");
   return returnval;
   }
 
@@ -99,6 +99,8 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   if (tuple.BuyPrice.size() < 8)
     for (int counter = 0; counter < 8 - tuple.BuyPrice.size(); counter++)
       returnval += blank;
+
+  returnval += blank;
 
   if (tuple.SellPrice.size() > 8)
     returnval += string("xxxxxx");

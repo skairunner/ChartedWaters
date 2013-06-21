@@ -145,7 +145,7 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
   neighbors.clear();
   while (openset.size() != 0)
     {
-    cout << "e";
+   // cout << "e";
     node current = findLowestF(openset);
     // Push current onto closed, and pop current from open.
     closedset[current.position] = current;

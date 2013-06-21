@@ -36,6 +36,7 @@ class Ship
     int character; // default 127, a triangle
     int waveResistance;
     std::vector<std::pair<int,int>> path;
+    int faction; //default 0
   private:
     int speed; // Tiles per day. Default 1.
     
