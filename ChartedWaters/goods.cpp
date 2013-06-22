@@ -78,12 +78,16 @@ void JSONToItem::slurpItems(const std::string& filename, ItemDictionary& dict)
   while (!root[counter].isNull())
     {
     Json::Value item = root[counter];
-    
-    string ID = item["ID"].asString();
-    dict.ItemNames[ID] = item["name"].asString();
-    dict.BasePrice[ID] = item["base price"].asInt();
+    Item buffer;
+    buffer.ID = item["ID"].asString();
+    buffer.name = item["name"].asString();
+    buffer.basePrice = item["base price"].asInt();
     if (!item["desc"].isNull())
-      dict.ItemDesc[ID] = item["dest"].asString();
+      buffer.desc = item["desc"].asString();
+    buffer.type = item["type"].asString();
+    buffer.category = item["category"].asString();
+    dict.ItemList[buffer.ID] = buffer;
+ 
     counter++;
     }
   }
@@ -139,28 +143,30 @@ string JSONToItem::slurp(const string& filename)
 
 ItemDictionary::ItemDictionary()
   {
-  categories.push_back(string("Food"));
-  categories.push_back(string("Raw materials"));
-  categories.push_back(string("Other"));
-  categories.push_back(string("Luxury items"));
-
+  vector<string> types;
   types.push_back(string("Alcohol"));
   types.push_back(string("Foodstuffs"));
   types.push_back(string("Seasonings"));
   types.push_back(string("Livestock"));
   types.push_back(string("Luxury food"));
+  categories[string("Food")] = types;
+  types.clear();
 
   types.push_back(string("Textiles"));
   types.push_back(string("Fabric"));
   types.push_back(string("Dyes"));
   types.push_back(string("Ores"));
   types.push_back(string("Industrial goods"));
+  categories[string("Raw materials")] = types;
+  types.clear();
 
   types.push_back(string("Medicine"));
   types.push_back(string("Sundries"));
   types.push_back(string("Weapons"));
   types.push_back(string("Firearms"));
   types.push_back(string("Crafts"));
+  categories[string("Other")] = types;
+  types.clear();
 
   types.push_back(string("Artwork"));
   types.push_back(string("Spices"));
@@ -168,36 +174,49 @@ ItemDictionary::ItemDictionary()
   types.push_back(string("Fragrances"));
   types.push_back(string("Jewellery"));
   types.push_back(string("Precious stones"));
+  categories[string("Luxury items")] = types;
 
-  BasePrice[string("null")] = 0;
-  ItemNames[string("null")] = string("invalid item");
-  DecayRates[string("null")] = pair<double, double>(0, 0);
-  ItemDesc[string("null")] = string("No description.");
+  Item buffer;
+  buffer.ID = string("null");
+  buffer.basePrice = 0;
+  buffer.decayRateNegative = buffer.decayRatePositive = 0;
+  buffer.desc = string("No description.");
+  buffer.name = string("invalid item");
+  ItemList[string("null")] = buffer;
   }
 
 string ItemDictionary::findItemName(const std::string& ID)
   {
-  auto it = ItemNames.find(ID);
-  if (it == ItemNames.end())
-    return ItemNames[string("null")];
+  auto it = ItemList.find(ID);
+  if (it == ItemList.end())
+    return ItemList[string("null")].name;
   else
-    return it->second;
+    return it->second.name;
   }
 
 int ItemDictionary::findBasePrice(const std::string& ID)
   {
-  auto it = BasePrice.find(ID);
-  if (it == BasePrice.end())
-    return BasePrice[string("null")];
+  auto it = ItemList.find(ID);
+  if (it == ItemList.end())
+    return ItemList[string("null")].basePrice;
   else
-    return it->second;
+    return it->second.basePrice;
   }
 
 pair<double, double> ItemDictionary::findDecayRates(const std::string& ID)
   {
-  auto it = DecayRates.find(ID);
-  if (it == DecayRates.end())
-    return DecayRates[string("null")];
+  auto it = ItemList.find(ID);
+  if (it == ItemList.end())
+    return pair<double, double>(ItemList[string("null")].decayRateNegative, ItemList[string("null")].decayRatePositive);
+  else
+    return pair<double,double>(it->second.decayRateNegative, it->second.decayRatePositive);
+  }
+
+Item& ItemDictionary::getItemTemplate(const string& ID)
+  {
+  auto it = ItemList.find(ID);
+  if (it == ItemList.end())
+    return ItemList[string("null")];
   else
     return it->second;
   }
@@ -209,50 +228,39 @@ pair<double, double> ItemDictionary::findDecayRates(const std::string& ID)
 ///////////////////////
 
 Item::Item()
-  : itemName(string("Null")), basePrice(0), decayRatePositive(0), decayRateNegative(0)
+  : name(string("Null")), basePrice(0), decayRatePositive(0), decayRateNegative(0)
   {
+  }
+
+Item::Item(const Item& item)
+  :ID(item.ID),name(item.name), desc(item.desc), basePrice(item.basePrice)
+  {
+
   }
 
 Item::Item(const std::string& newID)
   :ID(newID)
   {
-  itemName = ItemDict.findItemName(newID);
-  basePrice = ItemDict.findBasePrice(newID);
-  pair<double, double> buffer = ItemDict.findDecayRates(newID);
-  decayRatePositive = buffer.first;
-  decayRateNegative = buffer.second;
+  auto item = ItemDict.getItemTemplate(newID);
+  name = item.name;
+  desc = item.desc;
+  basePrice = item.basePrice;
   }
 
 
 bool Item::operator==(const Item& right) const
   {
-  if (right.getID() == ID)
+  if (right.ID == ID)
     return true;
   else return false;
   }
 
 bool Item::operator<(const Item& right) const
   {
-  if (itemName < right.getName())
+  if (name < right.name)
     return true;
   else return false;
   }
-
-std::string Item::getID() const
-  {
-  return ID;
-  }
-
-string Item::getName() const
-  {
-  return itemName;
-  }
-
-double Item::getBasePrice() const
-  {
-  return basePrice;
-  }
-
 
 
 ///////////////////////

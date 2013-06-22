@@ -8,6 +8,7 @@
 enum ItemIDs {IID_NULL = 0, IID_FRIED_CHICKEN, IID_COOKED_LLAMA_CHOPS, IID_CHICKEN_CHEESE};
 
 class ItemDictionary;
+class Item;
 
 class JSONToItem
   {
@@ -31,18 +32,12 @@ class ItemDictionary
     int findBasePrice(const std::string& ID);
     std::pair<double, double> findDecayRates(const std::string& ID);
     std::string findItemDesc(const std::string& ID);
-  //  std::string* findItemCategory(const std::string& ID);
-  //  std::string* findItemType(const std::string& ID);
+    Item& getItemTemplate(const std::string& itemID);
 
   private:
-    std::vector<std::string> categories;
-    std::vector<std::string> types;
+    std::map<std::string, Item> ItemList;
+    std::map<std::string, std::vector<std::string>> categories;
 
-    std::map<std::string, std::string> ItemNames;
-    std::map<std::string, int> BasePrice;
-    std::map<std::string, std::string> ItemDesc;
-    std::map<std::string, std::pair<double, double>> DecayRates; // Implemented per item type, not per item.
-   // std::map<std::string, std::pair<std::string*,std::string*>> ItemCatAndType; // All category and type vars in Item reference this.
   };
 
 extern ItemDictionary ItemDict;
@@ -52,22 +47,18 @@ class Item
   {
   public:
     Item();
+    Item(const Item& item);
     //Item(const int& newID);
     Item(const std::string& newID);
     bool operator==(const Item& right) const; // An economy item is identical to an Item if the IDs are the same.
     bool operator<(const Item& right) const; // This one sorts by alphabetical order
-    std::string getName() const;
-    double getBasePrice() const;
-    std::string getID() const;
 
-  protected:
-    //int ID;
     std::string ID;
-    std::string itemName;
-
-    //std::string* category;
-    //std::string* type;
-
+    std::string name;
+    std::string desc;
+    std::string category;
+    std::string type;
+   
     int basePrice;
     double decayRatePositive; // When the demand > supply
     double decayRateNegative; // when the demand < supply.

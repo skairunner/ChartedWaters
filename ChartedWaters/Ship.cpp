@@ -54,7 +54,7 @@ int Ship::getMoney()
 int Ship::getNumberOfItems(const std::string& ID)
   {
   for (auto it = itemList.begin(); it < itemList.end(); it++)
-    if (ID == it->getID())
+    if (ID == it->ID)
       return it->howMany();
   return 0; // if it's not in the list.
   }
@@ -65,8 +65,8 @@ vector<LedgerItemTuple> Ship::returnListOfItems()
   LedgerItemTuple buffer;
   for (auto it = itemList.begin(); it < itemList.end(); it++)
     {
-    buffer.itemID = it->getID();
-    buffer.ItemName = it->getName();
+    buffer.itemID = it->ID;
+    buffer.ItemName = it->name;
     buffer.averagePurchasePrice = to_string((long double)it->getAveragePrice());
     buffer.numberOfItems = to_string((long double)it->howMany());
     returnVal.push_back(buffer);
@@ -81,7 +81,7 @@ bool Ship::removeItem(const std::string& ItemID, const int& numberOf)
   {
   auto it = itemList.begin();
   for (; it < itemList.end(); it++)
-    if (it->getID() == ItemID)
+    if (it->ID == ItemID)
       break;
   if (it == itemList.end())
     return false;
@@ -97,7 +97,7 @@ int Ship::getPurchasePriceOf(const std::string& ID)
   {
   auto it = itemList.begin();
   for (; it < itemList.end(); it++)
-    if (it->getID() == ID)
+    if (it->ID == ID)
       break;
   if (it == itemList.end())
     return false;
@@ -108,7 +108,7 @@ bool Ship::removeFromList(const std::string& itemID)
   {
   int counter = 0;
   for (; counter < itemList.size(); counter++)
-    if (itemID == itemList[counter].getID())
+    if (itemID == itemList[counter].ID)
       break;
   if (counter == itemList.size())
     return false;

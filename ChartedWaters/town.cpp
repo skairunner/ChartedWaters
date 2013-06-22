@@ -1,4 +1,5 @@
 #include "town.h"
+#pragma warning (disable : 4244)
 using namespace std;
 
 Town::Town()
@@ -29,8 +30,8 @@ vector<EconomyItemTuple> Town::returnListOfItems()
     EconomyItemTuple buffer;
     int temporary;
     double secondtemp; // To change the raw floats into 'clean', 1-decimal point numbers.
-    buffer.itemID = it->getID();
-    buffer.ItemName = it->getName();
+    buffer.itemID = it->ID;
+    buffer.ItemName = it->name;
     buffer.numberOfItems = to_string((long double)it->howMany());
     temporary = (it->getPrice()) * (1 + taxRate) * 10;
     secondtemp = temporary / 10.0f;
@@ -38,7 +39,7 @@ vector<EconomyItemTuple> Town::returnListOfItems()
     temporary = it->getPrice() * (1 - taxRate) * 10;
     secondtemp = temporary / 10.0f;
     buffer.SellPrice = string("~") + to_string((long double)secondtemp);
-    int percentage = (double)it->getPrice()/it->getBasePrice() * 100;
+    int percentage = (double)it->getPrice()/it->basePrice * 100;
     buffer.percentageOfBasePrice = to_string((long double)percentage) + string("%%");
 
     returnVal.push_back(buffer);
@@ -51,7 +52,7 @@ void Town::addItems(const std::string& ID, const int& numberOf)
   {
   auto it = itemlist.begin();
   for (; it < itemlist.end(); it++)
-    if (it->getID() == ID)
+    if (it->ID == ID)
       {
       it->addItem(numberOf);
       return;
@@ -69,7 +70,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf)
 
   // implicit else, as if will return.
   for (; it < itemlist.end(); it++)
-    if (it->getID() == ID)
+    if (it->ID == ID)
       {
   //    it->addItem(numberOf);
       break;
@@ -104,7 +105,7 @@ int Town::getPriceOf(const std::string& ID)
   {
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
-    if (it->getID() == ID)
+    if (it->ID == ID)
       return it->getPrice();
     }
   // If it doesn't exist, return the price ...
@@ -149,7 +150,7 @@ int Town::getFactionID()
 int Town::getNumberOf(const std::string& itemID)
   {
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
-    if (it->getID() == itemID)
+    if (it->ID == itemID)
       {
       return it->howMany();
       }
