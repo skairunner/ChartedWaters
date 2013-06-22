@@ -221,6 +221,20 @@ Item& ItemDictionary::getItemTemplate(const string& ID)
     return it->second;
   }
 
+void ItemDictionary::sortIntoLists()
+  {
+  // Clear existing.
+  itemsPerCategory.clear();
+  for (auto it = categories.begin(); it != categories.end(); it++) // Make buffers for each.
+    {
+    itemsPerCategory[it->first] = vector<string>();
+    }
+  for (auto it = ItemList.begin(); it != ItemList.end(); it++)
+    {
+    itemsPerCategory[it->second.category].push_back(it->second.ID);
+    }
+  }
+
 ///////////////////////
 //////////
 //////////  Item

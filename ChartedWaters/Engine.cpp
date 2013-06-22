@@ -31,6 +31,16 @@ typedef pair<int, int> coord;
 GameState* newState;
 bool mouseClick = false;
 bool pressedPeriod = false;
+bool lockedToShip = false;
+
+void lockToShip () // sets camera to ship.
+  {
+  auto pos = TheWorld.getPlayerShip().getPosition();
+  focusX = pos.first < screenwidth / 2 ? screenwidth/2 : pos.first; // Make sure it's within bounds.
+  focusY = pos.second < screenheight /2 ? screenheight /2 : pos.second;
+  focusX = focusX > width - screenwidth / 2 ? width - screenwidth /2 : focusX;
+  focusY = focusY > height - screenheight / 2 ? height - screenheight /2 : focusY;
+  }
 
 bool Engine::EngineInit()
 {
@@ -74,7 +84,7 @@ tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld.getPlayerShip();
 ship.addMoney(65536);
-
+lockToShip();
 
 	return true;
 }
@@ -82,6 +92,9 @@ void Engine::Update()
 {
 if (!newState)
   delete newState;
+
+if (lockedToShip)
+  lockToShip();
 
 if (redo)
   {
@@ -193,6 +206,8 @@ else if (unicode == 's') // Check for shop.
     PushState(newState);
     }
   }
+else if (unicode == 'Y')
+  lockedToShip = !lockedToShip;
 }
 
 void Engine::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)

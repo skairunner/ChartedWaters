@@ -5,7 +5,6 @@
 World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(312515), first(true)
   {
-  srand(time(0));
   nameFactory = NameFactory(rand());
 
   regen();
@@ -15,7 +14,7 @@ World::World(const int& w, const int& h)
   PlayerShip.setName(nameFactory.getName());
   randomBoat rb(coord(w, h));
   rb.setRandomPosUntilSea(WorldMap);
-  PlayerShip.setPosition(coord(0,0));
+  PlayerShip.setPosition(rb.currentPosition);
   }
 
 World::~World()
@@ -27,12 +26,13 @@ void World::regen()
   {
   cityList.clear();
   WorldMap.gen();
+  ItemMaps.SetSeed(rand());
 
   for (auto it = WorldMap.cities.begin(); it < WorldMap.cities.end(); it++)
     {
     cityList[*it] = Town(nameFactory.getName(), 0.05f, WorldMap.ref(it->first, it->second).isInZOC);
     }
-
+  populateCities();
   delete pathfinder;
   pathfinder = new Pather(WorldMap);
   }
@@ -72,6 +72,21 @@ Town& World::getFirstTown()
     first = false;
     }
   return cityList.begin()->second;
+  }
+
+void World::populateCities()
+  {
+  ///// Use z=1.5 for food, 3.5 for industrial, 5.5 for other, 7.5 for luxury;
+  const double zoom = 0.01;
+  for (auto it = cityList.begin(); it != cityList.end(); it++)
+    {
+    auto pos = it->first;
+    // First, Food.
+    double food = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 1.5);
+    food += 3; // bump into positive.
+    food = abs(food); // Remove any vestigal negatives.
+
+    }
   }
 
 /////

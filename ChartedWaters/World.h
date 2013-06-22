@@ -6,6 +6,7 @@
 #include <libtcod.hpp>
 #include "nameFactory.h"
 #include "A_star.h"
+#include "include/noise.h"
 
 class Renderer;
 
@@ -26,7 +27,11 @@ class World
   private:
     NameFactory nameFactory;
     WorldMapClass WorldMap;
+    void populateCities(); // With items.
     
+    noise::module::Perlin ItemMaps; 
+
+
     bool first;
     std::map<coord, Town> cityList;
     std::vector<Ship> shipList;

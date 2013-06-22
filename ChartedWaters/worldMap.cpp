@@ -1,6 +1,7 @@
 #include "worldMap.h"
 #include <stdlib.h>
 #include <time.h>
+#pragma warning(disable : 4244)
 
 using namespace std;
 
@@ -12,7 +13,6 @@ WorldMapClass::WorldMapClass(const int& width, const int& height)
     for (int xcounter = 0; xcounter < w; xcounter++)
       grid.push_back(maptile());
   null.isNull = true;
-  srand(time(0));
   }
 
 void WorldMapClass::gen()
