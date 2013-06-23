@@ -31,6 +31,7 @@ class Town
     int sellItems(Ship& ship, const std::string& ID, int numberOf);
     void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
+    void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.
 
     std::vector<EconomyItemTuple> returnListOfItems();
     int getPriceOf(const std::string& ID);
@@ -43,5 +44,5 @@ class Town
     int lastTransaction;
     int unitPurchasePriceOfSell;
 
-  
+    std::vector<std::string> spawnList;
   };

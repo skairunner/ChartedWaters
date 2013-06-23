@@ -7,6 +7,7 @@
 #include "nameFactory.h"
 #include "A_star.h"
 #include "include/noise.h"
+#include <random>
 
 class Renderer;
 
@@ -23,6 +24,9 @@ class World
     bool queryShop(Ship& ship);
     Town& getTown(Ship& ship);
     Town& getFirstTown();
+    int random(const int& min, const int& max);
+    std::map<coord, Town> cityList;
+    std::vector<Ship> shipList;
 
   private:
     NameFactory nameFactory;
@@ -30,11 +34,10 @@ class World
     void populateCities(); // With items.
     
     noise::module::Perlin ItemMaps; 
-
+    std::mt19937 gen;
 
     bool first;
-    std::map<coord, Town> cityList;
-    std::vector<Ship> shipList;
+
     Ship PlayerShip;
     int width, height;
   };

@@ -5,7 +5,7 @@
 
 
 
-enum ItemIDs {IID_NULL = 0, IID_FRIED_CHICKEN, IID_COOKED_LLAMA_CHOPS, IID_CHICKEN_CHEESE};
+//enum ItemIDs {IID_NULL = 0, IID_FRIED_CHICKEN, IID_COOKED_LLAMA_CHOPS, IID_CHICKEN_CHEESE};
 
 class ItemDictionary;
 class Item;
@@ -34,14 +34,13 @@ class ItemDictionary
     std::string findItemDesc(const std::string& ID);
     Item& getItemTemplate(const std::string& itemID);
     void sortIntoLists(); // Make a map of vector of item IDs.
-    std::vector<std::string> getItemsPerCategory(const std::string& category);
-    
+    std::vector<std::string>& getItemsPerCategory(const std::string& category);
 
   private:
     std::map<std::string, Item> ItemList;
     std::map<std::string, std::vector<std::string>> categories;
     std::map<std::string, std::vector<std::string>> itemsPerCategory;
-
+    bool sorted;
   };
 
 extern ItemDictionary ItemDict;

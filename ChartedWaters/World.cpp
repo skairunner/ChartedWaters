@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <time.h>
 
+
 World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(312515), first(true)
   {
@@ -27,13 +28,18 @@ void World::regen()
   cityList.clear();
   WorldMap.gen();
   ItemMaps.SetSeed(rand());
+  gen.seed(rand());
 
   for (auto it = WorldMap.cities.begin(); it < WorldMap.cities.end(); it++)
     {
     cityList[*it] = Town(nameFactory.getName(), 0.05f, WorldMap.ref(it->first, it->second).isInZOC);
     }
   populateCities();
-  delete pathfinder;
+  for (auto it = cityList.begin(); it != cityList.end(); it++)
+    it->second.spawnItems();
+
+  if (!pathfinder)
+    delete pathfinder;
   pathfinder = new Pather(WorldMap);
   }
 
@@ -74,18 +80,65 @@ Town& World::getFirstTown()
   return cityList.begin()->second;
   }
 
+int World::random(const int& min, const int& max)
+  {
+  std::uniform_int_distribution<> dist(min, max);
+  return  dist(gen);
+  }
+
 void World::populateCities()
   {
   ///// Use z=1.5 for food, 3.5 for industrial, 5.5 for other, 7.5 for luxury;
   const double zoom = 0.01;
+
+  auto foodlist = ItemDict.getItemsPerCategory(std::string("Food"));
+  auto otherlist = ItemDict.getItemsPerCategory(std::string("Other"));
+  auto industlist = ItemDict.getItemsPerCategory(std::string("Raw materials"));
+  auto luxurylist = ItemDict.getItemsPerCategory(std::string("Luxury"));
+
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     {
     auto pos = it->first;
     // First, Food.
     double food = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 1.5);
-    food += 3; // bump into positive.
-    food = abs(food); // Remove any vestigal negatives.
+    double indust = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 3.5);
+    double other = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 5.5);
+    double luxury = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 7.5);
 
+    food += 3; // bump into positive.
+    other += 3;
+    indust += 3;
+    luxury += 3;
+
+    food = (int)(2 * abs(food)); // Remove any vestigal negatives.
+    indust = (int)(2 * abs(indust));
+    other = (int)(2 * abs(other));
+    luxury = (int)(2 * abs(luxury));
+
+    while (food > 0)
+      {
+      food -= 1;
+      int number = random(0, foodlist.size()-1);
+      it->second.spawnList.push_back(foodlist.at(number));
+      }
+    while (indust > 0)
+      {
+      indust -= 1;
+      int number = random(0, industlist.size()-1);
+      it->second.spawnList.push_back(industlist.at(number));
+      }
+    while (other > 0)
+      {
+      other -= 1;
+      int number = random(0, otherlist.size()-1);
+      it->second.spawnList.push_back(otherlist.at(number));
+      }
+    while (luxury > 0)
+      {
+      luxury -= 1;
+      int number = random(0, luxurylist.size() -1);
+      it->second.spawnList.push_back(luxurylist.at(number));
+      }
     }
   }
 

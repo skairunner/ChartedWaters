@@ -156,3 +156,13 @@ int Town::getNumberOf(const std::string& itemID)
       }
   return -1;
   }
+
+void Town::spawnItems()
+  {
+  for (auto it = spawnList.begin(); it < spawnList.end(); it++)
+    {
+    if ((*it)[0] == 'l') // If it's a luxury item.
+      addItems(*it, 50);
+    else addItems(*it, 100);
+    }
+  }

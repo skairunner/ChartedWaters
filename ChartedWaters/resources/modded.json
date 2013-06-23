@@ -22,5 +22,13 @@
 		"name" : "Demonic Mark",
 		"base price" : 666,
 		"desc" : "6666666666666666666666"
+	},
+	{
+		"ID" : "rawmaterials_yarn",
+		"category" : "Raw materials",
+		"type" : "Textiles",
+		"name" : "Yarn",
+		"base price" : 23,
+		"desc" : "It's a nice piece of yarn! No idea why it takes up a whole crate of storage."
 	}
 ]

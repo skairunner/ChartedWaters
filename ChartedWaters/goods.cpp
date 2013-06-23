@@ -34,6 +34,8 @@ void JSONToItem::readItems(ItemDictionary& dict)
     cout << endl;
     counter++;
     }
+
+  dict.sortIntoLists();
   }
 
 void JSONToItem::readItems()
@@ -142,6 +144,7 @@ string JSONToItem::slurp(const string& filename)
 ///////////////////////
 
 ItemDictionary::ItemDictionary()
+  : sorted(false)
   {
   vector<string> types;
   types.push_back(string("Alcohol"));
@@ -233,6 +236,14 @@ void ItemDictionary::sortIntoLists()
     {
     itemsPerCategory[it->second.category].push_back(it->second.ID);
     }
+  sorted = true;
+  }
+
+vector<string>& ItemDictionary::getItemsPerCategory(const string& category)
+  {
+  if (!sorted)
+    sortIntoLists();
+  return itemsPerCategory.find(category)->second;
   }
 
 ///////////////////////

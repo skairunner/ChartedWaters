@@ -17,7 +17,7 @@ const int screenheight = 64;
 int focusX = screenwidth/2;
 int focusY = screenheight/2;
 
-World TheWorld(width, height);
+World* TheWorld;
 TCODConsole* cityscreen;
 TCODConsole* mapscreen;
 TCODConsole* ZOCscreen;
@@ -35,7 +35,7 @@ bool lockedToShip = false;
 
 void lockToShip () // sets camera to ship.
   {
-  auto pos = TheWorld.getPlayerShip().getPosition();
+  auto pos = TheWorld->getPlayerShip().getPosition();
   focusX = pos.first < screenwidth / 2 ? screenwidth/2 : pos.first; // Make sure it's within bounds.
   focusY = pos.second < screenheight /2 ? screenheight /2 : pos.second;
   focusX = focusX > width - screenwidth / 2 ? width - screenwidth /2 : focusX;
@@ -46,13 +46,14 @@ bool Engine::EngineInit()
 {
 JSONToItem jsonParser;
 jsonParser.readItems(ItemDict); // Read items into dictionary.
+TheWorld = new World(width, height);
 
-TheWorld.regen();
-TheWorld.regen();
+TheWorld->regen();
+TheWorld->regen();
 
-TheWorld.getPlayerShip().addItem(Item("food_friedchicken"), 50, ItemDict.findBasePrice(string("food_friedchicken")));
-TheWorld.getPlayerShip().addItem(Item("food_fruityloops"), 50, ItemDict.findBasePrice(string("food_fruityloops")));
-TheWorld.getPlayerShip().addItem(Item("luxury_carbonnano"), 7, 7391);
+TheWorld->getPlayerShip().addItem(Item("food_friedchicken"), 50, ItemDict.findBasePrice(string("food_friedchicken")));
+TheWorld->getPlayerShip().addItem(Item("food_fruityloops"), 50, ItemDict.findBasePrice(string("food_fruityloops")));
+TheWorld->getPlayerShip().addItem(Item("luxury_carbonnano"), 7, 7391);
 
 ShipScreen = new TCODConsole(width, height);
 
@@ -74,15 +75,15 @@ cityscreen->setDefaultBackground(TCODColor::magenta);
 
 AccessibleScreen = new TCODConsole(width, height);
 
-Renderer::getTerrainBitmap(mapscreen, TheWorld);
-Renderer::getCityBitmap(cityscreen, TheWorld);
-Renderer::getAccessBitmap(AccessibleScreen, TheWorld.pathfinder->map);
-Renderer::getShipBitmap(ShipScreen, TheWorld);
+Renderer::getTerrainBitmap(mapscreen, *TheWorld);
+Renderer::getCityBitmap(cityscreen, *TheWorld);
+Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
+Renderer::getShipBitmap(ShipScreen, *TheWorld);
 
 ZOCscreen = new TCODConsole(width, height);
 tooltip = new TCODConsole(30, 1);
 
-Ship& ship = TheWorld.getPlayerShip();
+Ship& ship = TheWorld->getPlayerShip();
 ship.addMoney(65536);
 lockToShip();
 
@@ -98,36 +99,36 @@ if (lockedToShip)
 
 if (redo)
   {
-  TheWorld.regen();
+  TheWorld->regen();
   ZOCscreen->clear();
   cityscreen->clear();
   mapscreen->clear();
   AccessibleScreen->clear();
   PathScreen->clear();
   redo = false;
-  Renderer::getTerrainBitmap(mapscreen, TheWorld);
-  Renderer::getCityBitmap(cityscreen, TheWorld);
-  Renderer::getAccessBitmap(AccessibleScreen, TheWorld.pathfinder->map);
+  Renderer::getTerrainBitmap(mapscreen, *TheWorld);
+  Renderer::getCityBitmap(cityscreen, *TheWorld);
+  Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
   }
 
-std::string name = Renderer::findCityName(coord(mouseX, mouseY), TheWorld); 
+std::string name = Renderer::findCityName(coord(mouseX, mouseY), *TheWorld); 
 tooltip->clear();
 tooltip->print(0, 0, name.c_str());
 
 if (mouseClick)
   {
   mouseClick = false;
-  auto it = TheWorld.pathfinder->path(TheWorld.getPlayerShip().getPosition(), coord(mouseX, mouseY), 6);
-  TheWorld.getPlayerShip().setPath(it);
+  auto it = TheWorld->pathfinder->path(TheWorld->getPlayerShip().getPosition(), coord(mouseX, mouseY), 6);
+  TheWorld->getPlayerShip().setPath(it);
   PathScreen->clear();
   for (auto iterator = it.begin()+1; iterator < it.end(); iterator++)
     PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
   }
 if (pressedPeriod)
   {
-  TheWorld.getPlayerShip().updatePos();
+  TheWorld->getPlayerShip().updatePos();
   pressedPeriod = false;
-  Renderer::getShipBitmap(ShipScreen, TheWorld);
+  Renderer::getShipBitmap(ShipScreen, *TheWorld);
   }
 
 // Write the tooltip!
@@ -179,35 +180,44 @@ else if (key == SDLK_UP)
   focusY = focusY - scrollspeed >= screenheight/2 ? focusY - scrollspeed : screenheight/2;
 else if (key == SDLK_DOWN)
   focusY = focusY + scrollspeed <= height - screenheight/2 ? focusY + scrollspeed : height - screenheight /2;
-else if (unicode == 'S')
-  {
-  newState = new State_ShipStatus(TheWorld.getPlayerShip());
-  PushState(newState);
-  }
-else if (unicode == '.')
-  {
-  pressedPeriod = true;
-  }
 else if (key == SDLK_RETURN)
+  TheWorld->queryShop(TheWorld->getPlayerShip());
+
+switch (unicode)
   {
-  TheWorld.queryShop(TheWorld.getPlayerShip());
-  }
-else if (unicode == 'T') // Test shop
-  {
-  newState = new State_Shop(TheWorld.getFirstTown(), TheWorld.getPlayerShip());
+case 'S':
+  newState = new State_ShipStatus(TheWorld->getPlayerShip());
   PushState(newState);
-  }
-else if (unicode == 's') // Check for shop.
-  {
- // auto pos = TheWorld.getPlayerShip().getPosition();
-  if (TheWorld.queryShop(TheWorld.getPlayerShip()));
+  break;
+
+case '.':
+  pressedPeriod = true;
+  break;
+
+case 'T':  // Test shop
+  newState = new State_Shop(TheWorld->getFirstTown(), TheWorld->getPlayerShip());
+  PushState(newState);
+  break;
+
+case 's': // Check for shop.
+  if (TheWorld->queryShop(TheWorld->getPlayerShip()));
     {
-    newState = new State_Shop(TheWorld.getTown(TheWorld.getPlayerShip()), TheWorld.getPlayerShip());
+    newState = new State_Shop(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
     PushState(newState);
     }
-  }
-else if (unicode == 'Y')
+    break;
+    
+case 'Y':
   lockedToShip = !lockedToShip;
+  break;
+
+case 'R': //Test button to spawn items in shops.
+  for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)
+    it->second.spawnItems();
+  break;
+
+default: break;
+  }
 }
 
 void Engine::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)
