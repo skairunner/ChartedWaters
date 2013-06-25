@@ -76,6 +76,9 @@ void State_ShipStatus::redrawList()
 
   for (auto it = list.begin(); it < list.end(); it++)
     {
+    if (line %2)
+      console->setDefaultForeground(TCODColor::lightestGreen);
+    else console->setDefaultForeground(TCODColor::lightestBlue);
     console->print(1, line++, assembleOutput(*it).c_str());
     }
 

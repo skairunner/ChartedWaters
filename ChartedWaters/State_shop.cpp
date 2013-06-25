@@ -31,7 +31,7 @@ string shopHeader()
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                      Buy     Sell      #     %");
+  returnval += string("Item name                      Buy     Sell    #     %");
   return returnval;
   }
 
@@ -92,22 +92,22 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
 
   returnval += blank;
 
-  if (tuple.BuyPrice.size() > 8)
-    returnval += string("xxxxxx");
-  else returnval += tuple.BuyPrice.substr(0, 8);
+  if (tuple.BuyPrice.size() > 7)
+    returnval += string("xxxxxxx");
+  else returnval += tuple.BuyPrice.substr(0, 7);
 
-  if (tuple.BuyPrice.size() < 8)
-    for (int counter = 0; counter < 8 - tuple.BuyPrice.size(); counter++)
+  if (tuple.BuyPrice.size() < 7)
+    for (int counter = 0; counter < 7 - tuple.BuyPrice.size(); counter++)
       returnval += blank;
 
   returnval += blank;
 
-  if (tuple.SellPrice.size() > 8)
-    returnval += string("xxxxxx");
-  else returnval += tuple.SellPrice.substr(0, 8);
+  if (tuple.SellPrice.size() > 7)
+    returnval += string("xxxxxxx");
+  else returnval += tuple.SellPrice.substr(0, 7);
 
-  if (tuple.SellPrice.size() < 8)
-    for (int counter = 0; counter < 8 - tuple.SellPrice.size(); counter++)
+  if (tuple.SellPrice.size() < 7)
+    for (int counter = 0; counter < 7 - tuple.SellPrice.size(); counter++)
       returnval += blank;
 
   
@@ -166,8 +166,8 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
   for (auto it = inventory.begin(); it < inventory.end(); it++)
     {
     if (line %2)
-      consoleRight->setDefaultForeground(TCODColor::lightestGreen);
-    else consoleRight->setDefaultForeground(TCODColor::lightestBlue);
+      consoleLeft->setDefaultForeground(TCODColor::lightestGreen);
+    else consoleLeft->setDefaultForeground(TCODColor::lightestBlue);
     consoleLeft->print(1, line++, assembleOutput(*it).c_str());
     }
 

@@ -35,10 +35,10 @@ vector<EconomyItemTuple> Town::returnListOfItems()
     buffer.numberOfItems = to_string((long double)it->howMany());
     temporary = (it->getPrice()) * (1 + taxRate) * 10;
     secondtemp = temporary / 10.0f;
-    buffer.BuyPrice = string("~") + to_string((long double)secondtemp);
+    buffer.BuyPrice = to_string((long double)secondtemp);
     temporary = it->getPrice() * (1 - taxRate) * 10;
     secondtemp = temporary / 10.0f;
-    buffer.SellPrice = string("~") + to_string((long double)secondtemp);
+    buffer.SellPrice = to_string((long double)secondtemp);
     int percentage = (double)it->getPrice()/it->basePrice * 100;
     buffer.percentageOfBasePrice = to_string((long double)percentage) + string("%%");
 

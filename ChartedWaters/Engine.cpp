@@ -198,7 +198,7 @@ case 'T':  // Test shop
   break;
 
 case 's': // Check for shop.
-  if (TheWorld->queryShop(TheWorld->getPlayerShip()));
+  if (TheWorld->queryShop(TheWorld->getPlayerShip()))
     {
     newState = new State_Shop(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
     PushState(newState);
