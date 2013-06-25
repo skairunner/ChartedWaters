@@ -191,6 +191,9 @@ void State_Shop::redrawRight()
 
   for (auto it = goods.begin(); it < goods.end(); it++)
     {
+    if (line %2)
+      consoleRight->setDefaultForeground(TCODColor::lightestGreen);
+    else consoleRight->setDefaultForeground(TCODColor::lightestBlue);
     consoleRight->print(1, line++, assembleOutput(*it).c_str());
     }
 

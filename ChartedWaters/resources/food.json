@@ -1,0 +1,829 @@
+[
+	{
+		"ID": "food_alpacameat",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Alpaca meat",
+		"base price": 490,
+		"desc": "The lean, red meat of an alpaca."
+	},
+	{
+		"ID": "food_bacon",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Bacon",
+		"base price": 369
+	},
+	{
+		"ID": "food_barley",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Barley",
+		"base price": 31
+	},
+	{
+		"ID": "food_beef",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Beef",
+		"base price": 568
+	},
+	{
+		"ID": "food_berries",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Berries",
+		"base price": 20
+	},
+	{
+		"ID": "food_broadbeans",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Broad beans",
+		"base price": 60
+	},
+	{
+		"ID": "food_cactus",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Cactus",
+		"base price": 147
+	},
+	{
+		"ID": "food_carrots",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Carrots",
+		"base price": 91
+	},
+	{
+		"ID": "food_cassava",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Cassava",
+		"base price": 61
+	},
+	{
+		"ID": "food_cheese",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Cheese",
+		"base price": 346
+	},
+	{
+		"ID": "food_corn",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Corn",
+		"base price": 55
+	},
+	{
+		"ID": "food_crocodilemeat",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Crocodile meat",
+		"base price": 427
+	},
+	{
+		"ID": "food_duck",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Duck",
+		"base price": 302
+	},
+	{
+		"ID": "food_eggs",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Eggs",
+		"base price": 23
+	},
+	{
+		"ID": "food_fish",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Fish",
+		"base price": 145
+	},
+	{
+		"ID": "food_flour",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Flour",
+		"base price": 56
+	},
+	{
+		"ID": "food_ham",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Ham",
+		"base price": 426
+	},
+	{
+		"ID": "food_honeycomb",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Honey comb",
+		"base price": 120
+	},
+	{
+		"ID": "food_jambu",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Jambu",
+		"base price": 127
+	},
+	{
+		"ID": "food_kangaroomeat",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Kangaroo meat",
+		"base price": 312
+	},
+	{
+		"ID": "food_lamb",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Lamb",
+		"base price": 360
+	},
+	{
+		"ID": "food_milk",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Milk",
+		"base price": 148
+	},
+	{
+		"ID": "food_mushrooms",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Mushrooms",
+		"base price": 32
+	},
+	{
+		"ID": "food_oats",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Oats",
+		"base price": 37
+	},
+	{
+		"ID": "food_olives",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Olives",
+		"base price": 206
+	},
+	{
+		"ID": "food_onions",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Onions",
+		"base price": 80
+	},
+	{
+		"ID": "food_oysters",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Oysters",
+		"base price": 540
+	},
+	{
+		"ID": "food_pork",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Pork",
+		"base price": 305
+	},
+	{
+		"ID": "food_potatoes",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Potatoes",
+		"base price": 116
+	},
+	{
+		"ID": "food_poultry",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Poultry",
+		"base price": 297
+	},
+	{
+		"ID": "food_pumpkins",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Pumpkins",
+		"base price": 101
+	},
+	{
+		"ID": "food_quinoa",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Quinoa",
+		"base price": 164
+	},
+	{
+		"ID": "food_redbeans",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Red beans",
+		"base price": 68
+	},
+	{
+		"ID": "food_rice",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Rice",
+		"base price": 52
+	},
+	{
+		"ID": "food_rye",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Rye",
+		"base price": 47
+	},
+	{
+		"ID": "food_sausages",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Sausages",
+		"base price": 350
+	},
+	{
+		"ID": "food_shrimp",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Shrimp",
+		"base price": 441
+	},
+	{
+		"ID": "food_soyabeans",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Soya beans",
+		"base price": 64
+	},
+	{
+		"ID": "food_sugarbeet",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Sugar beet",
+		"base price": 161
+	},
+	{
+		"ID": "food_sugarcane",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Sugar cane",
+		"base price": 210
+	},
+	{
+		"ID": "food_sweetpotatos",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Sweet potatos",
+		"base price": 80
+	},
+	{
+		"ID": "food_taro",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Taro",
+		"base price": 84
+	},
+	{
+		"ID": "food_tomatos",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Tomatos",
+		"base price": 98
+	},
+	{
+		"ID": "food_turnips",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Turnips",
+		"base price": 61
+	},
+	{
+		"ID": "food_uplandrice",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Upland rice",
+		"base price": 41
+	},
+	{
+		"ID": "food_wheat",
+		"category": "Food",
+		"type": "Foodstuffs",
+		"name": "Wheat",
+		"base price": 69
+	},
+	{
+		"ID": "food_akvavit",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Akvavit",
+		"base price": 504
+	},
+	{
+		"ID": "food_beer",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Beer",
+		"base price": 248
+	},
+	{
+		"ID": "food_brandy",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Brandy",
+		"base price": 747
+	},
+	{
+		"ID": "food_fruitbrandy",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Fruit brandy",
+		"base price": 536
+	},
+	{
+		"ID": "food_gin",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Gin",
+		"base price": 587
+	},
+	{
+		"ID": "food_liquor",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Liquor",
+		"base price": 504
+	},
+	{
+		"ID": "food_rum",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Rum",
+		"base price": 416
+	},
+	{
+		"ID": "food_sherry",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Sherry",
+		"base price": 444
+	},
+	{
+		"ID": "food_soju",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Soju",
+		"base price": 120
+	},
+	{
+		"ID": "food_tequila",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Tequila",
+		"base price": 271
+	},
+	{
+		"ID": "food_toddy",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Toddy",
+		"base price": 286
+	},
+	{
+		"ID": "food_vodka",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Vodka",
+		"base price": 701
+	},
+	{
+		"ID": "food_whiskey",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Whiskey",
+		"base price": 519
+	},
+	{
+		"ID": "food_wine",
+		"category": "Food",
+		"type": "Alcohol",
+		"name": "Wine",
+		"base price": 376
+	},
+	{
+		"ID": "food_almondoil",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Almond oil",
+		"base price": 470
+	},
+	{
+		"ID": "food_anchovies",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Anchovies",
+		"base price": 220
+	},
+	{
+		"ID": "food_applevinegar",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Apple vinegar",
+		"base price": 370
+	},
+	{
+		"ID": "food_butter",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Butter",
+		"base price": 310
+	},
+	{
+		"ID": "food_cornoil",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Corn oil",
+		"base price": 200
+	},
+	{
+		"ID": "food_fishsauce",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Fish sauce",
+		"base price": 492
+	},
+	{
+		"ID": "food_honey",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Honey",
+		"base price": 919
+	},
+	{
+		"ID": "food_jam",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Jam",
+		"base price": 520
+	},
+	{
+		"ID": "food_lard",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Lard",
+		"base price": 291
+	},
+	{
+		"ID": "food_oliveoil",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Olive oil",
+		"base price": 355
+	},
+	{
+		"ID": "food_palmoil",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Palm oil",
+		"base price": 199
+	},
+	{
+		"ID": "food_peanutoil",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Peanut oil",
+		"base price": 268
+	},
+	{
+		"ID": "food_salt",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Salt",
+		"base price": 227
+	},
+	{
+		"ID": "food_sesameoil",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Sesame oil",
+		"base price": 294
+	},
+	{
+		"ID": "food_sugar",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Sugar",
+		"base price": 651
+	},
+	{
+		"ID": "food_whitevinegar",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "White vinegar",
+		"base price": 172
+	},
+	{
+		"ID": "food_winevinegar",
+		"category": "Food",
+		"type": "Seasonings",
+		"name": "Wine vinegar",
+		"base price": 449
+	},
+	{
+		"ID": "food_alpacas",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Alpacas",
+		"base price": 595
+	},
+	{
+		"ID": "food_cattle",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Cattle",
+		"base price": 319
+	},
+	{
+		"ID": "food_chicken",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Chicken",
+		"base price": 49
+	},
+	{
+		"ID": "food_crickets",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Crickets",
+		"base price": 25
+	},
+	{
+		"ID": "food_ducks",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Ducks",
+		"base price": 62
+	},
+	{
+		"ID": "food_goats",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Goats",
+		"base price": 186
+	},
+	{
+		"ID": "food_horses",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Horses",
+		"base price": 168
+	},
+	{
+		"ID": "food_mice",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Mice",
+		"base price": 90
+	},
+	{
+		"ID": "food_peafowl",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Peafowl",
+		"base price": 233
+	},
+	{
+		"ID": "food_pigs",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Pigs",
+		"base price": 63
+	},
+	{
+		"ID": "food_sheep",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Sheep",
+		"base price": 125
+	},
+	{
+		"ID": "food_deer",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Deer",
+		"base price": 240
+	},
+	{
+		"ID": "food_rabbits",
+		"category": "Food",
+		"type": "Livestock",
+		"name": "Rabbits",
+		"base price": 96
+	},
+	{
+		"ID": "food_almonds",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Almonds",
+		"base price": 141
+	},
+	{
+		"ID": "food_bananas",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Bananas",
+		"base price": 132
+	},
+	{
+		"ID": "food_blacktea",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Black tea",
+		"base price": 644
+	},
+	{
+		"ID": "food_cacao",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Cacao",
+		"base price": 546
+	},
+	{
+		"ID": "food_cashews",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Cashews",
+		"base price": 324
+	},
+	{
+		"ID": "food_caviar",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Caviar",
+		"base price": 860
+	},
+	{
+		"ID": "food_coconuts",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Coconuts",
+		"base price": 256
+	},
+	{
+		"ID": "food_coffee",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Coffee",
+		"base price": 557
+	},
+	{
+		"ID": "food_driedapricots",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Dried apricots",
+		"base price": 392
+	},
+	{
+		"ID": "food_driedapples",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Dried apples",
+		"base price": 324
+	},
+	{
+		"ID": "food_driedfigs",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Dried figs",
+		"base price": 291
+	},
+	{
+		"ID": "food_driedmango",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Dried mango",
+		"base price": 312
+	},
+	{
+		"ID": "food_driedstrawberries",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Dried strawberries",
+		"base price": 300
+	},
+	{
+		"ID": "food_durian",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Durian",
+		"base price": 660
+	},
+	{
+		"ID": "food_hazelnuts",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Hazelnuts",
+		"base price": 383
+	},
+	{
+		"ID": "food_lemonmyrtle",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Lemon myrtle",
+		"base price": 758
+	},
+	{
+		"ID": "food_macadamianuts",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Macadamia nuts",
+		"base price": 416
+	},
+	{
+		"ID": "food_mangoes",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Mangoes",
+		"base price": 315
+	},
+	{
+		"ID": "food_matetea",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Mate tea",
+		"base price": 194
+	},
+	{
+		"ID": "food_peanuts",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Peanuts",
+		"base price": 160
+	},
+	{
+		"ID": "food_pickles",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Pickles",
+		"base price": 255
+	},
+	{
+		"ID": "food_pineapples",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Pineapples",
+		"base price": 884
+	},
+	{
+		"ID": "food_pistachio",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Pistachio",
+		"base price": 343
+	},
+	{
+		"ID": "food_prunes",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Prunes",
+		"base price": 288
+	},
+	{
+		"ID": "food_raisins",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Raisins",
+		"base price": 312
+	},
+	{
+		"ID": "food_tobacco",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Tobacco",
+		"base price": 448
+	},
+	{
+		"ID": "food_walnuts",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Walnuts",
+		"base price": 465
+	},
+	{
+		"ID": "food_walnuts",
+		"category": "Food",
+		"type": "Luxury food",
+		"name": "Walnuts",
+		"base price": 465
+	}
+]

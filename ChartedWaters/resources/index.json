@@ -1,8 +1,9 @@
 {
 	// Index.
 	"files": [
-				"foodstuffs.json",
+				"food.json",
 				"luxury.json",
+				"rawmaterials.json",
 				"modded.json"
 			]
 

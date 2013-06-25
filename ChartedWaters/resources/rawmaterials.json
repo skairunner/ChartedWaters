@@ -1,0 +1,521 @@
+[
+	{
+		"ID": "rawmaterials_alpacahair",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Alpaca hair",
+		"base price": 306
+	},
+	{
+		"ID": "rawmaterials_camelhair",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Camel hair",
+		"base price": 392
+	},
+	{
+		"ID": "rawmaterials_coconutfibers",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Coconut fibers",
+		"base price": 145
+	},
+	{
+		"ID": "rawmaterials_cotton",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Cotton",
+		"base price": 348
+	},
+	{
+		"ID": "rawmaterials_feathers",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Feathers",
+		"base price": 495
+	},
+	{
+		"ID": "rawmaterials_fur",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Fur",
+		"base price": 1285
+	},
+	{
+		"ID": "rawmaterials_flax",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Flax",
+		"base price": 191
+	},
+	{
+		"ID": "rawmaterials_hemp",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Hemp",
+		"base price": 10
+	},
+	{
+		"ID": "rawmaterials_jute",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Jute",
+		"base price": 141
+	},
+	{
+		"ID": "rawmaterials_kenaf",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Kenaf",
+		"base price": 144
+	},
+	{
+		"ID": "rawmaterials_leather",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Leather",
+		"base price": 331
+	},
+	{
+		"ID": "rawmaterials_mohair",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Mohair",
+		"base price": 1150
+	},
+	{
+		"ID": "rawmaterials_panja",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Panja",
+		"base price": 304
+	},
+	{
+		"ID": "rawmaterials_silk",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Silk",
+		"base price": 1980
+	},
+	{
+		"ID": "rawmaterials_sisalhemp",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Sisal hemp",
+		"base price": 208
+	},
+	{
+		"ID": "rawmaterials_wool",
+		"category": "Raw materials",
+		"type": "Fiber",
+		"name": "Wool",
+		"base price": 351
+	},
+	{
+		"ID": "rawmaterials_awayo",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Awayo",
+		"base price": 1550
+	},
+	{
+		"ID": "rawmaterials_batik",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Batik",
+		"base price": 576
+	},
+	{
+		"ID": "rawmaterials_corduroy",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Corduroy",
+		"base price": 829
+	},
+	{
+		"ID": "rawmaterials_cottoncloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Cotton cloth",
+		"base price": 906
+	},
+	{
+		"ID": "rawmaterials_damaskcloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Damask cloth",
+		"base price": 3450
+	},
+	{
+		"ID": "rawmaterials_calico",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Calico",
+		"base price": 927
+	},
+	{
+		"ID": "rawmaterials_flannel",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Flannel",
+		"base price": 984
+	},
+	{
+		"ID": "rawmaterials_georgettecloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Georgette cloth",
+		"base price": 3039
+	},
+	{
+		"ID": "rawmaterials_gobelintapestry",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Gobelin tapestry",
+		"base price": 3120
+	},
+	{
+		"ID": "rawmaterials_hempcloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Hemp cloth",
+		"base price": 375
+	},
+	{
+		"ID": "rawmaterials_knitcloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Knit cloth",
+		"base price": 418
+	},
+	{
+		"ID": "rawmaterials_lace",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Lace",
+		"base price": 2510
+	},
+	{
+		"ID": "rawmaterials_muslin",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Muslin",
+		"base price": 1300
+	},
+	{
+		"ID": "rawmaterials_persiancarpet",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Persian carpet",
+		"base price": 4154,
+		"desc": "An anachronism, seeing that Persia does not exist in this world. It is a very valuable, high-quality carpet."
+	},
+	{
+		"ID": "rawmaterials_satin",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Satin",
+		"base price": 2762
+	},
+	{
+		"ID": "rawmaterials_silkcloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Silk cloth",
+		"base price": 3230
+	},
+	{
+		"ID": "rawmaterials_taffeta",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Taffeta",
+		"base price": 2603
+	},
+	{
+		"ID": "rawmaterials_tweed",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Tweed",
+		"base price": 1267
+	},
+	{
+		"ID": "rawmaterials_woolencloth",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Woolen cloth",
+		"base price": 926
+	},
+	{
+		"ID": "rawmaterials_velvet",
+		"category": "Raw materials",
+		"type": "Fabric",
+		"name": "Velvet",
+		"base price": 2940
+	},
+	{
+		"ID": "rawmaterials_bark",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Bark",
+		"base price": 6
+	},
+	{
+		"ID": "rawmaterials_cochineal",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Cochineal",
+		"base price": 600
+	},
+	{
+		"ID": "rawmaterials_grass",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Grass",
+		"base price": 9
+	},
+	{
+		"ID": "rawmaterials_indigodye",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Indigo dye",
+		"base price": 386
+	},
+	{
+		"ID": "rawmaterials_madder",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Madder",
+		"base price": 458
+	},
+	{
+		"ID": "rawmaterials_logwood",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Logwood",
+		"base price": 14
+	},
+	{
+		"ID": "rawmaterials_mangosteen",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Mangosteen",
+		"base price": 658
+	},
+	{
+		"ID": "rawmaterials_blueclay",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Blue clay",
+		"base price": 468
+	},
+	{
+		"ID": "rawmaterials_mimosa",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Mimosa",
+		"base price": 589
+	},
+	{
+		"ID": "rawmaterials_mulberry",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Mulberry",
+		"base price": 634
+	},
+	{
+		"ID": "rawmaterials_exoticberry",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Exotic berry",
+		"base price": 1123
+	},
+	{
+		"ID": "rawmaterials_pomegranate",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Pomegranate",
+		"base price": 665
+	},
+	{
+		"ID": "rawmaterials_safflower",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Safflower",
+		"base price": 501
+	},
+	{
+		"ID": "rawmaterials_tumeric",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Tumeric",
+		"base price": 197
+	},
+	{
+		"ID": "rawmaterials_royalpurple",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Royal purple",
+		"base price": 4330
+	},
+	{
+		"ID": "rawmaterials_woad",
+		"category": "Raw materials",
+		"type": "Dyes",
+		"name": "Woad",
+		"base price": 957
+	},
+	{
+		"ID": "rawmaterials_alabaster",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Alabaster",
+		"base price": 456
+	},
+	{
+		"ID": "rawmaterials_brass",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Brass",
+		"base price": 672
+	},
+	{
+		"ID": "rawmaterials_bronze",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Bronze",
+		"base price": 858
+	},
+	{
+		"ID": "rawmaterials_coal",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Coal",
+		"base price": 416
+	},
+	{
+		"ID": "rawmaterials_copper",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Copper",
+		"base price": 900
+	},
+	{
+		"ID": "rawmaterials_graphite",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Graphite",
+		"base price": 777
+	},
+	{
+		"ID": "rawmaterials_iron",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Iron",
+		"base price": 802
+	},
+	{
+		"ID": "rawmaterials_lead",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Lead",
+		"base price": 1200
+	},
+	{
+		"ID": "rawmaterials_logs",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Logs",
+		"base price": 364
+	},
+	{
+		"ID": "rawmaterials_lumber",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Lumber",
+		"base price": 654
+	},
+	{
+		"ID": "rawmaterials_marble",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Marble",
+		"base price": 1015
+	},
+	{
+		"ID": "rawmaterials_mercury",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Mercury",
+		"base price": 1220
+	},
+	{
+		"ID": "rawmaterials_oil",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Oil",
+		"base price": 592
+	},
+	{
+		"ID": "rawmaterials_paper",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Paper",
+		"base price": 264
+	},
+	{
+		"ID": "rawmaterials_papyrus",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Papyrus",
+		"base price": 370
+	},
+	{
+		"ID": "rawmaterials_parchment",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Parchment",
+		"base price": 1080
+	},
+	{
+		"ID": "rawmaterials_rubber",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Rubber",
+		"base price": 616
+	},
+	{
+		"ID": "rawmaterials_stone",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Stone",
+		"base price": 698
+	},
+	{
+		"ID": "rawmaterials_steel",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Steel",
+		"base price": 1160
+	},
+	{
+		"ID": "rawmaterials_sulphur",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Sulphur",
+		"base price": 371
+	},
+	{
+		"ID": "rawmaterials_vegetableoil",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Vegetable oil",
+		"base price": 82
+	},
+	{
+		"ID": "rawmaterials_wax",
+		"category": "Raw materials",
+		"type": "Industrial goods",
+		"name": "Wax",
+		"base price": 804
+	}
+]

@@ -51,8 +51,6 @@ TheWorld = new World(width, height);
 TheWorld->regen();
 TheWorld->regen();
 
-TheWorld->getPlayerShip().addItem(Item("food_friedchicken"), 50, ItemDict.findBasePrice(string("food_friedchicken")));
-TheWorld->getPlayerShip().addItem(Item("food_fruityloops"), 50, ItemDict.findBasePrice(string("food_fruityloops")));
 TheWorld->getPlayerShip().addItem(Item("luxury_carbonnano"), 7, 7391);
 
 ShipScreen = new TCODConsole(width, height);

@@ -158,7 +158,7 @@ ItemDictionary::ItemDictionary()
   types.push_back(string("Textiles"));
   types.push_back(string("Fabric"));
   types.push_back(string("Dyes"));
-  types.push_back(string("Ores"));
+  //types.push_back(string("Ores"));
   types.push_back(string("Industrial goods"));
   categories[string("Raw materials")] = types;
   types.clear();
