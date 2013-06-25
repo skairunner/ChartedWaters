@@ -165,6 +165,9 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
 
   for (auto it = inventory.begin(); it < inventory.end(); it++)
     {
+    if (line %2)
+      consoleRight->setDefaultForeground(TCODColor::lightestGreen);
+    else consoleRight->setDefaultForeground(TCODColor::lightestBlue);
     consoleLeft->print(1, line++, assembleOutput(*it).c_str());
     }
 
