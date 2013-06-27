@@ -198,7 +198,7 @@ double Pather::costTo(const coord& c2, const int& waveResistance)
 
 double Pather::heuristic(const coord& xy1, const coord& xy2)
   {
-  const double scalingFactor = 1; //// making this larger can make the pathfinding faster, at the cost of accuracy
+  const double scalingFactor = 2; //// making this larger can make the pathfinding faster, at the cost of accuracy
 
   double dY = xy1.second - xy2.second;
   dY *= dY; // dY^2

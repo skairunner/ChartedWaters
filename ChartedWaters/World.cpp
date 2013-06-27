@@ -32,7 +32,7 @@ void World::regen()
 
   for (auto it = WorldMap.cities.begin(); it < WorldMap.cities.end(); it++)
     {
-    cityList[*it] = Town(nameFactory.getName(), 0.05f, WorldMap.ref(it->first, it->second).isInZOC);
+    cityList[*it] = Town(nameFactory.getName(), 0.1f, WorldMap.ref(it->first, it->second).isInZOC);
     }
   populateCities();
   for (auto it = cityList.begin(); it != cityList.end(); it++)
@@ -64,19 +64,6 @@ Town& World::getTown(Ship& ship)
 
 Town& World::getFirstTown()
   {
-  if (first)
-    {
-    Town& it = cityList.begin()->second;
-    it.addItems(std::string("luxury_leg"), 9);
-    it.addItems(std::string("other_tylenol"), 992);
-    it.addItems(std::string("luxury_demonicmark"), 666);
-    it.addItems(std::string("food_tallowroast"), 400);
-    it.addItems(std::string("luxury_remalle"), 35);
-    it.addItems(std::string("luxury_allspice"), 120);
-    it.addItems(std::string("food_cookedllamachops"), 190);
-    it.addItems(std::string("food_chickencheese"), 1269);
-    first = false;
-    }
   return cityList.begin()->second;
   }
 
@@ -105,15 +92,15 @@ void World::populateCities()
     double other = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 5.5);
     double luxury = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 7.5);
 
-    food += 3; // bump into positive.
-    other += 3;
-    indust += 3;
-    luxury += 3;
+    food += 2; // bump into positive.
+    other += 2.5;
+    indust += 2.5;
+    luxury += 2.5;
 
-    food = (int)(2 * abs(food)); // Remove any vestigal negatives.
-    indust = (int)(2 * abs(indust));
+    food = (int)(3 * abs(food)); // Remove any vestigal negatives.
+    indust = (int)(3 * abs(indust));
     other = (int)(2 * abs(other));
-    luxury = (int)(2 * abs(luxury));
+    luxury = (int)(2.3 * abs(luxury));
 
     while (food > 0)
       {

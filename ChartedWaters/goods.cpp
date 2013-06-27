@@ -155,7 +155,7 @@ ItemDictionary::ItemDictionary()
   categories[string("Food")] = types;
   types.clear();
 
-  types.push_back(string("Textiles"));
+  types.push_back(string("Fibers"));
   types.push_back(string("Fabric"));
   types.push_back(string("Dyes"));
   //types.push_back(string("Ores"));
@@ -186,6 +186,28 @@ ItemDictionary::ItemDictionary()
   buffer.desc = string("No description.");
   buffer.name = string("invalid item");
   ItemList[string("null")] = buffer;
+
+  ///////// now let's do the initial stuff
+  InitialList[string("Alcohol")] = string("Alc");
+  InitialList[string("Foodstuffs")] = string("Fds");
+  InitialList[string("Seasonings")] = string("Sea");
+  InitialList[string("Livestock")] = string("Liv");
+  InitialList[string("Luxury food")] = string("Lux");
+  InitialList[string("Fiber")] = string("Fib");
+  InitialList[string("Fabric")] = string("Dye");
+  InitialList[string("Dyes")] = string("Fds");
+  InitialList[string("Industrial goods")] = string("Ind");
+  InitialList[string("Medicine")] = string("Med");
+  InitialList[string("Sundries")] = string("Etc");
+  InitialList[string("Weapons")] = string("Wea");
+  InitialList[string("Firearms")] = string("Fir");
+  InitialList[string("Crafts")] = string("Cra");
+  InitialList[string("Artwork")] = string("Art");
+  InitialList[string("Spices")] = string("Spi");
+  InitialList[string("Precious metals")] = string("P.M");
+  InitialList[string("Fragrances")] = string("Fra");
+  InitialList[string("Jewellery")] = string("Jwl");
+  InitialList[string("Precious stones")] = string("P.S");
   }
 
 string ItemDictionary::findItemName(const std::string& ID)
@@ -195,6 +217,18 @@ string ItemDictionary::findItemName(const std::string& ID)
     return ItemList[string("null")].name;
   else
     return it->second.name;
+  }
+
+string ItemDictionary::findItemTypeInitials(const std::string& ID)
+  {
+  auto temp = ItemList.find(ID);
+  if (temp == ItemList.end())
+    return string("nul");
+  string& type = temp->second.type;
+  auto it = InitialList.find(type);
+  if (it == InitialList.end())
+    return string("nul");
+  return it->second;
   }
 
 int ItemDictionary::findBasePrice(const std::string& ID)

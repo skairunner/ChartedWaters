@@ -30,6 +30,7 @@ class ItemDictionary
     ItemDictionary();
     std::string findItemName(const std::string& ID);
     int findBasePrice(const std::string& ID);
+    std::string findItemTypeInitials(const std::string& ID);
     std::pair<double, double> findDecayRates(const std::string& ID);
     std::string findItemDesc(const std::string& ID);
     Item& getItemTemplate(const std::string& itemID);
@@ -38,6 +39,7 @@ class ItemDictionary
 
   private:
     std::map<std::string, Item> ItemList;
+    std::map<std::string, std::string> InitialList;
     std::map<std::string, std::vector<std::string>> categories;
     std::map<std::string, std::vector<std::string>> itemsPerCategory;
     bool sorted;

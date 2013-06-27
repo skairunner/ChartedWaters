@@ -53,7 +53,7 @@ class randomBoat // randomly walks.
     void setRandomPosUntilSea(WorldMapClass& wm);
   private:
     void markZOC(WorldMapClass& wm, int cityCode);
-    void recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double budget);
+    void recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double size);
     void setRandomPos(const coord& dimensions); 
     
     std::mt19937 gen;

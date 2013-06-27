@@ -8,7 +8,7 @@ using namespace std;
 State_ShipStatus::State_ShipStatus(Ship& ship)
   : refToShip(ship), selector(5), redraw(false)
   {
-  console = new TCODConsole(64, 62);
+  console = new TCODConsole(64, 46);
   }
 
 State_ShipStatus::~State_ShipStatus()
@@ -84,7 +84,7 @@ void State_ShipStatus::redrawList()
 
 
   console->setDefaultForeground(TCODColor(96,71,64));
-  console->printFrame(0, 0, 64, 62, false);
+  console->printFrame(0, 0, 64, 46, false);
   }
 
 void State_ShipStatus::invertLine(const int& line)
@@ -121,7 +121,7 @@ bool State_ShipStatus::Init()
 
 
   console->setDefaultForeground(TCODColor(96,71,64));
-  console->printFrame(0, 0, 64, 62, false);
+  console->printFrame(0, 0, 64, 46, false);
 
   return true;
   }

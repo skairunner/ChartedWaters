@@ -37,7 +37,7 @@ string slurp(const string& filename)
 int main(int argc,char *argv[])
   {  
   srand(time(0));
-  CursesEngine.Init("Charted Waters","resources/asciisquare.bmp",128,64);
+  CursesEngine.Init("Charted Waters","resources/asciisquare.bmp",100,48);
   CursesEngine.Start();
   CursesEngine.End();
   return 0;

@@ -12,8 +12,8 @@ State_Shop::State_Shop(Town& town, Ship& ship)
   : refToTown(town), refToShip(ship), selector(5), whichConsole(false), redraw(false), startbuy(false), startsell(false),
   calculatebuy(false), calculatesell(false)
   {
-  consoleLeft = new TCODConsole(64, 64);
-  consoleRight = new TCODConsole(64, 64);
+  consoleLeft = new TCODConsole(50, 48);
+  consoleRight = new TCODConsole(50, 48);
   
   }
 
@@ -22,7 +22,7 @@ string header() // The one that says ID ... name ... price ... numberof
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                  Bought at  Sells at  #");
+  returnval += string("Ty  Item name          Bought at  Sells at  #");
   return returnval;
   }
 
@@ -31,8 +31,16 @@ string shopHeader()
   string returnval;
   string blank(" ");
 
-  returnval += string("Item name                      Buy     Sell    #     %");
+  returnval += string("Typ Item name           Buy    Sell   #     %");
   return returnval;
+  }
+
+string changeToDecimal(const string& input)
+  {
+  if (*(input.end()-2) != '.')
+    return input + string(".0");
+  else
+    return input;
   }
 
 string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
@@ -41,12 +49,15 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
   /// ID
   /// iiii_n{30}_ppppp_xmmm~
   string blank(" ");
+  string type = ItemDict.findItemTypeInitials(tuple.itemID);
 
   string returnval;
+  returnval += type.substr(0, 2);
+  returnval += blank;
 
-  returnval += tuple.ItemName.substr(0, 30);
-  if(tuple.ItemName.size() < 30)
-    for (int counter = 0; counter < 30 - tuple.ItemName.size(); counter++)
+  returnval += tuple.ItemName.substr(0, 20);
+  if(tuple.ItemName.size() < 20)
+    for (int counter = 0; counter < 20 - tuple.ItemName.size(); counter++)
       returnval += blank;
 
   returnval += blank;
@@ -83,41 +94,45 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   /// iiii_n{30}_ppppp_xmmm~
   string blank(" ");
 
+  string type = ItemDict.findItemTypeInitials(tuple.itemID);
+
   string returnval;
+  returnval += type;
+  returnval += blank;
 
-  returnval += tuple.ItemName.substr(0, 30);
-  if(tuple.ItemName.size() < 30)
-    for (int counter = 0; counter < 30 - tuple.ItemName.size(); counter++)
+  returnval += tuple.ItemName.substr(0, 19);
+  if(tuple.ItemName.size() < 19)
+    for (int counter = 0; counter < 19 - tuple.ItemName.size(); counter++)
       returnval += blank;
 
   returnval += blank;
-
-  if (tuple.BuyPrice.size() > 7)
-    returnval += string("xxxxxxx");
-  else returnval += tuple.BuyPrice.substr(0, 7);
-
-  if (tuple.BuyPrice.size() < 7)
-    for (int counter = 0; counter < 7 - tuple.BuyPrice.size(); counter++)
+  string buffer = tuple.BuyPrice;
+  buffer = changeToDecimal(buffer);
+  if (buffer.size() < 6)
+    for (int counter = 0; counter < 6 - buffer.size(); counter++)
       returnval += blank;
+  if (buffer.size() > 6)
+    returnval += string("xxxxxxx");
+  else returnval += buffer.substr(0, 6);
 
   returnval += blank;
 
-  if (tuple.SellPrice.size() > 7)
-    returnval += string("xxxxxxx");
-  else returnval += tuple.SellPrice.substr(0, 7);
-
-  if (tuple.SellPrice.size() < 7)
-    for (int counter = 0; counter < 7 - tuple.SellPrice.size(); counter++)
+  buffer = tuple.SellPrice;
+  buffer = changeToDecimal(buffer);
+  if (buffer.size() < 6)
+    for (int counter = 0; counter < 6 - buffer.size(); counter++)
       returnval += blank;
+  if (buffer.size() > 6)
+    returnval += string("xxxxxx");
+  else returnval += buffer.substr(0, 6);
 
-  
+   
   
   returnval += string(" x");
   returnval += tuple.numberOfItems;
   if (tuple.numberOfItems.size() < 4)
     for (int counter = 0; counter < 4 - tuple.numberOfItems.size(); counter++)
       returnval += blank;
-
   returnval += blank;
   returnval += tuple.percentageOfBasePrice;
   return returnval;
@@ -173,7 +188,7 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
 
 
   consoleLeft->setDefaultForeground(TCODColor(96,71,64));
-  consoleLeft->printFrame(0, 0, 64, 64, false);
+  consoleLeft->printFrame(0, 0, 50, 48, false);
   }
 
 void State_Shop::redrawRight()
@@ -202,7 +217,7 @@ void State_Shop::redrawRight()
 
 
   consoleRight->setDefaultForeground(TCODColor(96,71,64));
-  consoleRight->printFrame(0, 0, 64, 64, false);
+  consoleRight->printFrame(0, 0, 50, 48, false);
   }
 
 void State_Shop::Render(TCODConsole *root)
@@ -220,7 +235,7 @@ void State_Shop::Render(TCODConsole *root)
     redraw = false;
     }
   TCODConsole::blit(consoleLeft, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.7f);
-  TCODConsole::blit(consoleRight, 0, 0, 0, 0, root, 64, 0, 1.0f, 0.7f);
+  TCODConsole::blit(consoleRight, 0, 0, 0, 0, root, 50, 0, 1.0f, 0.7f);
   }
 
 void State_Shop::RecoverFromPush()

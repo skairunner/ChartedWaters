@@ -142,8 +142,24 @@ void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCitie
 
 void WorldMapClass::setCityFlags()
   {
-  const int number = 15;
+  int number = 15;
   auto it = time(0);
+  setFactionsCity(1, number, it++);
+  setFactionsCity(2, number, it++);
+  setFactionsCity(3, number, it++);
+  setFactionsCity(4, number, it++);
+  setFactionsCity(5, number, it++);
+  setFactionsCity(6, number, it++);
+  setFactionsCity(7, number, it++);
+  number /= 2;
+  setFactionsCity(1, number, it++);
+  setFactionsCity(2, number, it++);
+  setFactionsCity(3, number, it++);
+  setFactionsCity(4, number, it++);
+  setFactionsCity(5, number, it++);
+  setFactionsCity(6, number, it++);
+  setFactionsCity(7, number, it++);
+  number /= 2;
   setFactionsCity(1, number, it++);
   setFactionsCity(2, number, it++);
   setFactionsCity(3, number, it++);
@@ -201,7 +217,8 @@ bool randomBoat::explore(WorldMapClass& wm)
       wm.ref(currentPosition.first, currentPosition.second).isCity = true;
       wm.cities.push_back(currentPosition);
       int cityCode = wm.cities.size();
-      markZOC(wm, cityCode);
+     // markZOC(wm, cityCode);
+      recursiveZOC(currentPosition.first, currentPosition.second, wm, 3);
       
       return true;
       }
@@ -219,20 +236,19 @@ bool randomBoat::explore(WorldMapClass& wm)
   return false;
   }
 
-void randomBoat::recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double budget)
+void randomBoat::recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double size)
   {
-  if (budget <= 0)
+  if (size < 0)
     return;
-  else if (wm.ref(x, y).altitude <= 0)
+  else if (wm.ref(x, y).altitude < 0)
     return;
   else
     {
     wm.ref(x, y).isInZOC = faction;
-    double cost = wm.ref(x, y).altitude;
-    recursiveZOC(x-1, y, wm, budget - cost);
-    recursiveZOC(x+1, y, wm, budget - cost);
-    recursiveZOC(x, y-1, wm, budget - cost);
-    recursiveZOC(x, y+1, wm, budget - cost);
+    recursiveZOC(x-1, y, wm, size -1);
+    recursiveZOC(x+1, y, wm, size -1);
+    recursiveZOC(x, y-1, wm, size -1);
+    recursiveZOC(x, y+1, wm, size -1);
     return;
     }
   }

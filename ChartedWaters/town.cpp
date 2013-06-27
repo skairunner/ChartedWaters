@@ -1,9 +1,10 @@
 #include "town.h"
+#include <cstdlib>
 #pragma warning (disable : 4244)
 using namespace std;
 
 Town::Town()
-  :taxRate(0.05f)
+  :taxRate(0.10f)
   {
   /// test items
   
@@ -114,11 +115,15 @@ int Town::getPriceOf(const std::string& ID)
 
 int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)
   {
+  double taxrate = 
   lastTransaction = 0;
   if (numberOf == 0)
     return 0;
   if (numberOf < 0)
     numberOf = ship.getNumberOfItems(ID);
+  // Set tax rate to 0 if it's hometown.
+
+
   unitPurchasePriceOfSell = ship.getPurchasePriceOf(ID);
   bool success = ship.removeItem(ID, numberOf);
   if (!success)
@@ -162,7 +167,7 @@ void Town::spawnItems()
   for (auto it = spawnList.begin(); it < spawnList.end(); it++)
     {
     if ((*it)[0] == 'l') // If it's a luxury item.
-      addItems(*it, 50);
-    else addItems(*it, 100);
+      addItems(*it, 100);
+    else addItems(*it, rand()%200 + 300);
     }
   }

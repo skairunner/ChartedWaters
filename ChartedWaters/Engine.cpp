@@ -12,8 +12,8 @@ int mouseX, mouseY;
 const int width = 256;
 const int height = 256;
 
-const int screenwidth = 128;
-const int screenheight = 64;
+const int screenwidth = 100;
+const int screenheight = 48;
 int focusX = screenwidth/2;
 int focusY = screenheight/2;
 
@@ -50,8 +50,6 @@ TheWorld = new World(width, height);
 
 TheWorld->regen();
 TheWorld->regen();
-
-TheWorld->getPlayerShip().addItem(Item("luxury_carbonnano"), 7, 7391);
 
 ShipScreen = new TCODConsole(width, height);
 
@@ -138,6 +136,7 @@ void Engine::Render(TCODConsole *root)
 {
 root->setKeyColor(TCODColor::magenta);
 TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
+
 TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 
