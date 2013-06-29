@@ -49,7 +49,6 @@ jsonParser.readItems(ItemDict); // Read items into dictionary.
 TheWorld = new World(width, height);
 
 TheWorld->regen();
-TheWorld->regen();
 
 ShipScreen = new TCODConsole(width, height);
 
@@ -81,6 +80,7 @@ tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld->getPlayerShip();
 ship.addMoney(65536);
+pressedPeriod = true;
 lockToShip();
 
 	return true;
@@ -101,10 +101,19 @@ if (redo)
   mapscreen->clear();
   AccessibleScreen->clear();
   PathScreen->clear();
+  lockToShip();
   redo = false;
   Renderer::getTerrainBitmap(mapscreen, *TheWorld);
   Renderer::getCityBitmap(cityscreen, *TheWorld);
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
+  for (int ycounter = 0; ycounter < height; ycounter++)
+    for (int xcounter = 0; xcounter < width; xcounter++)
+      if (TheWorld->WorldMap.ref(xcounter, ycounter).isInZOC > 0)
+        {
+        int faction = TheWorld->WorldMap.ref(xcounter, ycounter).isInZOC;
+        auto color = Renderer::findFactionColor(faction);
+        ZOCscreen->putCharEx(xcounter, ycounter, 219, color, color);
+        }
   }
 
 std::string name = Renderer::findCityName(coord(mouseX, mouseY), *TheWorld); 
@@ -137,6 +146,7 @@ void Engine::Render(TCODConsole *root)
 root->setKeyColor(TCODColor::magenta);
 TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
 
+//TCODConsole::blit(ZOCscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 0.8f, 0.0f);
 TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 

@@ -27,10 +27,11 @@ class World
     int random(const int& min, const int& max);
     std::map<coord, Town> cityList;
     std::vector<Ship> shipList;
+    WorldMapClass WorldMap;
 
   private:
     NameFactory nameFactory;
-    WorldMapClass WorldMap;
+    
     void populateCities(); // With items.
     
     noise::module::Perlin ItemMaps; 

@@ -4,7 +4,7 @@
 
 
 World::World(const int& w, const int& h)
-  : width(w), height(h), WorldMap(w, h), nameFactory(312515), first(true)
+  : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true)
   {
   nameFactory = NameFactory(rand());
 
@@ -13,9 +13,13 @@ World::World(const int& w, const int& h)
 
   PlayerShip = Ship();
   PlayerShip.setName(nameFactory.getName());
-  randomBoat rb(coord(w, h));
-  rb.setRandomPosUntilSea(WorldMap);
-  PlayerShip.setPosition(rb.currentPosition);
+  int size = cityList.size();
+  int city = rand()%size;
+  auto it = cityList.begin();
+  for (; city > 1; city--)
+    it++;
+  auto pos = it->first;
+  PlayerShip.setPosition(pos);
   }
 
 World::~World()
@@ -37,6 +41,14 @@ void World::regen()
   populateCities();
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     it->second.spawnItems();
+
+  int size = cityList.size();
+  int city = rand()%size;
+  auto it = cityList.begin();
+  for (; city > 1; city--)
+    it++;
+  auto pos = it->first;
+  PlayerShip.setPosition(pos);
 
   if (!pathfinder)
     delete pathfinder;

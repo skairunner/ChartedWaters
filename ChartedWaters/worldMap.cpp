@@ -1,6 +1,7 @@
 #include "worldMap.h"
 #include <stdlib.h>
 #include <time.h>
+
 #pragma warning(disable : 4244)
 
 using namespace std;
@@ -186,14 +187,14 @@ randomBoat::randomBoat(const coord& dim, const int& ffaction,const unsigned long
 
 void randomBoat::setRandomPos(const coord& dimensions)
   {
-  uniform_int_distribution<> xdist(0, dimensions.first);
-  uniform_int_distribution<> ydist(0, dimensions.second);
+  uniform_int_distribution<> xdist(0, dimensions.first-1);
+  uniform_int_distribution<> ydist(0, dimensions.second-1);
   startingPosition = currentPosition = coord(xdist(gen), ydist(gen));
   }
 
 void randomBoat::setRandomPosUntilSea(WorldMapClass& wm)
   {
-  while (wm.ref(currentPosition.first, currentPosition.second).altitude > 0)
+  while (wm.ref(currentPosition.first, currentPosition.second).altitude >= 0)
     setRandomPos(coord(wm.w, wm.h));
   }
 
@@ -218,7 +219,7 @@ bool randomBoat::explore(WorldMapClass& wm)
       wm.cities.push_back(currentPosition);
       int cityCode = wm.cities.size();
      // markZOC(wm, cityCode);
-      recursiveZOC(currentPosition.first, currentPosition.second, wm, 3);
+      recursiveZOC(currentPosition.first, currentPosition.second, wm, 5);
       
       return true;
       }
@@ -240,8 +241,8 @@ void randomBoat::recursiveZOC(const int& x,const int& y, WorldMapClass& wm, doub
   {
   if (size < 0)
     return;
-  else if (wm.ref(x, y).altitude < 0)
-    return;
+ /* else if (wm.ref(x, y).altitude < 0)
+    return;*/
   else
     {
     wm.ref(x, y).isInZOC = faction;
