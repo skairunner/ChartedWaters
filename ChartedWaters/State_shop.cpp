@@ -154,7 +154,7 @@ void State_Shop::End()
 void State_Shop::invertLine(const int& line, TCODConsole* console)
   {
   
-  for (int counter = 1; counter < 63; counter++)
+  for (int counter = 1; counter < 50; counter++)
     {
     console->setCharBackground(counter, line, TCODColor::white);
     console->setCharForeground(counter, line, TCODColor::black);
@@ -446,7 +446,7 @@ void State_Shop::KeyDown(const int &key,const int &unicode)
     redrawRight();
     invertLine(selector, consoleRight);
     }
-  else if (key == SDLK_DOWN && selector < 60)
+  else if (key == SDLK_DOWN && selector < 46)
      {
      selector++;
      redraw = true;

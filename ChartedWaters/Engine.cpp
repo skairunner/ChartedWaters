@@ -69,6 +69,7 @@ cityscreen->setKeyColor(TCODColor::magenta);
 cityscreen->setDefaultBackground(TCODColor::magenta);
 
 AccessibleScreen = new TCODConsole(width, height);
+Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
 
 Renderer::getTerrainBitmap(mapscreen, *TheWorld);
 Renderer::getCityBitmap(cityscreen, *TheWorld);
@@ -145,6 +146,7 @@ void Engine::Render(TCODConsole *root)
 {
 root->setKeyColor(TCODColor::magenta);
 TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
+TCODConsole::blit(AccessibleScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 
 //TCODConsole::blit(ZOCscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 0.8f, 0.0f);
 TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
