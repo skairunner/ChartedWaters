@@ -236,8 +236,10 @@ std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const co
   vector<coord> output;
   if (paths.find(dest) != paths.end() && paths.find(dest)->second.cameFrom != dest ) // if in the map and it doesn't lead to itself
     {
+    auto pos = paths.find(dest)->second.cameFrom;
     cout << "r";
-    auto it = reconstructPath(paths, paths.find(dest)->second.cameFrom);
+    paths.erase(dest);
+    auto it = reconstructPath(paths, pos);
     output.reserve(output.size() + it.size());
     output.insert(output.end(), it.begin(), it.end());
     output.push_back(dest);
