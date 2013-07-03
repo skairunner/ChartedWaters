@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 
+
 using namespace std;
 
 cell::cell(const int& xx, const int& yy)
@@ -119,7 +120,10 @@ coord PathMap::getDimensions()
 Pather::Pather(WorldMapClass& wmc)
   : map(wmc)
   {
-
+//  console = new TCODConsole(map.width, map.height);
+  done = false;
+  metTop = metBot = metLeft = false;
+  start = coord(0, 0);
   }
 
 cell& PathMap::ref(const coord& xy)
@@ -129,7 +133,8 @@ cell& PathMap::ref(const coord& xy)
 
 vector<coord> Pather::path(const coord& starting, const coord& destination, const double waveResistance)
   {
-  if (!map.ref(destination).accessible)
+  auto searchResult = fill_closedset.find(destination);
+  if (!map.ref(destination).accessible || searchResult == fill_closedset.end())
     {
     return vector<coord>(2, starting);
     }
@@ -250,4 +255,115 @@ std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const co
     output.push_back(dest);
     return output;
     }
+  }
+
+vector<coord> Pather::getFillNeighbors(coord current)
+  {
+  /*vector<coord> output;
+  if (!map.ref(current).accessible) // First, if the tile I am in isn't accessible, there are no neighbors.
+    return output;
+  // Check top, topleft, left, botleft, bot
+  // topleft
+  auto neighbor = map.ref(current.first - 1, current.second - 1);
+  if (!neighbor.null && neighbor.accessible)
+    output.push_back(neighbor.xy);
+
+  neighbor = map.ref(current.first, current.second - 1); // top
+  if (!neighbor.null && neighbor.accessible)
+    output.push_back(neighbor.xy);
+
+  neighbor = map.ref(current.first - 1, current.second); // left
+  if (!neighbor.null && neighbor.accessible)
+    output.push_back(neighbor.xy);
+
+  neighbor = map.ref(current.first - 1, current.second +1); // bottom left
+  if (!neighbor.null && neighbor.accessible)
+    output.push_back(neighbor.xy);
+
+  neighbor = map.ref(current.first, current.second + 1); // bottom
+  if (!neighbor.null && neighbor.accessible)
+    output.push_back(neighbor.xy);*/
+
+  auto output = map.findNeighborList(current);
+
+
+  vector<coord> out;
+  for (auto it = output.begin(); it < output.end(); it++)
+    {
+    // check if it's in the closed set
+    if (fill_closedset.find(it->xy) != fill_closedset.end())
+      continue;
+    out.push_back(it->xy);
+    }
+  return out;
+  }
+
+void Pather::stepFloodfill()
+  {
+  if (done)
+    return;
+  if ((fill_openset.size() == 0) || (fill_openset.begin() == fill_openset.end()))
+    {
+    done = true;
+    ///// do the finishing stuff.
+   /* if (metBot && metTop && metLeft)
+      {
+      for (int ycounter = 0; ycounter < map.height; ycounter++)
+        for (int xcounter = 0; xcounter < map.width; xcounter++)
+          {
+          console->setCharForeground(xcounter, ycounter, TCODColor::orange);
+          }
+      }*/
+    return;
+    }
+
+  coord currentpos = fill_openset.begin()->first;
+  
+  fill_openset.erase(currentpos);
+  int val = 0;
+  if (currentpos == start)
+    val = 1;
+  fill_closedset[currentpos] = val;
+  auto neighbors = getFillNeighbors(currentpos);
+  for (auto it = neighbors.begin(); it < neighbors.end(); it++)
+    {
+    if (!metBot)
+      {
+      if (it->second % map.height == map.height-1)
+        metBot = true;
+      }
+    else if (!metTop)
+      {
+      if (it->second % map.height == 0)
+        metTop = true;
+      }
+    if (!metLeft)
+      {
+      if (it->first % map.width == 0)
+        metLeft = true;
+      }
+    fill_openset[*it] = 0;
+    }
+  
+ // console->putCharEx(currentpos.first, currentpos.second, 249, TCODColor::lime, TCODColor::black);
+  }
+
+void Pather::completeFloodfill()
+  {
+start:
+  cout << "p";
+//  console->clear();
+  metTop = metBot = metLeft = false;
+  start.first = rand()%map.width;
+  start.second = rand()%map.height;
+  fill_openset.clear();
+  fill_closedset.clear();
+  fill_openset[start] = 0;
+  while (!done)
+    stepFloodfill();
+  if (metTop == false || metBot == false || metLeft == false)
+    goto start;
+  
+  //for (auto it = fill_closedset.begin(); it != fill_closedset.end(); it++)
+  //  console->putCharEx(it->first.first % map.width, it->first.second % map.height, 249, TCODColor::peach, TCODColor::black);
   }

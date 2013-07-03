@@ -2,7 +2,7 @@
 #include "worldMap.h"
 #include <map>
 #include <vector>
-
+//#include <libtcod.hpp> /// testing only.
 
 struct cell
   {
@@ -50,6 +50,17 @@ class Pather
     Pather(WorldMapClass& wmc);
     std::vector<coord> path(const coord& starting, const coord& destination, const double waveResistance); // Each path must not change the internal state.
     PathMap map; // ref to the map it paths on.
+
+    void stepFloodfill();
+    void completeFloodfill();
+   // TCODConsole* console;
+    std::vector<coord> getFillNeighbors(coord current);
+    std::map<coord, bool> fill_openset;
+    std::map<coord, int> fill_closedset; // 0 for explored, 1 for starting point.
+    coord start;
+    bool done;
+    bool metOrigin;
+    bool metTop, metBot, metLeft;
 
   private:
     

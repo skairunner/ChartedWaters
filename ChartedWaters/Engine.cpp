@@ -76,6 +76,8 @@ Renderer::getCityBitmap(cityscreen, *TheWorld);
 Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
 Renderer::getShipBitmap(ShipScreen, *TheWorld);
 
+
+
 ZOCscreen = new TCODConsole(width, height);
 tooltip = new TCODConsole(30, 1);
 
@@ -97,6 +99,7 @@ if (lockedToShip)
 if (redo)
   {
   TheWorld->regen();
+  TheWorld->pathfinder->completeFloodfill();
   ZOCscreen->clear();
   cityscreen->clear();
   mapscreen->clear();
@@ -146,9 +149,10 @@ void Engine::Render(TCODConsole *root)
 {
 root->setKeyColor(TCODColor::magenta);
 TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
-TCODConsole::blit(AccessibleScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
+//TCODConsole::blit(AccessibleScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 
 //TCODConsole::blit(ZOCscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 0.8f, 0.0f);
+//TCODConsole::blit(TheWorld->pathfinder->console, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
 TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 
