@@ -82,6 +82,7 @@ ZOCscreen = new TCODConsole(width, height);
 tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld->getPlayerShip();
+ship.faction = 1;
 ship.addMoney(65536);
 pressedPeriod = true;
 lockToShip();
@@ -99,7 +100,9 @@ if (lockedToShip)
 if (redo)
   {
   TheWorld->regen();
+#ifdef NDEBUG
   TheWorld->pathfinder->completeFloodfill();
+#endif
   ZOCscreen->clear();
   cityscreen->clear();
   mapscreen->clear();

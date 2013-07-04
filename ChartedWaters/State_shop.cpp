@@ -10,11 +10,12 @@ using namespace std;
 
 State_Shop::State_Shop(Town& town, Ship& ship)
   : refToTown(town), refToShip(ship), selector(5), whichConsole(false), redraw(false), startbuy(false), startsell(false),
-  calculatebuy(false), calculatesell(false)
+  calculatebuy(false), calculatesell(false), isHometown(false)
   {
   consoleLeft = new TCODConsole(50, 48);
   consoleRight = new TCODConsole(50, 48);
-  
+  if(ship.faction == town.getFactionID())
+    isHometown = true;
   }
 
 string header() // The one that says ID ... name ... price ... numberof
@@ -22,7 +23,7 @@ string header() // The one that says ID ... name ... price ... numberof
   string returnval;
   string blank(" ");
 
-  returnval += string("Ty  Item name          Bought at  Sells at  #");
+  returnval += string("Typ  Item name          Bought at  Sells at  #");
   return returnval;
   }
 
@@ -52,7 +53,7 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
   string type = ItemDict.findItemTypeInitials(tuple.itemID);
 
   string returnval;
-  returnval += type.substr(0, 2);
+  returnval += type;
   returnval += blank;
 
   returnval += tuple.ItemName.substr(0, 20);
@@ -64,21 +65,25 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
 
   if (tuple.averagePurchasePrice.size() > 5)
     returnval += string("xxxx");
-  else returnval += tuple.averagePurchasePrice.substr(0, 5);
-
-  if (tuple.averagePurchasePrice.size() < 5)
+  if (tuple.averagePurchasePrice.size() <= 5)
+    {
     for (int counter = 0; counter < 5 - tuple.averagePurchasePrice.size(); counter++)
       returnval += blank;
+    returnval += tuple.averagePurchasePrice.substr(0, 5);
+    }
+
+  
 
   returnval += string("   ");
 
-  string sellprice = to_string((long double)refToTown.getPriceOf(itemIDToTrade) * (1.0f - refToTown.getTaxRate()));
+  string sellprice = to_string((long double)refToTown.getPriceOf(itemIDToTrade) * (1.0f - refToTown.getTaxRate(isHometown)));
 
-  returnval += string("~") + sellprice;
+  //returnval += string("~") + sellprice;
   
   if (sellprice.size() < 6)
-    for (int counter = 0; counter < 6 - abs(log(refToTown.getPriceOf(itemIDToTrade) * (1.0f - refToTown.getTaxRate()))); counter++)
+    for (int counter = 0; counter < 6 - sellprice.size() - 1; counter++)
       returnval += blank;
+  returnval += string("~") + sellprice.substr(0, 6);
 
   returnval += string("   x");
   returnval += tuple.numberOfItems;
@@ -198,10 +203,10 @@ void State_Shop::redrawRight()
   int line = 1;
   consoleRight->print(1, line++, (string("The city of ") + refToTown.getName()).c_str());
 
-  consoleRight->print(1, line++, (string("Tax rate is ") + to_string((long double)refToTown.getTaxRate() * 100) + string("%%")).c_str());
+  consoleRight->print(1, line++, (string("Tax rate is ") + to_string((long double)refToTown.getTaxRate(isHometown) * 100) + string("%%")).c_str());
   line++;
   line++; // skip a line
-  goods = refToTown.returnListOfItems();
+  goods = refToTown.returnListOfItems(isHometown);
   /// 
   consoleRight->setDefaultForeground(TCODColor::yellow);
   consoleRight->print(1, line++, shopHeader().c_str());
@@ -247,6 +252,7 @@ void State_Shop::RecoverFromPush()
 
 void State_Shop::Update()
   {
+  
   if (getPrompt  && startbuy) // If the player input something...
       {
       if (promptResult.empty())
@@ -262,7 +268,7 @@ void State_Shop::Update()
         itemIDToTrade = goods.at(selector-6).itemID;
         if (numberToTrade < 0)
           {
-          numberToTrade = refToShip.getMoney() / (refToTown.getPriceOf(itemIDToTrade) * (1 + refToTown.getTaxRate()));
+          numberToTrade = refToShip.getMoney() / (refToTown.getPriceOf(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown)));
           numberToTrade = numberToTrade > refToTown.getNumberOf(itemIDToTrade) ? refToTown.getNumberOf(itemIDToTrade) : numberToTrade;
           }
 
@@ -300,7 +306,7 @@ void State_Shop::Update()
     {
     if (yesNo) // if said yes
       {
-      int errors = refToTown.buyItems(refToShip, itemIDToTrade, numberToTrade);
+      int errors = refToTown.buyItems(refToShip, itemIDToTrade, numberToTrade, isHometown);
       string print;
       switch (errors)
         {
@@ -350,7 +356,7 @@ void State_Shop::Update()
           numberToTrade = stoi(inventory.at(selector-6).numberOfItems);
           }
 
-        int total = numberToTrade * refToTown.getPriceOf(itemIDToTrade) * (double)(1 - refToTown.getTaxRate());
+        int total = numberToTrade * refToTown.getPriceOf(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
         
         string print = string("Really sell ") + to_string((long double)numberToTrade) + string(" ") + itemName + string(" for ") + to_string((long double)total) + string(" ducats?");
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
@@ -384,7 +390,7 @@ void State_Shop::Update()
     {
     if (yesNo) // if said yes
       {
-      int errors = refToTown.sellItems(refToShip, itemIDToTrade, numberToTrade);
+      int errors = refToTown.sellItems(refToShip, itemIDToTrade, numberToTrade, isHometown);
       string print;
       switch (errors)
         {

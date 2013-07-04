@@ -22,10 +22,10 @@ string Town::getName()
   return TownName;
   }
 
-vector<EconomyItemTuple> Town::returnListOfItems()
+vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
   {
   vector<EconomyItemTuple> returnVal;
-
+  double tax = getTaxRate(isHometown);
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
     EconomyItemTuple buffer;
@@ -34,10 +34,10 @@ vector<EconomyItemTuple> Town::returnListOfItems()
     buffer.itemID = it->ID;
     buffer.ItemName = it->name;
     buffer.numberOfItems = to_string((long double)it->howMany());
-    temporary = (it->getPrice()) * (1 + taxRate) * 10;
+    temporary = (it->getPrice()) * (1 + tax) * 10;
     secondtemp = temporary / 10.0f;
     buffer.BuyPrice = to_string((long double)secondtemp);
-    temporary = it->getPrice() * (1 - taxRate) * 10;
+    temporary = it->getPrice() * (1 - tax) * 10;
     secondtemp = temporary / 10.0f;
     buffer.SellPrice = to_string((long double)secondtemp);
     int percentage = (double)it->getPrice()/it->basePrice * 100;
@@ -62,7 +62,7 @@ void Town::addItems(const std::string& ID, const int& numberOf)
   itemlist.push_back(EconomyItem(ID, numberOf, numberOf * 1.1f));
   }
 
-int Town::buyItems(Ship& ship, const std::string& ID, int numberOf)
+int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
   {
   if (numberOf == 0)
     return 0;
@@ -77,22 +77,24 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf)
       break;
       }
 
+  double currentTax = getTaxRate(hometown);
+
   if (it == itemlist.end())
     return twNO_SUCH_ITEM; // item doesn't exist!
 
   if (numberOf < 0)
     {
-    numberOf = ship.getMoney() / (it->getPrice() * (1 + taxRate)); // FLOOR ( money / price ) = number of items buyable.
+    numberOf = ship.getMoney() / (it->getPrice() * (1 + currentTax)); // FLOOR ( money / price ) = number of items buyable.
     numberOf = numberOf > it->howMany() ? it->howMany() : numberOf; // If the possible number of items buyable is more than the total.
     }
-  int price = it->getPrice() * numberOf * (1 + taxRate);
+  int price = it->getPrice() * numberOf * (1 + currentTax);
   if (price > ship.getMoney())
     return twNOT_ENOUGH_MONEY; // don't have money to buy all that
   if (numberOf > it->howMany())
     return twNOT_ENOUGH_ITEMS; // not enough items to buy!
 
   /// Finally, actually buy them items.
-  ship.addItem(Item(ID), numberOf, it->getPrice() * (1 + taxRate));
+  ship.addItem(Item(ID), numberOf, it->getPrice() * (1 + currentTax));
   ship.addMoney(-price);
   it->addItem(-numberOf);
   it->addDemand(numberOf);
@@ -113,7 +115,7 @@ int Town::getPriceOf(const std::string& ID)
   return -1;
   }
 
-int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)
+int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
   {
   double taxrate = 
   lastTransaction = 0;
@@ -123,12 +125,12 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)
     numberOf = ship.getNumberOfItems(ID);
   // Set tax rate to 0 if it's hometown.
 
-
+  double currentTax = getTaxRate(hometown);
   unitPurchasePriceOfSell = ship.getPurchasePriceOf(ID);
   bool success = ship.removeItem(ID, numberOf);
   if (!success)
     return twNOT_ENOUGH_ITEMS;
-  int earned = numberOf * getPriceOf(ID) * (1 - taxRate);
+  int earned = numberOf * getPriceOf(ID) * (1 - currentTax);
   addItems(ID, numberOf);
   ship.addMoney(earned);
   lastTransaction = earned;
@@ -137,8 +139,10 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf)
   return twSUCCESS;
   }
 
-double Town::getTaxRate()
+double Town::getTaxRate(bool hometown)
   {
+  if (hometown)
+    return 0;
   return taxRate;
   }
 

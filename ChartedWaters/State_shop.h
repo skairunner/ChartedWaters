@@ -40,6 +40,7 @@ class State_Shop : public GameState
     std::string promptResult;
     bool yesNo; // result from a y/n prompt
     bool getPrompt; // Fetch a result from a y/n prompt.
+    bool isHometown;
 
     Town& refToTown;
     Ship& refToShip;

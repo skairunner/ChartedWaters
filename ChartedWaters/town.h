@@ -27,15 +27,15 @@ class Town
     Town();
     Town(const std::string& newName, const double& tax, const int& ffaction = 0);
     std::string getName();
-    int buyItems(Ship& ship, const std::string& ID, int numberOf); // if numberOf = -1, buy all items possible with the money.
-    int sellItems(Ship& ship, const std::string& ID, int numberOf);
+    int buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false); // if numberOf = -1, buy all items possible with the money.
+    int sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false);
     void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
     void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.
 
-    std::vector<EconomyItemTuple> returnListOfItems();
+    std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
     int getPriceOf(const std::string& ID);
-    double getTaxRate();
+    double getTaxRate(bool hometown = false);
     int getNumberOf(const std::string& ID);
 
     void setTaxRate(const double& newTaxRate);
