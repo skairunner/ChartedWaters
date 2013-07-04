@@ -30,9 +30,10 @@ World::~World()
 void World::regen()
   {
   cityList.clear();
+  ItemDict.clearCitiesList();
   WorldMap.gen();
   ItemMaps.SetSeed(rand());
-  gen.seed(rand());
+  gen.seed(rand()); 
 
   for (auto it = WorldMap.cities.begin(); it < WorldMap.cities.end(); it++)
     {
@@ -41,7 +42,6 @@ void World::regen()
   populateCities();
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     it->second.spawnItems();
-
   int size = cityList.size();
   int city = rand()%size;
   auto it = cityList.begin();
@@ -114,6 +114,16 @@ void World::populateCities()
     other = (int)(2 * abs(other));
     luxury = (int)(2.3 * abs(luxury));
 
+    if (food > 2)
+      it->second.isAgri = true;
+    if (indust > 2)
+      it->second.isIndustrial = true;
+    if (luxury > 2)
+      it->second.isLuxury = true;
+    if (other > 2)
+      it->second.isOther = true;
+
+
     while (food > 0)
       {
       food -= 1;
@@ -137,6 +147,11 @@ void World::populateCities()
       luxury -= 1;
       int number = random(0, luxurylist.size() -1);
       it->second.spawnList.push_back(luxurylist.at(number));
+      }
+
+    for (auto itemID = it->second.spawnList.begin(); itemID < it->second.spawnList.end(); itemID++)
+      {
+      ItemDict.addCityToItem(*itemID, it->first);
       }
     }
   }

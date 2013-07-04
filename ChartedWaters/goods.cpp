@@ -280,6 +280,21 @@ vector<string>& ItemDictionary::getItemsPerCategory(const string& category)
   return itemsPerCategory.find(category)->second;
   }
 
+void ItemDictionary::addCityToItem(const string& itemID, const pair<int,int>& city)
+  {
+  citiesPerItem[itemID].push_back(city);
+  }
+
+vector<pair<int,int>> ItemDictionary::getCitiesForItem(const string& itemID)
+  {
+  return citiesPerItem[itemID]; // this implicitly creates an empty vector if the key didn't exist before the function call.
+  }
+
+void ItemDictionary::clearCitiesList()
+  {
+  citiesPerItem.clear();
+  }
+
 ///////////////////////
 //////////
 //////////  Item

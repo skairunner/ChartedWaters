@@ -44,5 +44,7 @@ class Town
     int lastTransaction;
     int unitPurchasePriceOfSell;
 
+    bool isAgri, isIndustrial, isOther, isluxury;
+
     std::vector<std::string> spawnList;
   };

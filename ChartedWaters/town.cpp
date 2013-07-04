@@ -4,7 +4,7 @@
 using namespace std;
 
 Town::Town()
-  :taxRate(0.10f)
+  :taxRate(0.10f), isLuxury(false), isOther(false), isIndustrial(0), isAgri(0)
   {
   /// test items
   
@@ -12,7 +12,7 @@ Town::Town()
   }
 
 Town::Town(const std::string& newName, const double& tax, const int& ffaction)
-  : TownName(newName), taxRate(tax), faction(ffaction)
+  : TownName(newName), taxRate(tax), faction(ffaction), isLuxury(false), isOther(false), isIndustrial(0), isAgri(0)
   {
   TownName[0] = toupper(TownName[0]);
   }
@@ -104,6 +104,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   return twSUCCESS;
   }
 
+// Must consider: (1) if it's produced in that city (2) supply vs demand for said item (3) if the city is in a 'zone'
 int Town::getPriceOf(const std::string& ID)
   {
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
@@ -113,7 +114,7 @@ int Town::getPriceOf(const std::string& ID)
     }
   // If it doesn't exist, return the price ...
   return -1;
-  }
+  } 
 
 int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
   {

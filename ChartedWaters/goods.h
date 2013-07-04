@@ -37,11 +37,16 @@ class ItemDictionary
     void sortIntoLists(); // Make a map of vector of item IDs.
     std::vector<std::string>& getItemsPerCategory(const std::string& category);
 
+    void addCityToItem(const std::string& itemID, const std::pair<int,int>& city);
+    std::vector<std::pair<int,int>> getCitiesForItem(const std::string& itemID);
+    void clearCitiesList();
+
   private:
     std::map<std::string, Item> ItemList;
     std::map<std::string, std::string> InitialList;
     std::map<std::string, std::vector<std::string>> categories;
     std::map<std::string, std::vector<std::string>> itemsPerCategory;
+    std::map<std::string, std::vector<std::pair<int,int>>> citiesPerItem;
     bool sorted;
   };
 
