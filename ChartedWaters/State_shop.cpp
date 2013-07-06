@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "State_prompt.h"
 #include <iostream>
+#include <regex>
 #pragma warning(disable : 4018)
 
 using namespace std;
@@ -38,7 +39,9 @@ string shopHeader()
 
 string changeToDecimal(const string& input)
   {
-  if (*(input.end()-2) != '.')
+  regex rgx;
+  rgx.assign("\\.\\d");
+  if(!regex_search(input, rgx)) // If the regex wasn't matched -> if there is no decimal point in it.
     return input + string(".0");
   else
     return input;
@@ -76,7 +79,7 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
 
   returnval += string("   ");
 
-  string sellprice = to_string((long double)refToTown.getPriceOf(itemIDToTrade) * (1.0f - refToTown.getTaxRate(isHometown)));
+  string sellprice = to_string((long double)refToTown.getSellPrice(tuple.itemID) * (1.0f - refToTown.getTaxRate(isHometown)));
 
   //returnval += string("~") + sellprice;
   
@@ -356,7 +359,7 @@ void State_Shop::Update()
           numberToTrade = stoi(inventory.at(selector-6).numberOfItems);
           }
 
-        int total = numberToTrade * refToTown.getPriceOf(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
+        int total = numberToTrade * refToTown.getSellPrice(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
         
         string print = string("Really sell ") + to_string((long double)numberToTrade) + string(" ") + itemName + string(" for ") + to_string((long double)total) + string(" ducats?");
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);

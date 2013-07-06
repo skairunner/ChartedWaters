@@ -1,6 +1,8 @@
 #include "town.h"
 #include <cstdlib>
+#include <limits>
 #pragma warning (disable : 4244)
+
 using namespace std;
 
 Town::Town()
@@ -33,11 +35,13 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
     double secondtemp; // To change the raw floats into 'clean', 1-decimal point numbers.
     buffer.itemID = it->ID;
     buffer.ItemName = it->name;
+
     buffer.numberOfItems = to_string((long double)it->howMany());
     temporary = (it->getPrice()) * (1 + tax) * 10;
     secondtemp = temporary / 10.0f;
+
     buffer.BuyPrice = to_string((long double)secondtemp);
-    temporary = it->getPrice() * (1 - tax) * 10;
+    temporary = getSellPrice(it->ID) * 10 * (1 - tax);
     secondtemp = temporary / 10.0f;
     buffer.SellPrice = to_string((long double)secondtemp);
     int percentage = (double)it->getPrice()/it->basePrice * 100;
@@ -60,6 +64,16 @@ void Town::addItems(const std::string& ID, const int& numberOf)
       }
   // since the item doesn't exist
   itemlist.push_back(EconomyItem(ID, numberOf, numberOf * 1.1f));
+  }
+
+vector<EconomyItem>::iterator Town::getItemIterator(const string& ID)
+  {
+  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
+    {
+    if (it->ID == ID)
+      return it;
+    }
+  return itemlist.end();
   }
 
 int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
@@ -104,7 +118,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   return twSUCCESS;
   }
 
-// Must consider: (1) if it's produced in that city (2) supply vs demand for said item (3) if the city is in a 'zone'
+
 int Town::getPriceOf(const std::string& ID)
   {
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
@@ -112,13 +126,65 @@ int Town::getPriceOf(const std::string& ID)
     if (it->ID == ID)
       return it->getPrice();
     }
-  // If it doesn't exist, return the price ...
-  return -1;
+  // If it doesn't exist, return the base price ...
+  return ItemDict.findBasePrice(ID);
   } 
+
+double Town::getDistanceFromNearestSource(const std::string& ID)
+  {
+  auto list = ItemDict.getCitiesForItem(ID);
+  if (list.size() == 0)
+    return 99999; // max :D
+  double distance = numeric_limits<double>::max(); // Squared at first.
+  for (auto it = list.begin()+1; it < list.end(); it++)
+    {
+    double potentialDistance = pow((double)myPosition.first - it->first, 2) + pow((double)myPosition.second - it->second, 2);
+    if (potentialDistance <= distance)
+      distance = potentialDistance;
+    }
+
+  return sqrt(distance);
+  }
+
+// Must consider: (1) if it's produced in that city (2) supply vs demand for said item (3) if the city is in a 'zone' (4) closest city that produces said good
+double Town::getSellPrice(const std::string& ID)
+  {
+  double producedHere = 1.0f;
+  double produceZone = 1.0f;
+  double distanceMult = 1.0f;
+
+  // Produced here -> half
+  auto spawnlistIt = spawnList.begin();
+  while (spawnlistIt < spawnList.end() && *spawnlistIt != ID)
+    spawnlistIt++;
+  if (spawnlistIt != spawnList.end()) 
+    producedHere = 0.5f;
+  
+  // Is in a zone -> 90%
+  string category = ItemDict.findItemCategory(ID);
+
+  if (isAgri && category == string("Food"))
+    produceZone = 0.9f;
+  else if (isIndustrial && category == string("Raw materials"))
+    produceZone = 0.9f;
+  else if (isOther && category == string("Other"))
+    produceZone = 0.9f;
+  else if (isLuxury && category == string("Luxury items"))
+    produceZone = 0.9f;
+
+  // Distance bonus
+  double distance = getDistanceFromNearestSource(ID);
+  distance = distance > 100 ? 100 : distance;
+  distance = distance < 0 ? 0 : distance;
+  distanceMult = distance / 50 + 0.7f;
+
+  return getPriceOf(ID) * distanceMult * produceZone * producedHere;
+  }
+
+
 
 int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
   {
-  double taxrate = 
   lastTransaction = 0;
   if (numberOf == 0)
     return 0;
@@ -131,7 +197,7 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometo
   bool success = ship.removeItem(ID, numberOf);
   if (!success)
     return twNOT_ENOUGH_ITEMS;
-  int earned = numberOf * getPriceOf(ID) * (1 - currentTax);
+  int earned = numberOf * getSellPrice(ID) * (1 - currentTax);
   addItems(ID, numberOf);
   ship.addMoney(earned);
   lastTransaction = earned;

@@ -187,7 +187,7 @@ ItemDictionary::ItemDictionary()
   buffer.name = string("invalid item");
   ItemList[string("null")] = buffer;
 
-  ///////// now let's do the initial stuff
+  ///////// now let's do the initials stuff
   InitialList[string("Alcohol")] = string("Alc");
   InitialList[string("Foodstuffs")] = string("Fds");
   InitialList[string("Seasonings")] = string("Sea");
@@ -238,6 +238,15 @@ int ItemDictionary::findBasePrice(const std::string& ID)
     return ItemList[string("null")].basePrice;
   else
     return it->second.basePrice;
+  }
+
+string ItemDictionary::findItemCategory(const string& ID)
+  {
+  auto it = ItemList.find(ID);
+  if (it == ItemList.end())
+    return ItemList[string("null")].category;
+  else
+    return it->second.category;
   }
 
 pair<double, double> ItemDictionary::findDecayRates(const std::string& ID)
@@ -294,6 +303,8 @@ void ItemDictionary::clearCitiesList()
   {
   citiesPerItem.clear();
   }
+
+
 
 ///////////////////////
 //////////

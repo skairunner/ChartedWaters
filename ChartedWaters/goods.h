@@ -33,6 +33,8 @@ class ItemDictionary
     std::string findItemTypeInitials(const std::string& ID);
     std::pair<double, double> findDecayRates(const std::string& ID);
     std::string findItemDesc(const std::string& ID);
+    std::string findItemCategory(const std::string& ID);
+
     Item& getItemTemplate(const std::string& itemID);
     void sortIntoLists(); // Make a map of vector of item IDs.
     std::vector<std::string>& getItemsPerCategory(const std::string& category);

@@ -133,7 +133,13 @@ cell& PathMap::ref(const coord& xy)
 
 vector<coord> Pather::path(const coord& starting, const coord& destination, const double waveResistance)
   {
+#ifdef NDEBUG
   auto searchResult = fill_closedset.find(destination);
+#endif
+#ifndef NDEBUG
+  fill_closedset[coord(0,0)] = true;
+  auto searchResult = fill_closedset.begin(); 
+#endif
   if (!map.ref(destination).accessible || searchResult == fill_closedset.end())
     {
     return vector<coord>(2, starting);

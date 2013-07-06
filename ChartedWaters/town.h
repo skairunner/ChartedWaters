@@ -2,6 +2,7 @@
 #include <map>
 #include "goods.h"
 #include "Ship.h"
+#include <vector>
 
 enum TOWN_ERRORS {twSUCCESS = 1, twNO_SUCH_ITEM, twNOT_ENOUGH_MONEY, twNOT_ENOUGH_ITEMS};
 
@@ -22,6 +23,9 @@ class Town
     std::string TownName;
     double taxRate;
     int faction;
+    std::vector<EconomyItem>::iterator getItemIterator(const std::string& ID); //return itemlist.end() if not found.
+    double getDistanceFromNearestSource(const std::string& ID);
+    
 
   public:
     Town();
@@ -35,6 +39,7 @@ class Town
 
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
     int getPriceOf(const std::string& ID);
+    double  getSellPrice(const std::string& ID);
     double getTaxRate(bool hometown = false);
     int getNumberOf(const std::string& ID);
 
@@ -44,7 +49,7 @@ class Town
     int lastTransaction;
     int unitPurchasePriceOfSell;
 
-    bool isAgri, isIndustrial, isOther, isluxury;
-
+    bool isAgri, isIndustrial, isOther, isLuxury;
+    std::pair<int, int> myPosition;
     std::vector<std::string> spawnList;
   };
