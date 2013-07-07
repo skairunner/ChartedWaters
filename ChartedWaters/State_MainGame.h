@@ -6,7 +6,7 @@ class MainGameState: public GameState
   {
   public:
   GameState *prev;
-  MainGameState(const int& w, const int& h, std::vector<GameState*>* pointerToStack, const int debugCounter);
+  MainGameState(const int& w, const int& h,const int debugCounter);
   ~MainGameState();
   virtual bool Init();
   virtual void Update();

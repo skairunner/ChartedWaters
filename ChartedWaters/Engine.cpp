@@ -4,6 +4,7 @@
 #include "State_ShipStatus.h"
 #include <string>
 #include "State_shop.h"
+#include "State_MainGame.h"
 
 Engine CursesEngine;
 

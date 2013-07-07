@@ -193,7 +193,8 @@ void Renderer::getTerrainBitmap(TCODConsole* map, World& world)
         if (it.isCoastal)
           {
           character = 178;
-          fore = coastalBrown;
+          back = coastalBrown;
+          fore = sandcolor;
           }
 
         map->putCharEx(xcounter, ycounter, character, fore, back);

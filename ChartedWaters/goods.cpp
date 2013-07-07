@@ -194,8 +194,8 @@ ItemDictionary::ItemDictionary()
   InitialList[string("Livestock")] = string("Liv");
   InitialList[string("Luxury food")] = string("Lux");
   InitialList[string("Fiber")] = string("Fib");
-  InitialList[string("Fabric")] = string("Dye");
-  InitialList[string("Dyes")] = string("Fds");
+  InitialList[string("Fabric")] = string("Fab");
+  InitialList[string("Dyes")] = string("Dye");
   InitialList[string("Industrial goods")] = string("Ind");
   InitialList[string("Medicine")] = string("Med");
   InitialList[string("Sundries")] = string("Etc");

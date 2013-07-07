@@ -13,9 +13,7 @@ State_ShipStatus::State_ShipStatus(Ship& ship)
 
 State_ShipStatus::~State_ShipStatus()
   {
-    delete console;
-    if (!stateStack) 
-      delete stateStack;
+    
   }
 
 string State_ShipStatus::header() // The one that says ID ... name ... price ... numberof
@@ -143,8 +141,6 @@ void State_ShipStatus::Render(TCODConsole *root)
 void State_ShipStatus::End()
   {
   delete console;
-    if (!stateStack) 
-      delete stateStack;
   }
   //
 void State_ShipStatus::Resize(int new_w,int new_h){}

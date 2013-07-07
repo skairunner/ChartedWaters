@@ -5,10 +5,10 @@
 class GameState
 	{
 	public:
-    std::vector<GameState*>* stateStack;
+   // std::vector<GameState*>* stateStack;
 		GameState *prev;
-		GameState(): pushSomething(false) {prev=NULL; popMe = false;}
-    GameState(std::vector<GameState*>* pointerToStack) {prev = NULL; popMe = false; pushSomething = false; stateStack = pointerToStack;}
+		GameState(): pushSomething(false), prev(NULL), popMe(false) {}
+  //  GameState() {prev = NULL; popMe = false; pushSomething = false;}
 		virtual bool Init(){return true;}
 		virtual void Update(){}
 		virtual void Render(TCODConsole *root){}
