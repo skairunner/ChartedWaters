@@ -181,6 +181,7 @@ ItemDictionary::ItemDictionary()
 
   Item buffer;
   buffer.ID = string("null");
+  buffer.category = string("null");
   buffer.basePrice = 0;
   buffer.decayRateNegative = buffer.decayRatePositive = 0;
   buffer.desc = string("No description.");
@@ -208,6 +209,7 @@ ItemDictionary::ItemDictionary()
   InitialList[string("Fragrances")] = string("Fra");
   InitialList[string("Jewellery")] = string("Jwl");
   InitialList[string("Precious stones")] = string("P.S");
+  InitialList[string("null")] = string("!!!");
   }
 
 string ItemDictionary::findItemName(const std::string& ID)

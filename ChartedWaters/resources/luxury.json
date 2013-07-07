@@ -1,2 +1,569 @@
 [
+	{
+		"ID": "luxury_antiqueart",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Antique art",
+		"base price": 3280
+	},
+	{
+		"ID": "luxury_bronzesculptures",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Bronze sculptures",
+		"base price": 982
+	},
+	{
+		"ID": "luxury_marblesculptures",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Marble sculptures",
+		"base price": 2890
+	},
+	{
+		"ID": "luxury_oilpaintings",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Oil paintings",
+		"base price": 2770
+	},
+	{
+		"ID": "luxury_stonesculptures",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Stone sculptures",
+		"base price": 1394
+	},
+	{
+		"ID": "luxury_woodensculptures",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Wooden sculptures",
+		"base price": 990
+	},
+	{
+		"ID": "luxury_rarecoins",
+		"category": "Luxury",
+		"type": "Artwork",
+		"name": "Rare coins",
+		"base price": 1390
+	},
+	{
+		"ID": "luxury_allspice",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Allspice",
+		"base price": 288
+	},
+	{
+		"ID": "luxury_basil",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Basil",
+		"base price": 118
+	},
+	{
+		"ID": "luxury_bergamot",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Bergamot",
+		"base price": 472
+	},
+	{
+		"ID": "luxury_cardamom",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Cardamom",
+		"base price": 981
+	},
+	{
+		"ID": "luxury_celery",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Celery",
+		"base price": 96
+	},
+	{
+		"ID": "luxury_cinnamon",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Cinnamon",
+		"base price": 416
+	},
+	{
+		"ID": "luxury_cloves",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Cloves",
+		"base price": 418
+	},
+	{
+		"ID": "luxury_garlic",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Garlic",
+		"base price": 278
+	},
+	{
+		"ID": "luxury_ginger",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Ginger",
+		"base price": 2186
+	},
+	{
+		"ID": "luxury_laurel",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Laurel",
+		"base price": 99
+	},
+	{
+		"ID": "luxury_lemongrass",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Lemon grass",
+		"base price": 88
+	},
+	{
+		"ID": "luxury_mace",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Mace",
+		"base price": 524
+	},
+	{
+		"ID": "luxury_mustard",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Mustard",
+		"base price": 203
+	},
+	{
+		"ID": "luxury_mutmeg",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Mutmeg",
+		"base price": 406
+	},
+	{
+		"ID": "luxury_oregano",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Oregano",
+		"base price": 560
+	},
+	{
+		"ID": "luxury_parsley",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Parsley",
+		"base price": 98
+	},
+	{
+		"ID": "luxury_pepper",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Pepper",
+		"base price": 306
+	},
+	{
+		"ID": "luxury_redpepper",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Red pepper",
+		"base price": 363
+	},
+	{
+		"ID": "luxury_rosemary",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Rosemary",
+		"base price": 2345
+	},
+	{
+		"ID": "luxury_saffron",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Saffron",
+		"base price": 252
+	},
+	{
+		"ID": "luxury_sesameseeds",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Sesame seeds",
+		"base price": 189
+	},
+	{
+		"ID": "luxury_thyme",
+		"category": "Luxury",
+		"type": "Spices",
+		"name": "Thyme",
+		"base price": 277
+	},
+	{
+		"ID": "luxury_fool'sgold",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Fool's gold",
+		"base price": 51
+	},
+	{
+		"ID": "luxury_gold",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Gold",
+		"base price": 7070
+	},
+	{
+		"ID": "luxury_golddust",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Gold dust",
+		"base price": 3690
+	},
+	{
+		"ID": "luxury_iridium",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Iridium",
+		"base price": 5794
+	},
+	{
+		"ID": "luxury_palladium",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Palladium",
+		"base price": 6085
+	},
+	{
+		"ID": "luxury_platinum",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Platinum",
+		"base price": 3990
+	},
+	{
+		"ID": "luxury_quicksilver",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Quicksilver",
+		"base price": 3211
+	},
+	{
+		"ID": "luxury_rosegold",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Rose gold",
+		"base price": 3700
+	},
+	{
+		"ID": "luxury_silver",
+		"category": "Luxury",
+		"type": "Precious metals",
+		"name": "Silver",
+		"base price": 2830
+	},
+	{
+		"ID": "luxury_aloeswood",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Aloeswood",
+		"base price": 1710
+	},
+	{
+		"ID": "luxury_ambergris",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Ambergris",
+		"base price": 3661
+	},
+	{
+		"ID": "luxury_benzoinresin",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Benzoin resin",
+		"base price": 828
+	},
+	{
+		"ID": "luxury_camphor",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Camphor",
+		"base price": 1058
+	},
+	{
+		"ID": "luxury_cedar",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Cedar",
+		"base price": 1200
+	},
+	{
+		"ID": "luxury_civitmusk",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Civit musk",
+		"base price": 2491
+	},
+	{
+		"ID": "luxury_daffodils",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Daffodils",
+		"base price": 740
+	},
+	{
+		"ID": "luxury_eucalyptus",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Eucalyptus",
+		"base price": 327
+	},
+	{
+		"ID": "luxury_frakincense",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Frakincense",
+		"base price": 2080
+	},
+	{
+		"ID": "luxury_geranium",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Geranium",
+		"base price": 610
+	},
+	{
+		"ID": "luxury_incense",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Incense",
+		"base price": 952
+	},
+	{
+		"ID": "luxury_jasmine",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Jasmine",
+		"base price": 4350
+	},
+	{
+		"ID": "luxury_lavender",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "lavender",
+		"base price": 676
+	},
+	{
+		"ID": "luxury_lemonoil",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Lemon oil",
+		"base price": 537
+	},
+	{
+		"ID": "luxury_lilac",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Lilac",
+		"base price": 619
+	},
+	{
+		"ID": "luxury_lilyofthevalley",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Lily of the Valley",
+		"base price": 830
+	},
+	{
+		"ID": "luxury_musk",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Musk",
+		"base price": 3940
+	},
+	{
+		"ID": "luxury_oakmoss",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Oakmoss",
+		"base price": 600
+	},
+	{
+		"ID": "luxury_patchouli",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Patchouli",
+		"base price": 1217
+	},
+	{
+		"ID": "luxury_rose",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Rose",
+		"base price": 2802
+	},
+	{
+		"ID": "luxury_sandalwood",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Sandalwood",
+		"base price": 2950
+	},
+	{
+		"ID": "luxury_shellperfume",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Shell perfume",
+		"base price": 1220
+	},
+	{
+		"ID": "luxury_ylangylang",
+		"category": "Luxury",
+		"type": "Fragrances",
+		"name": "Ylang ylang",
+		"base price": 674
+	},
+	{
+		"ID": "luxury_amber",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Amber",
+		"base price": 2025
+	},
+	{
+		"ID": "luxury_aventurine",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Aventurine",
+		"base price": 1505
+	},
+	{
+		"ID": "luxury_cat'seye",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Cat's eye",
+		"base price": 3510
+	},
+	{
+		"ID": "luxury_crystal",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Crystal",
+		"base price": 1180
+	},
+	{
+		"ID": "luxury_coral",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Coral",
+		"base price": 2610
+	},
+	{
+		"ID": "luxury_diamond",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Diamond",
+		"base price": 5400
+	},
+	{
+		"ID": "luxury_emerald",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Emerald",
+		"base price": 3340
+	},
+	{
+		"ID": "luxury_incarose",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Inca rose",
+		"base price": 4012
+	},
+	{
+		"ID": "luxury_ivory",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Ivory",
+		"base price": 2490
+	},
+	{
+		"ID": "luxury_jade",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Jade",
+		"base price": 1440
+	},
+	{
+		"ID": "luxury_lapislazuli",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Lapis lazuli",
+		"base price": 1952
+	},
+	{
+		"ID": "luxury_malachite",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Malachite",
+		"base price": 1990
+	},
+	{
+		"ID": "luxury_opal",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Opal",
+		"base price": 1870
+	},
+	{
+		"ID": "luxury_pearl",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Pearl",
+		"base price": 7020
+	},
+	{
+		"ID": "luxury_pinkdiamond",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Pink diamond",
+		"base price": 4650
+	},
+	{
+		"ID": "luxury_ruby",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Ruby",
+		"base price": 2708
+	},
+	{
+		"ID": "luxury_sapphire",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Sapphire",
+		"base price": 3239
+	},
+	{
+		"ID": "luxury_topaz",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Topaz",
+		"base price": 1680
+	},
+	{
+		"ID": "luxury_turquoise",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Turquoise",
+		"base price": 1017
+	},
+	{
+		"ID": "luxury_turtleshell",
+		"category": "Luxury",
+		"type": "Precious stones",
+		"name": "Turtle shell",
+		"base price": 1416
+	}
 ]

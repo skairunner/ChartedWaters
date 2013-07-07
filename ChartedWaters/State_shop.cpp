@@ -207,6 +207,15 @@ void State_Shop::redrawRight()
   consoleRight->print(1, line++, (string("The city of ") + refToTown.getName()).c_str());
 
   consoleRight->print(1, line++, (string("Tax rate is ") + to_string((long double)refToTown.getTaxRate(isHometown) * 100) + string("%%")).c_str());
+  if (refToTown.isAgri) 
+    consoleRight->putCharEx(1, line, 'A', TCODColor::lightGreen, TCODColor::black);
+  if (refToTown.isIndustrial) 
+    consoleRight->putCharEx(2, line, 'I', TCODColor::darkGrey, TCODColor::black);
+  if (refToTown.isOther) 
+    consoleRight->putCharEx(3, line, 'O', TCODColor::lightBlue, TCODColor::black);
+  if (refToTown.isLuxury) 
+    consoleRight->putCharEx(4, line, 'L', TCODColor::gold, TCODColor::black);
+
   line++;
   line++; // skip a line
   goods = refToTown.returnListOfItems(isHometown);

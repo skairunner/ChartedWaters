@@ -6,10 +6,9 @@
 using namespace std;
 
 Town::Town()
-  :taxRate(0.10f), isLuxury(false), isOther(false), isIndustrial(0), isAgri(0)
+  :taxRate(0.10f), isLuxury(false), isOther(false), isIndustrial(false), isAgri(false), faction(0)
   {
-  /// test items
-  
+ 
 
   }
 

@@ -106,22 +106,22 @@ void World::populateCities()
     double luxury = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 7.5);
 
     food += 2; // bump into positive.
-    other += 2.5;
-    indust += 2.5;
-    luxury += 2.5;
+    other += 2;
+    indust += 2;
+    luxury += 2;
 
-    food = (int)(3 * abs(food)); // Remove any vestigal negatives.
-    indust = (int)(3 * abs(indust));
+    food = (int)(2 * abs(food)); // Remove any vestigal negatives.
+    indust = (int)(2 * abs(indust));
     other = (int)(2 * abs(other));
-    luxury = (int)(2.3 * abs(luxury));
+    luxury = (int)(1.5 * abs(luxury));
 
-    if (food > 2)
+    if (food >= 4)
       it->second.isAgri = true;
-    if (indust > 2)
+    if (indust >= 4)
       it->second.isIndustrial = true;
-    if (luxury > 2)
+    if (luxury >= 4)
       it->second.isLuxury = true;
-    if (other > 2)
+    if (other >= 4)
       it->second.isOther = true;
 
 

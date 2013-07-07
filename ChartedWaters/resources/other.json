@@ -1,2 +1,506 @@
 [
+	{
+		"ID": "other_aniseed",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Aniseed",
+		"base price": 188
+	},
+	{
+		"ID": "other_apricotseeds",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Apricot seeds",
+		"base price": 356
+	},
+	{
+		"ID": "other_autumncrocus",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Autumn crocus",
+		"base price": 290
+	},
+	{
+		"ID": "other_belladonna",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Belladonna",
+		"base price": 364
+	},
+	{
+		"ID": "other_chamomile",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Chamomile",
+		"base price": 288
+	},
+	{
+		"ID": "other_dandelions",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Dandelions",
+		"base price": 206
+	},
+	{
+		"ID": "other_digitalis",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Digitalis",
+		"base price": 512
+	},
+	{
+		"ID": "other_elder",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Elder",
+		"base price": 168
+	},
+	{
+		"ID": "other_heather",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Heather",
+		"base price": 175
+	},
+	{
+		"ID": "other_lemonbalm",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Lemon balm",
+		"base price": 291
+	},
+	{
+		"ID": "other_maca",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Maca",
+		"base price": 329
+	},
+	{
+		"ID": "other_mandrake",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Mandrake",
+		"base price": 821
+	},
+	{
+		"ID": "other_quicksilverbalm",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Quicksilver balm",
+		"base price": 1300
+	},
+	{
+		"ID": "other_myrrh",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Myrrh",
+		"base price": 519
+	},
+	{
+		"ID": "other_noni",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Noni",
+		"base price": 436
+	},
+	{
+		"ID": "other_oxgallstones",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Ox gallstones",
+		"base price": 882
+	},
+	{
+		"ID": "other_peony",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Peony",
+		"base price": 303
+	},
+	{
+		"ID": "other_rhinoceroshron",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Rhinoceros hron",
+		"base price": 1920
+	},
+	{
+		"ID": "other_rosehip",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Rosehip",
+		"base price": 372
+	},
+	{
+		"ID": "other_rhubarb",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Rhubarb",
+		"base price": 290
+	},
+	{
+		"ID": "other_sage",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Sage",
+		"base price": 402
+	},
+	{
+		"ID": "other_senna",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Senna",
+		"base price": 244
+	},
+	{
+		"ID": "other_teatree",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Tea tree",
+		"base price": 608
+	},
+	{
+		"ID": "other_wormwood",
+		"category": "Other",
+		"type": "Medicine",
+		"name": "Wormwood",
+		"base price": 306
+	},
+	{
+		"ID": "other_advancedtomes",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Advanced tomes",
+		"base price": 776
+	},
+	{
+		"ID": "other_basictomes",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Basic tomes",
+		"base price": 450
+	},
+	{
+		"ID": "other_encyclopediaofmagic",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Encyclopedia of Magic",
+		"base price": 2100
+	},
+	{
+		"ID": "other_inkstone",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Inkstone",
+		"base price": 960
+	},
+	{
+		"ID": "other_magicpowder",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Magic powder",
+		"base price": 301
+	},
+	{
+		"ID": "other_rarebooks",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Rare books",
+		"base price": 1820
+	},
+	{
+		"ID": "other_ritualcandles",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Ritual candles",
+		"base price": 225
+	},
+	{
+		"ID": "other_spellseals",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Spell seals",
+		"base price": 123
+	},
+	{
+		"ID": "other_spellwriters",
+		"category": "Other",
+		"type": "Sundries",
+		"name": "Spellwriters",
+		"base price": 620
+	},
+	{
+		"ID": "other_arquebuses",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Arquebuses",
+		"base price": 1908
+	},
+	{
+		"ID": "other_bullets",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Bullets",
+		"base price": 772
+	},
+	{
+		"ID": "other_cannonshot",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Cannon shot",
+		"base price": 1670
+	},
+	{
+		"ID": "other_cannons",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Cannons",
+		"base price": 3380
+	},
+	{
+		"ID": "other_grenades",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Grenades",
+		"base price": 2122
+	},
+	{
+		"ID": "other_gunpowder",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Gunpowder",
+		"base price": 875
+	},
+	{
+		"ID": "other_muskets",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Muskets",
+		"base price": 3140
+	},
+	{
+		"ID": "other_pistols",
+		"category": "Other",
+		"type": "Firearms",
+		"name": "Pistols",
+		"base price": 1061
+	},
+	{
+		"ID": "other_bastardswords",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Bastard swords",
+		"base price": 1435
+	},
+	{
+		"ID": "other_crossbows",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Crossbows",
+		"base price": 939
+	},
+	{
+		"ID": "other_daggers",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Daggers",
+		"base price": 867
+	},
+	{
+		"ID": "other_damaskussword",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Damaskus sword",
+		"base price": 4729
+	},
+	{
+		"ID": "other_longbows",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Long bows",
+		"base price": 793
+	},
+	{
+		"ID": "other_longswords",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Long swords",
+		"base price": 1736
+	},
+	{
+		"ID": "other_platearmor",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Plate armor",
+		"base price": 2576
+	},
+	{
+		"ID": "other_rapiers",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Rapiers",
+		"base price": 1008
+	},
+	{
+		"ID": "other_saber",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Saber",
+		"base price": 992
+	},
+	{
+		"ID": "other_shortbows",
+		"category": "Other",
+		"type": "Weapons",
+		"name": "Short bows",
+		"base price": 893
+	},
+	{
+		"ID": "other_antlercrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Antler crafts",
+		"base price": 2672
+	},
+	{
+		"ID": "other_brushes",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Brushes",
+		"base price": 1456
+	},
+	{
+		"ID": "other_celadon",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Celadon",
+		"base price": 3120
+	},
+	{
+		"ID": "other_ceramic",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Ceramic",
+		"base price": 1437
+	},
+	{
+		"ID": "other_coralcrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Coral crafts",
+		"base price": 2646
+	},
+	{
+		"ID": "other_earthenware",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Earthenware",
+		"base price": 790
+	},
+	{
+		"ID": "other_embroidery",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Embroidery",
+		"base price": 2960
+	},
+	{
+		"ID": "other_fineclothing",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Fine clothing",
+		"base price": 4160
+	},
+	{
+		"ID": "other_finefurniture",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Fine furniture",
+		"base price": 2808
+	},
+	{
+		"ID": "other_glasscrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Glass crafts",
+		"base price": 1263
+	},
+	{
+		"ID": "other_glasseggs",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Glass eggs",
+		"base price": 1123
+	},
+	{
+		"ID": "other_goldcrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Gold crafts",
+		"base price": 3142
+	},
+	{
+		"ID": "other_goldthread",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Gold thread",
+		"base price": 2566
+	},
+	{
+		"ID": "other_ivorycrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Ivory crafts",
+		"base price": 3600
+	},
+	{
+		"ID": "other_jewellery",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Jewel lery",
+		"base price": 4292
+	},
+	{
+		"ID": "other_lacquerware",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Lacquerware",
+		"base price": 1260
+	},
+	{
+		"ID": "other_leathercrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Leather crafts",
+		"base price": 1125
+	},
+	{
+		"ID": "other_leatherstraps",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Leather straps",
+		"base price": 625
+	},
+	{
+		"ID": "other_silvercrafts",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Silver crafts",
+		"base price": 3061
+	},
+	{
+		"ID": "other_silverware",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "Silverware",
+		"base price": 3061
+	},
+	{
+		"ID": "other_whiteceladon",
+		"category": "Other",
+		"type": "Crafts",
+		"name": "White celadon",
+		"base price": 3120
+	}
 ]
