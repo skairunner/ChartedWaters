@@ -48,6 +48,7 @@ class Town
     int numberOfLastTransaction;
     int lastTransaction;
     int unitPurchasePriceOfSell;
+    std::string lastTransactionItemID;
 
     bool isAgri, isIndustrial, isOther, isLuxury;
     std::pair<int, int> myPosition;

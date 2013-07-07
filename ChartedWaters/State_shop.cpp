@@ -24,7 +24,7 @@ string header() // The one that says ID ... name ... price ... numberof
   string returnval;
   string blank(" ");
 
-  returnval += string("Typ  Item name          Bought at  Sells at  #");
+  returnval += string("Typ Item name          Bought at  Sells at  #");
   return returnval;
   }
 
@@ -323,7 +323,7 @@ void State_Shop::Update()
       switch (errors)
         {
       case twSUCCESS:
-        print = string("Successfully bought ") + to_string((long double)numberToTrade) + string(" ") + goods.at(selector-6).ItemName + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
+        print = string("Successfully bought ") + to_string((long double)numberToTrade) + string(" ") + ItemDict.findItemName(refToTown.lastTransactionItemID) + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
         nextState = new State_Prompt(print.size()+4, 4, print, throwawayBool);
         pushSomething = true;
         redrawLeft();
@@ -402,13 +402,16 @@ void State_Shop::Update()
     {
     if (yesNo) // if said yes
       {
+      int length;
       int errors = refToTown.sellItems(refToShip, itemIDToTrade, numberToTrade, isHometown);
       string print;
       switch (errors)
         {
       case twSUCCESS:
-        print = string("Successfully sold ") + to_string((long double)numberToTrade) + string(" ") + goods.at(selector-6).ItemName + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
-        nextState = new State_Prompt(print.size()+4, 4, print, throwawayBool);
+        print = string("Successfully sold ") + to_string((long double)numberToTrade) + string(" ") + ItemDict.findItemName(refToTown.lastTransactionItemID) + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
+        length = print.size();
+        print += string("\nNet profit: ") + to_string((long double)(refToTown.lastTransaction - refToTown.unitPurchasePriceOfSell * refToTown.numberOfLastTransaction)) + string(" ducats.");
+        nextState = new State_Prompt(length+4, 5, print, throwawayBool);
         pushSomething = true;
         redrawLeft();
         redrawRight();

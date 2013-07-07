@@ -18,6 +18,8 @@ const int screenheight = 48;
 int focusX = screenwidth/2;
 int focusY = screenheight/2;
 
+int playerMovement = 0;
+
 World* TheWorld;
 TCODConsole* cityscreen;
 TCODConsole* mapscreen;
@@ -139,8 +141,13 @@ if (mouseClick)
   }
 if (pressedPeriod)
   {
-  TheWorld->getPlayerShip().updatePos();
+  playerMovement = TheWorld->getPlayerShip().speed;
   pressedPeriod = false;
+  }
+if (playerMovement > 0)
+  {
+  TheWorld->getPlayerShip().updatePos();
+  playerMovement--;
   Renderer::getShipBitmap(ShipScreen, *TheWorld);
   }
 

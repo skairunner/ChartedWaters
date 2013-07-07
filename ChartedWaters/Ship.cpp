@@ -4,7 +4,7 @@
 using namespace std;
 
 Ship::Ship()
-  : ducats(1000), storage(0), maxstorage(50), speed(1), character(127), waveResistance(6), faction(0)
+  : ducats(1000), storage(0), maxstorage(212), speed(6), character(127), waveResistance(6), faction(0)
   {
 
   }

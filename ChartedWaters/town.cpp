@@ -80,6 +80,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   if (numberOf == 0)
     return 0;
   lastTransaction = 0;
+  lastTransactionItemID.clear();
   auto it = itemlist.begin();
 
   // implicit else, as if will return.
@@ -114,6 +115,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   lastTransaction = price;
   numberOfLastTransaction = numberOf;
   unitPurchasePriceOfSell = 0;
+  lastTransactionItemID = ID;
   return twSUCCESS;
   }
 
@@ -189,6 +191,7 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometo
     return 0;
   if (numberOf < 0)
     numberOf = ship.getNumberOfItems(ID);
+  lastTransactionItemID.clear();
   // Set tax rate to 0 if it's hometown.
 
   double currentTax = getTaxRate(hometown);
@@ -201,6 +204,7 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometo
   ship.addMoney(earned);
   lastTransaction = earned;
   numberOfLastTransaction = numberOf;
+  lastTransactionItemID = ID;
   
   return twSUCCESS;
   }

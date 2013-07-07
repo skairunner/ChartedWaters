@@ -37,9 +37,9 @@ class Ship
     int waveResistance;
     std::vector<std::pair<int,int>> path;
     int faction; //default 0
-  private:
-    int speed; // Tiles per day. Default 1.
-    
+    int speed; // Tiles per day. Default 6.
+
+  private:   
     bool removeFromList(const std::string& itemID);
     std::string shipName;
     int ducats;

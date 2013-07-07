@@ -30,7 +30,7 @@ bool TCODEngine::Init(char *name,char *ascii,int winwidth,int winheight)
 	TCODConsole::setCustomFont(ascii,TCOD_FONT_LAYOUT_ASCII_INROW,16,16);
   //TCODConsole::setCustomFont(ascii,TCOD_FONT_LAYOUT_ASCII_INCOL,16,16);
 	TCODConsole::initRoot(winwidth,winheight,name,false);
-	TCODSystem::setFps(60);
+	TCODSystem::setFps(30);
   pointerToStack = &StateQueue;
 	return EngineInit();
 }
