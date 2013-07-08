@@ -4,7 +4,7 @@
 using namespace std;
 
 Ship::Ship()
-  : ducats(1000), storage(0), maxstorage(212), speed(6), character(127), waveResistance(6), faction(0)
+  : ducats(1000), storage(0), maxstorage(212), baseSpeed(6), character(127), waveResistance(6), faction(0)
   {
 
   }
@@ -135,7 +135,10 @@ void Ship::setPosition(const std::pair<int, int>& newPos)
 
 int Ship::getSpeed()
   {
-  return speed;
+  double mult;
+  mult = (1-(double)getTotalStorageUsed()/getMaxStorage()) + 0.5; // if total == max, 0.5f. 
+  mult = mult > 1 ? 1 : mult;
+  return mult * baseSpeed;
   }
 
 pair<int, int> Ship::getPosition()

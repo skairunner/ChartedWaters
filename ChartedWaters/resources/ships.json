@@ -1,0 +1,14 @@
+[
+	{
+		"ID" : "galleon",
+		"name" : "Galleon",
+		"price" : 840000,
+		"desc" : "A galleon!",
+		"max storage" : 326,
+		"max cargo" : 266,
+		"max sailors" : 28,
+		"max cannons" : 32,
+		"base speed" : 8,
+		"wave resistance" : 8
+	}
+]

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "goods.h"
+#include "shipPrototype.h"
 
 struct LedgerItemTuple
   {
@@ -14,6 +15,9 @@ class Ship
   {
   public:
     Ship();
+    Ship(const ShipPrototype& prototype);
+    void changeShip(const ShipPrototype& prototype);
+
     void setName(const std::string& newName);
     std::string getName();
     bool addMoney(const int& amount); // false if the total money would go under 0.
@@ -37,7 +41,7 @@ class Ship
     int waveResistance;
     std::vector<std::pair<int,int>> path;
     int faction; //default 0
-    int speed; // Tiles per day. Default 6.
+
 
   private:   
     bool removeFromList(const std::string& itemID);
@@ -45,6 +49,8 @@ class Ship
     int ducats;
     int storage;
     int maxstorage;
+    int baseSpeed;
+    int maxcargo, maxsailors, maxcannons; // Must add up to maxStorage.
     std::vector<LedgerItem> itemList;
     std::pair<int, int> position;
   };
