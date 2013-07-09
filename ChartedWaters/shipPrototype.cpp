@@ -42,7 +42,9 @@ void JSONToShip::readShips(ShipDictionary& dict)
     Json::Value ship = root[counter];
     ShipPrototype buffer;
     buffer.ID = ship["ID"].asString();
-    buffer.type = ship["name"].asString();
+    buffer.name = ship["name"].asString();
+    buffer.size = ship["size"].asString();
+    buffer.specialization = ship["specialization"].asString();
     buffer.price = ship["price"].asInt();
     if (!ship["desc"].isNull())
       buffer.desc = ship["desc"].asString();
@@ -50,12 +52,15 @@ void JSONToShip::readShips(ShipDictionary& dict)
     buffer.maxcannons = ship["max cannons"].asInt();
     buffer.maxcargo = ship["max cargo"].asInt();
     buffer.maxsailors = ship["max sailors"].asInt();
-    buffer.baseSpeed = ship["base speed"].asInt();
+    buffer.lateen = ship["lateen sails"].asInt();
+    buffer.square = ship["square sails"].asInt();
+    buffer.minimumsailors = ship["minimum sailors"].asInt();
     buffer.waveResistance = ship["wave resistance"].asInt();
+    buffer.baseArmor = ship["base armor"].asInt();
+    buffer.maxDurability = ship["max durability"].asInt();
     if (buffer.maxstorage != buffer.maxcannons + buffer.maxcargo + buffer.maxsailors)
       cerr << "Storage != cargo + sailors + cannons for " << buffer.ID << "!\n";
     dict.ships[buffer.ID] = buffer;
- 
     counter++;
     }
   };

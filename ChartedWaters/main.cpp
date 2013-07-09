@@ -19,15 +19,15 @@ ostream& operator<<(ostream& o, vector<string> right)
 int main(int argc,char *argv[])
   {  
   srand(time(0));
-  JSONToShip parser;
-  parser.readShips(ShipDict);
-  /*
+  /*JSONToShip parser;
+  parser.readShips(ShipDict);*/
+  
  CursesEngine.Init("Chartered Waters","resources/asciisquare.bmp",100,48);
   //CursesEngine.Init("Charted Waters","resources/terminal.png",100,48);
   CursesEngine.Start();
   CursesEngine.End();
   return 0;
-  */
+  
   cin.ignore(1);
   return 0;
 }

@@ -9,13 +9,19 @@ class ShipPrototype
   {
   public:
     std::string ID;
-    std::string type; //eg, 'Caravel', 'Carrack'
+    std::string name; //eg, 'Caravel', 'Carrack'
+    std::string specialization;
     std::string desc;
+    std::string size;
     int price;
     int maxstorage;
     int maxcargo, maxsailors, maxcannons;
-    int baseSpeed;
+    int minimumsailors;
+    int baseSpeed(); // calc base speed from sails.
+    int lateen, square; // sails
     int waveResistance;
+    int baseArmor;
+    int maxDurability;
   };
 
 class ShipDictionary
