@@ -11,7 +11,7 @@ struct LedgerItemTuple
   std::string averagePurchasePrice;
   };
 
-class Ship
+class Ship : protected ShipPrototype
   {
   public:
     Ship();
@@ -48,9 +48,6 @@ class Ship
     std::string shipName;
     int ducats;
     int storage;
-    int maxstorage;
-    int baseSpeed;
-    int maxcargo, maxsailors, maxcannons; // Must add up to maxStorage.
     std::vector<LedgerItem> itemList;
     std::pair<int, int> position;
   };

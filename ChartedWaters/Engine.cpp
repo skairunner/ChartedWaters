@@ -5,6 +5,7 @@
 #include <string>
 #include "State_shop.h"
 #include "State_MainGame.h"
+#include "shipPrototype.h"
 
 Engine CursesEngine;
 
@@ -49,6 +50,9 @@ bool Engine::EngineInit()
 {
 JSONToItem jsonParser;
 jsonParser.readItems(ItemDict); // Read items into dictionary.
+JSONToShip parser;
+parser.readShips(ShipDict);
+
 TheWorld = new World(width, height);
 
 TheWorld->regen();

@@ -52,9 +52,9 @@ void JSONToShip::readShips(ShipDictionary& dict)
     buffer.maxcannons = ship["max cannons"].asInt();
     buffer.maxcargo = ship["max cargo"].asInt();
     buffer.maxsailors = ship["max sailors"].asInt();
-    buffer.lateen = ship["lateen sails"].asInt();
-    buffer.square = ship["square sails"].asInt();
-    buffer.minimumsailors = ship["minimum sailors"].asInt();
+    buffer.lateen = ship["lateen sail"].asInt();
+    buffer.square = ship["square sail"].asInt();
+    buffer.minimumsailors = ship["min sailors"].asInt();
     buffer.waveResistance = ship["wave resistance"].asInt();
     buffer.baseArmor = ship["base armor"].asInt();
     buffer.maxDurability = ship["max durability"].asInt();

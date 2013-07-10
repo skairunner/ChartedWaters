@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include "shipPrototype.h"
 //// Basically ship types that can be pasted over player/merchant ships to change their attributes.
 
 class JSONToShip;
