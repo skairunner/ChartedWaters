@@ -7,13 +7,13 @@
 // temporarily copied away.
 
 using namespace std;
-
+/*
 ostream& operator<<(ostream& o, vector<string> right)
   {
   for (auto it = right.begin(); it < right.end(); it++)
     cout << *it;
   return o;
-  }
+  }*/
 
 int main(int argc,char *argv[])
   {  

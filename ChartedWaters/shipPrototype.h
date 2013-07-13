@@ -9,8 +9,8 @@ class JSONToShip;
 class ShipPrototype
   {
   public:
-    std::string ID;
-    std::string name; //eg, 'Caravel', 'Carrack'
+    std::string typeID;
+    std::string typeName; //eg, 'Caravel', 'Carrack'
     std::string specialization;
     std::string desc;
     std::string size;
@@ -29,8 +29,11 @@ class ShipDictionary
   {
   friend class JSONToShip;
   public:
+    ShipDictionary();
     ShipPrototype getShip(const std::string& ID);
+    ShipPrototype getRandomShip();
   private:
+    ShipPrototype null;
     std::map<std::string, ShipPrototype> ships;
   };
 

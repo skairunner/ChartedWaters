@@ -91,11 +91,12 @@ tooltip = new TCODConsole(30, 1);
 Ship& ship = TheWorld->getPlayerShip();
 ship.faction = 1;
 ship.addMoney(65536);
+ship.changeShip(ShipDict.getShip(string("sloop")));
 pressedPeriod = true;
 lockToShip();
 
 	return true;
-}
+} 
 void Engine::Update()
 {
 if (!newState)

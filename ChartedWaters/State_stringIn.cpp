@@ -27,8 +27,10 @@ void state_StringIn::Update()
 void state_StringIn::Render(TCODConsole *root)
   {
   console->clear();
+  console->setDefaultForeground(TCODColor::white);
   console->print(1, 1, text.c_str());
   console->print(1, 2, (string("> ") + buffer).c_str());
+  console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
   TCODConsole::blit(console, 0, 0, 0, 0, root, 0, 0, 1, 1);
   }

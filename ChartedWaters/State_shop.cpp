@@ -5,13 +5,16 @@
 #include "State_prompt.h"
 #include <iostream>
 #include <regex>
+
 #pragma warning(disable : 4018)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4996)
 
 using namespace std;
 
 State_Shop::State_Shop(Town& town, Ship& ship)
-  : refToTown(town), refToShip(ship), selector(5), whichConsole(false), redraw(false), startbuy(false), startsell(false),
-  calculatebuy(false), calculatesell(false), isHometown(false)
+  : refToTown(town), refToShip(ship), selector(6), whichConsole(false), redraw(false), startbuy(false), startsell(false),
+  calculatebuy(false), calculatesell(false), isHometown(false), state(0), getPrompt(false)
   {
   consoleLeft = new TCODConsole(50, 48);
   consoleRight = new TCODConsole(50, 48);
@@ -22,7 +25,6 @@ State_Shop::State_Shop(Town& town, Ship& ship)
 string header() // The one that says ID ... name ... price ... numberof
   {
   string returnval;
-  string blank(" ");
 
   returnval += string("Typ Item name          Bought at  Sells at  #");
   return returnval;
@@ -31,9 +33,59 @@ string header() // The one that says ID ... name ... price ... numberof
 string shopHeader()
   {
   string returnval;
-  string blank(" ");
 
   returnval += string("Typ Item name           Buy    Sell   #     %");
+  return returnval;
+  }
+
+string drydocksHeader()
+  {
+  string returnval;
+
+  returnval += string("Ship name                  Size        Net price");
+  return returnval;
+  }
+
+string rightAlignNumber(const int& input, const int& size)
+  {
+  char price_cstr[50];
+  _snprintf(price_cstr, sizeof(price_cstr), "%d", input);
+  string buffer(price_cstr);
+  //string buffer = to_string((long double)input);
+  string returnval;
+  if (buffer.size() < size)
+    for (int counter = 0; counter < size - buffer.size(); counter++)
+      returnval += " ";
+  if (buffer.size() > size)
+    for (int counter = 0; counter < size; counter++)
+      returnval += "x";
+  else returnval += buffer.substr(0, size);
+  return returnval;
+  }
+
+string rightAlign(const string& input, const int& size)
+  {
+  string returnval;
+  if(input.size() > size)
+    {
+    for (int counter = 0; counter < size; counter++)
+      returnval += "x";
+    return returnval;
+    }
+  if(input.size() < size)
+    for (int counter = 0; counter < size - input.size(); counter++)
+      returnval += " ";
+  returnval += input.substr(0, size);
+  return returnval;
+  }
+
+string leftAlign(const string& input, const int& size)
+  {
+  string returnval;
+  returnval += input.substr(0, size);
+  if(input.size() < size)
+    for (int counter = 0; counter < size - input.size(); counter++)
+      returnval += " ";
   return returnval;
   }
 
@@ -146,6 +198,45 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   return returnval;
   }
 
+string State_Shop::assembleOutput(const ShipPrototype& sp)
+  {
+  /// 
+  /// Name:n Size:s Maxstorage: M, max cargo C, max sailors S, min sailor m, max cannon c, lateen sail l, square sail s, base armor A, durability D
+  /// n{15}_s_MMM_CCC_mm/SS_cc_lll_sss_AA_DDD
+  string blank(" ");
+
+  string returnval;
+
+  returnval += sp.typeName.substr(0, 15);
+  if(sp.typeName.size() < 15)
+    for (int counter = 0; counter < 15 - sp.typeName.size(); counter++)
+      returnval += blank;
+
+  returnval += blank;
+  if (sp.size == string("small"))
+    returnval += "S";
+  else if (sp.size == string("medium"))
+    returnval += "M";
+  else if (sp.size == string("large"))
+    returnval += "L";
+  else returnval += "n";
+  
+  returnval += blank;
+
+  returnval += rightAlignNumber(sp.maxstorage, 3) + " ";
+  returnval += rightAlignNumber(sp.maxcargo, 3) + " ";
+  returnval += rightAlignNumber(sp.minimumsailors, 2);
+  returnval += "/";
+  returnval += rightAlignNumber(sp.maxsailors, 2) + " ";
+  returnval += rightAlignNumber(sp.maxcannons, 2) + " ";
+  returnval += rightAlignNumber(sp.lateen, 3) + " ";
+  returnval += rightAlignNumber(sp.square, 3) + " ";
+  returnval += rightAlignNumber(sp.baseArmor, 2) + " ";
+  returnval += rightAlignNumber(sp.maxDurability, 3);
+
+  return returnval;
+  }
+
 bool State_Shop::Init()
   {
   redrawLeft();
@@ -172,13 +263,17 @@ void State_Shop::invertLine(const int& line, TCODConsole* console)
 void State_Shop::redrawLeft() // Similar to State_shipstatus
   {
   consoleLeft->clear();
+  consoleLeft->setDefaultForeground(TCODColor::grey);
+  consoleLeft->print(1, 0, "(0) Trade shop (1) Drydocks");
   consoleLeft->setDefaultForeground(TCODColor::white);
 
-  int line = 1;
+  int line = 2;
+  
+
   consoleLeft->print(1, line++, (string("The ") + refToShip.getName()).c_str());
   consoleLeft->print(1, line++, (to_string((long double)refToShip.getMoney()) + string(" ducats")).c_str());
-  consoleLeft->print(1, line++, (string("Storage: ") + to_string((long double)refToShip.getTotalStorageUsed()) + string("/") +
-                             to_string((long double)refToShip.getMaxStorage())).c_str());
+  consoleLeft->print(1, line++, ("Storage " + to_string((long double)refToShip.getTotalGoods()) + "/" +
+                             to_string((long double)refToShip.getMaxGoods())).c_str());
   line++; // skip a line
   inventory = refToShip.returnListOfItems();
   /// 
@@ -190,31 +285,38 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
     {
     if (line %2)
       consoleLeft->setDefaultForeground(TCODColor::lightestGreen);
-    else consoleLeft->setDefaultForeground(TCODColor::lightestBlue);
+    else consoleLeft->setDefaultForeground(TCODColor::lightestSky);
     consoleLeft->print(1, line++, assembleOutput(*it).c_str());
     }
 
 
   consoleLeft->setDefaultForeground(TCODColor(96,71,64));
-  consoleLeft->printFrame(0, 0, 50, 48, false);
+  consoleLeft->printFrame(0, 1, 50, 47, false);
   }
 
 void State_Shop::redrawRight()
   {
   consoleRight->clear();
   consoleRight->setDefaultForeground(TCODColor::white);
-  int line = 1;
+  int line = 2;
+
   consoleRight->print(1, line++, (string("The city of ") + refToTown.getName()).c_str());
 
   consoleRight->print(1, line++, (string("Tax rate is ") + to_string((long double)refToTown.getTaxRate(isHometown) * 100) + string("%%")).c_str());
+
+  consoleRight->setDefaultForeground(TCODColor::darkerGrey);
+  consoleRight->print(1, line, "AIOL");
+  consoleRight->setDefaultForeground(TCODColor::white);
+
   if (refToTown.isAgri) 
-    consoleRight->putCharEx(1, line, 'A', TCODColor::lightGreen, TCODColor::black);
+    consoleRight->setCharForeground(1, line, TCODColor::lightGreen);
   if (refToTown.isIndustrial) 
-    consoleRight->putCharEx(2, line, 'I', TCODColor::darkGrey, TCODColor::black);
+    consoleRight->setCharForeground(2, line, TCODColor::white);
   if (refToTown.isOther) 
-    consoleRight->putCharEx(3, line, 'O', TCODColor::lightBlue, TCODColor::black);
+    consoleRight->setCharForeground(3, line, TCODColor::lightBlue);
   if (refToTown.isLuxury) 
-    consoleRight->putCharEx(4, line, 'L', TCODColor::gold, TCODColor::black);
+    consoleRight->setCharForeground(4, line, TCODColor::gold);
+
 
   line++;
   line++; // skip a line
@@ -228,29 +330,18 @@ void State_Shop::redrawRight()
     {
     if (line %2)
       consoleRight->setDefaultForeground(TCODColor::lightestGreen);
-    else consoleRight->setDefaultForeground(TCODColor::lightestBlue);
+    else consoleRight->setDefaultForeground(TCODColor::lightestSky);
     consoleRight->print(1, line++, assembleOutput(*it).c_str());
     }
 
 
   consoleRight->setDefaultForeground(TCODColor(96,71,64));
-  consoleRight->printFrame(0, 0, 50, 48, false);
+  consoleRight->printFrame(0, 1, 50, 48, false);
   }
 
 void State_Shop::Render(TCODConsole *root)
   {
-  if (redraw && !whichConsole)
-    {
-    redrawLeft();
-    invertLine(selector, consoleLeft);
-    redraw = false;
-    }
-  else if (redraw&& whichConsole)
-    {
-    redrawRight();
-    invertLine(selector, consoleRight);
-    redraw = false;
-    }
+  
   TCODConsole::blit(consoleLeft, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.7f);
   TCODConsole::blit(consoleRight, 0, 0, 0, 0, root, 50, 0, 1.0f, 0.7f);
   }
@@ -264,7 +355,32 @@ void State_Shop::RecoverFromPush()
 
 void State_Shop::Update()
   {
-  
+  if (state == 0)
+    updateShop();
+  else if (state == 1)
+    updateDrydocks();
+  }
+
+void State_Shop::KeyDown(const int &key,const int &unicode)
+  {
+  if (state == 0)
+    keydownShop(key, unicode);
+  else if (state == 1)
+    keydownDrydocks(key, unicode);
+  }
+
+/////////////////
+/////////////////
+/////////////////
+
+void State_Shop::updateShop()
+  {
+  if (swappedToShop)
+    {
+    swappedToShop = false;
+    redrawLeft();
+    redrawRight();
+    }
   if (getPrompt  && startbuy) // If the player input something...
       {
       if (promptResult.empty())
@@ -276,8 +392,8 @@ void State_Shop::Update()
       numberToTrade = 0;
       try {
         numberToTrade = stoi(promptResult);
-        string itemName = goods.at(selector-6).ItemName;
-        itemIDToTrade = goods.at(selector-6).itemID;
+        string itemName = goods.at(selector-7).ItemName;
+        itemIDToTrade = goods.at(selector-7).itemID;
         if (numberToTrade < 0)
           {
           numberToTrade = refToShip.getMoney() / (refToTown.getPriceOf(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown)));
@@ -305,7 +421,7 @@ void State_Shop::Update()
       }
   else if (startbuy)
     {
-      if (selector >= 6 && selector-6 < goods.size()) 
+      if (selector >= 6 && selector-7 < goods.size()) 
       {
       promptResult.clear();
       nextState = new state_StringIn(32, promptResult, string("Buy how many? (-1 is 'all')"));
@@ -361,11 +477,11 @@ void State_Shop::Update()
     numberToTrade = 0;
       try {
         numberToTrade = stoi(promptResult);
-        string itemName = inventory.at(selector-6).ItemName;
-        itemIDToTrade = inventory.at(selector-6).itemID;
+        string itemName = inventory.at(selector-7).ItemName;
+        itemIDToTrade = inventory.at(selector-7).itemID;
         if (numberToTrade < 0)
           {
-          numberToTrade = stoi(inventory.at(selector-6).numberOfItems);
+          numberToTrade = stoi(inventory.at(selector-7).numberOfItems);
           }
 
         int total = numberToTrade * refToTown.getSellPrice(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
@@ -386,10 +502,23 @@ void State_Shop::Update()
         startbuy = false;
         getPrompt = false;
         }
+
+      if (redraw && !whichConsole)
+        {
+        redrawLeft();
+        invertLine(selector, consoleLeft);
+        redraw = false;
+        }
+      else if (redraw&& whichConsole)
+        {
+        redrawRight();
+        invertLine(selector, consoleRight);
+        redraw = false;
+        }
     }
   else if (startsell)
     {
-    if (selector >= 6 && selector-6 < inventory.size()) 
+    if (selector >= 6 && selector-7 < inventory.size()) 
       {
       promptResult.clear();
       nextState = new state_StringIn(32, promptResult, string("Sell how many? (-1 is 'all')"));
@@ -433,10 +562,20 @@ void State_Shop::Update()
     yesNo = false;
     }
 
+  if(redraw && !whichConsole)
+    {
+    redrawLeft();
+    invertLine(selector, consoleLeft);
+    }
+  else
+    {
+    redrawRight();
+    invertLine(selector, consoleRight);
+    }
   exit:;
   }
 
-void State_Shop::KeyDown(const int &key,const int &unicode)
+void State_Shop::keydownShop(const int &key,const int &unicode)
   {
   if (key == SDLK_ESCAPE)
     {
@@ -452,7 +591,7 @@ void State_Shop::KeyDown(const int &key,const int &unicode)
   else if (key == SDLK_LEFT && whichConsole) // If the right side is selected, the left key swaps to the left.
     {
     whichConsole = false;
-    selector = 6;
+    selector = 7;
     
     redrawLeft();
     redrawRight();
@@ -461,7 +600,7 @@ void State_Shop::KeyDown(const int &key,const int &unicode)
   else if (key == SDLK_RIGHT && !whichConsole) // opposite: swap to right
     {
     whichConsole = true;
-    selector = 6;
+    selector = 7;
     
     redrawLeft();
     redrawRight();
@@ -472,7 +611,7 @@ void State_Shop::KeyDown(const int &key,const int &unicode)
      selector++;
      redraw = true;
      }
-   else if (key == SDLK_UP && selector > 6)
+   else if (key == SDLK_UP && selector > 7)
      {
      selector--;
      redraw = true;
@@ -483,5 +622,186 @@ void State_Shop::KeyDown(const int &key,const int &unicode)
        startbuy = true;
      else
        startsell = true;
+     }
+   else if (unicode == '1')
+     {
+     state = 1;
+     selector = 3;
+     redraw = true;
+     }
+  }
+
+////
+////
+////
+
+void State_Shop::drydocks_left()
+  {
+  consoleLeft->clear();
+
+  consoleLeft->setDefaultForeground(TCODColor::grey);
+  consoleLeft->print(1, 0, "(0) Trade shop (1) Drydocks");
+  int line = 2;
+
+  consoleLeft->setDefaultForeground(TCODColor::yellow);
+  consoleLeft->print(1, line++, drydocksHeader().c_str());
+  consoleLeft->setDefaultForeground(TCODColor::white);
+
+  for (auto it = refToTown.shipList.begin(); it < refToTown.shipList.end(); it++)
+    {
+    string buffer;
+    buffer += leftAlign(it->typeName, 25) + " ";
+    buffer += leftAlign(it->size, 7) + " ";
+    char price_cstr[14];
+    _snprintf(price_cstr, sizeof(price_cstr), "%d", it->price - refToShip.getShipPrice());
+    string price(price_cstr);
+    buffer += rightAlign(price, 14) + " ";
+    consoleLeft->print(1, line++, buffer.c_str());
+    }
+
+  if (selector > 1)
+    invertLine(selector, consoleLeft);
+
+  consoleLeft->setDefaultForeground(TCODColor(96,71,64));
+  consoleLeft->printFrame(0, 1, 50, 47, false);
+  }
+
+void State_Shop::drydocks_right()
+  {
+  consoleRight->clear();
+  consoleRight->setDefaultForeground(TCODColor::white);
+
+  int line = 2;
+  if (selector >= 3 && selector-3 < refToTown.shipList.size())
+    {
+    auto ship = refToTown.shipList.at(selector-3);
+    
+    swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Name : %s", ship.typeName.c_str()); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Size : %s", ship.size.c_str()); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Price: %d", ship.price); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Total storage: %d", ship.maxstorage); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.maxcargo, ship.minimumsailors, ship.maxsailors, ship.maxcannons); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.lateen, ship.square); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Base speed: %d", ship.baseSpeed()); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Wave resistance: %d", ship.waveResistance); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Base armor: %d", ship.baseArmor); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Max durability: %d", ship.maxDurability); swapLineColors(consoleRight, line);
+    }
+  auto ship = refToShip;
+  line=24;
+
+  consoleRight->setDefaultForeground(TCODColor::yellow);
+  consoleRight->print(1, line++, "<Current ship>");
+
+  swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Name : %s", ship.getType().c_str()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Size : %s", ship.getSize().c_str()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Price: %d", ship.getShipPrice()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Total storage: %d", ship.getMaxStorage()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.getMaxGoods(), ship.getMinSailors(), ship.getMaxSailors(), ship.getMaxCannons()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.getLateen(), ship.getSquare()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Base speed: %d", ship.getSpeed()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Base armor: %d", ship.getArmor()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Max durability: %d", ship.getMaxDurability()); swapLineColors(consoleRight, line);
+
+  consoleRight->setDefaultForeground(TCODColor(96,71,64));
+  consoleRight->printFrame(0, 1, 50, 22, false);
+  consoleRight->printFrame(0, 23, 50, 25, false);
+  }
+
+void State_Shop::swapLineColors(TCODConsole* con, const int& counter)
+  {
+  if (counter %2)
+      con->setDefaultForeground(TCODColor::lightestGreen);
+  else con->setDefaultForeground(TCODColor::lightestBlue);
+  }
+
+void State_Shop::updateDrydocks()
+  {
+  consoleLeft->clear();
+  consoleLeft->setDefaultForeground(TCODColor::white);
+
+  if (getPrompt && calculatebuy)
+    {
+    if (yesNo)
+      {
+      int price = refToTown.shipList.at(selector-3).price - refToShip.getShipPrice();
+      if (refToShip.getMoney() < price)
+        {
+        nextState = new State_Prompt(21, 4, string("Not enough money."), yesNo);
+        pushSomething = true;
+        }
+      else
+        {
+        refToShip.changeShip(refToTown.shipList.at(selector-3));
+        refToShip.addMoney(price);
+        string output = "You have purchased a " + refToShip.getType() + ".";
+        nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
+        pushSomething = true;
+        }
+      }
+    getPrompt = false;
+    }
+  if(startbuy && selector >= 3 && selector < refToTown.shipList.size()+3)
+    {
+    promptResult.clear();
+    int price = refToTown.shipList.at(selector-3).price - refToShip.getShipPrice();
+    int digits = floor(log10((float)abs(price))) + 1;
+    if (price < 0) digits++;
+    string output = string("Really buy a ") + refToTown.shipList.at(selector-3).typeName + " for " + rightAlignNumber(price, digits) + " ducats?";
+    yesNo = false;
+    nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
+    pushSomething = true;
+    getPrompt = true;
+    startbuy = false;
+    calculatebuy = true;
+    }
+
+
+  if (redraw)
+    {
+    drydocks_left();
+    drydocks_right();
+    }
+  }
+
+void State_Shop::keydownDrydocks(const int &key,const int &unicode)
+  {
+  if (key == SDLK_ESCAPE)
+    {
+    if (refToShip.getMaxStorage() >= refToShip.getTotalStorageUsed())
+      popMe = true;
+    else // too many items!
+      {
+      string message("You have too many items.");
+      nextState = new State_Prompt(message.size()+4, 4, message, throwawayBool);
+      pushSomething = true;
+      }
+    }
+  else if (key == SDLK_DOWN && selector < 46)
+     {
+     selector++;
+     redraw = true;
+     }
+   else if (key == SDLK_UP && selector > 2)
+     {
+     selector--;
+     redraw = true;
+     }
+   else if (unicode == '0')
+     {
+     state = 0;
+     selector = 7;
+     swappedToShop = true;
+     whichConsole = false;
+     startbuy = false;
+     calculatebuy = false;
+     getPrompt = false;
+     }
+   else if (key == SDLK_RETURN)
+     {
+     startbuy = true;
      }
   }

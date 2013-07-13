@@ -53,4 +53,5 @@ class Town
     bool isAgri, isIndustrial, isOther, isLuxury;
     std::pair<int, int> myPosition;
     std::vector<std::string> spawnList;
+    std::vector<ShipPrototype> shipList;
   };

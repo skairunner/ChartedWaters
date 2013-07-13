@@ -20,13 +20,21 @@ class State_Shop : public GameState
     virtual void RecoverFromPush();
 
   private:
+    int state; // 0=goods, 1=drydocks
+    void updateShop();
+    void updateDrydocks();
+    void keydownShop(const int &key,const int &unicode);
+    void keydownDrydocks(const int &key,const int &unicode);
+
     std::string assembleOutput(const LedgerItemTuple& tuple);
     std::string assembleOutput(const EconomyItemTuple& tuple);
+    std::string assembleOutput(const ShipPrototype& sp);
+    void swapLineColors(TCODConsole* con, const int& counter);
 
     TCODConsole* consoleLeft; // ship
     TCODConsole* consoleRight; // shop
     bool whichConsole; // false: left, true: right
-    bool redraw;
+    bool redraw; bool swappedToShop;
     bool startbuy; // Start the buying process! Get a number.
     bool startsell;
     bool calculatebuy; // Now see if the player can buy/sell the amount he wants to.
@@ -48,5 +56,7 @@ class State_Shop : public GameState
     std::vector<LedgerItemTuple> inventory;
     void redrawLeft();
     void redrawRight();
+    void drydocks_left();
+    void drydocks_right();
     void invertLine(const int& line, TCODConsole* console);
   };

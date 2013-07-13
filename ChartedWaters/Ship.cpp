@@ -4,14 +4,60 @@
 using namespace std;
 
 Ship::Ship()
-  : ducats(1000), storage(0), maxstorage(212), baseSpeed(6), character(127), waveResistance(6), faction(0)
+  : ducats(1000), storage(0), character(127), waveResistance(6), faction(0)
   {
+  maxstorage = 212;
+  }
 
+Ship::Ship(const ShipPrototype& prototype)
+  : ducats(1000), storage(0), character(127), faction(0)
+  {
+  typeID = prototype.typeID;
+  typeName = prototype.typeName;
+  specialization = prototype.specialization;
+  desc = prototype.desc;
+  size = prototype.size;
+  price = prototype.price;
+  maxstorage = prototype.maxstorage;
+  maxcargo = prototype.maxcargo;
+  maxsailors = prototype.maxsailors;
+  maxcannons = prototype.maxcannons;
+  minimumsailors = prototype.minimumsailors;
+  lateen = prototype.lateen;
+  square = prototype.square;
+  waveResistance = prototype.waveResistance;
+  baseArmor = prototype.baseArmor;
+  maxDurability = prototype.maxDurability;
+  }
+
+void Ship::changeShip(const ShipPrototype& prototype)
+  {
+  typeID = prototype.typeID;
+  typeName = prototype.typeName;
+  specialization = prototype.specialization;
+  desc = prototype.desc;
+  size = prototype.size;
+  price = prototype.price;
+  maxstorage = prototype.maxstorage;
+  maxcargo = prototype.maxcargo;
+  maxsailors = prototype.maxsailors;
+  maxcannons = prototype.maxcannons;
+  minimumsailors = prototype.minimumsailors;
+  lateen = prototype.lateen;
+  square = prototype.square;
+  waveResistance = prototype.waveResistance;
+  baseArmor = prototype.baseArmor;
+  maxDurability = prototype.maxDurability;
   }
 
 string Ship::getName()
   {
   return shipName;
+  }
+
+string Ship::getType()
+  {
+  return typeName;
   }
 
 void Ship::setName(const string& newName)
@@ -118,14 +164,14 @@ bool Ship::removeFromList(const std::string& itemID)
   return true;
   }
 
-int Ship::getTotalStorageUsed()
+int Ship::getTotalGoods()
   {
   return storage;
   }
 
-int Ship::getMaxStorage()
+int Ship::getMaxGoods()
   {
-  return maxstorage;
+  return maxcargo;
   }
 
 void Ship::setPosition(const std::pair<int, int>& newPos)
@@ -138,7 +184,7 @@ int Ship::getSpeed()
   double mult;
   mult = (1-(double)getTotalStorageUsed()/getMaxStorage()) + 0.5; // if total == max, 0.5f. 
   mult = mult > 1 ? 1 : mult;
-  return mult * baseSpeed;
+  return mult * baseSpeed();
   }
 
 pair<int, int> Ship::getPosition()
@@ -166,4 +212,64 @@ void Ship::updatePos()
     setPosition(path.back());
     path.pop_back();
     }
+  }
+
+int Ship::getShipPrice()
+  {
+  return price;
+  }
+
+int Ship::getMaxCannons()
+  {
+  return maxcannons;
+  }
+
+int Ship::getTotalStorageUsed()
+  {
+  return storage;
+  }
+
+int Ship::getMaxStorage()
+  {
+  return maxstorage;
+  }
+
+int Ship::getMinSailors()
+  {
+  return minimumsailors;
+  }
+
+int Ship::getMaxSailors()
+  {
+  return maxsailors;
+  }
+
+int Ship::getLateen()
+  {
+  return lateen;
+  }
+
+int Ship::getSquare()
+  {
+  return square;
+  }
+
+int Ship::getArmor()
+  {
+  return baseArmor;
+  }
+
+int Ship::getWaveResistance()
+  {
+  return waveResistance;
+  }
+
+int Ship::getMaxDurability()
+  {
+  return maxDurability;
+  }
+
+string Ship::getSize()
+  {
+  return size;
   }

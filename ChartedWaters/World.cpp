@@ -30,6 +30,7 @@ World::~World()
 void World::regen()
   {
   cityList.clear();
+  shipList.clear();
   ItemDict.clearCitiesList();
   WorldMap.gen();
   ItemMaps.SetSeed(rand());
@@ -40,6 +41,7 @@ void World::regen()
     cityList[*it] = Town(nameFactory.getName(), 0.1f, WorldMap.ref(it->first, it->second).isInZOC);
     cityList[*it].myPosition = *it;
     }
+
   populateCities();
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     it->second.spawnItems();
@@ -95,10 +97,17 @@ void World::populateCities()
   auto otherlist = ItemDict.getItemsPerCategory(std::string("Other"));
   auto industlist = ItemDict.getItemsPerCategory(std::string("Raw materials"));
   auto luxurylist = ItemDict.getItemsPerCategory(std::string("Luxury"));
-
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     {
+    
     auto pos = it->first;
+
+    // Pick ships to stock in the drydocks.
+    for (int counter = 0; counter < 5; counter++)
+      {
+      it->second.shipList.push_back(ShipDict.getRandomShip());
+      }
+
     // First, Food.
     double food = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 1.5);
     double indust = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 3.5);

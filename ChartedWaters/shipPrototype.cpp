@@ -1,13 +1,25 @@
 #include "shipPrototype.h"
 #include <fstream>
 #include "json/json.h"
+#include <cstdlib>
 
 using namespace std;
 
 ShipDictionary ShipDict;
 
+ShipDictionary::ShipDictionary()
+  {
+  null.typeID = "null";
+  null.maxcannons = null.maxcargo = null.lateen = null.square = null.maxsailors = null.minimumsailors = null.price = null.waveResistance = 0;
+  }
 
-
+ShipPrototype ShipDictionary::getShip(const string& ID)
+  {
+  auto it = ships.find(ID);
+  if (it == ships.end())
+    return null;
+  else return it->second;
+  }
 
 string JSONToShip::slurp(const string& filename)
   {
@@ -41,8 +53,8 @@ void JSONToShip::readShips(ShipDictionary& dict)
     {
     Json::Value ship = root[counter];
     ShipPrototype buffer;
-    buffer.ID = ship["ID"].asString();
-    buffer.name = ship["name"].asString();
+    buffer.typeID = ship["ID"].asString();
+    buffer.typeName = ship["name"].asString();
     buffer.size = ship["size"].asString();
     buffer.specialization = ship["specialization"].asString();
     buffer.price = ship["price"].asInt();
@@ -59,8 +71,26 @@ void JSONToShip::readShips(ShipDictionary& dict)
     buffer.baseArmor = ship["base armor"].asInt();
     buffer.maxDurability = ship["max durability"].asInt();
     if (buffer.maxstorage != buffer.maxcannons + buffer.maxcargo + buffer.maxsailors)
-      cerr << "Storage != cargo + sailors + cannons for " << buffer.ID << "!\n";
-    dict.ships[buffer.ID] = buffer;
+      cerr << "Storage != cargo + sailors + cannons for " << buffer.typeID << "!\n";
+    dict.ships[buffer.typeID] = buffer;
     counter++;
     }
   };
+
+int ShipPrototype::baseSpeed()
+  {
+  double temp = 1.3f * lateen + 0.7f * square;
+  temp /= 49.1666666666667f;
+  temp += 0.5f;
+  return temp;
+  }
+
+ShipPrototype ShipDictionary::getRandomShip()
+  {
+  int size = ships.size();
+  auto it = ships.begin();
+  int counter = rand()%size;
+  for(; counter > 0; counter--)
+    it++;
+  return it->second;
+  }

@@ -55,16 +55,36 @@ string State_ShipStatus::assembleOutput(const LedgerItemTuple& tuple)
   return returnval;
   }
 
+void State_ShipStatus::swapLineColors(TCODConsole* con, const int& line)
+  {
+  if (line %2)
+      con->setDefaultForeground(TCODColor::lightestGreen);
+  else con->setDefaultForeground(TCODColor::lightestBlue);
+  }
+
+void State_ShipStatus::printStats(TCODConsole* con, int& line)
+  {
+  swapLineColors(con, line);
+  con->print(1, line++, "Type : %s", refToShip.getType().c_str()); swapLineColors(con, line);
+  con->print(1, line++, "Size : %s", refToShip.getSize().c_str()); swapLineColors(con, line);
+  con->print(1, line++, "Total storage: %d", refToShip.getMaxStorage()); swapLineColors(con, line);
+  con->print(1, line++, "Goods: %d/%d    Sailors: %d(%d)/%d    Cannons: %d/%d", refToShip.getTotalGoods(), refToShip.getMaxGoods(), 0, refToShip.getMinSailors(), refToShip.getMaxSailors(), 0, refToShip.getMaxCannons()); swapLineColors(con, line);
+  con->print(1, line++, "Lateen sails: %d    Square sails: %d", refToShip.getLateen(), refToShip.getSquare()); swapLineColors(con, line);
+  con->print(1, line++, "Base speed: %d", refToShip.getSpeed()); swapLineColors(con, line);
+  con->print(1, line++, "Wave resistance: %d", refToShip.getWaveResistance()); swapLineColors(con, line);
+  con->print(1, line++, "Armor: %d", refToShip.getArmor()); swapLineColors(con, line);
+  con->print(1, line++, "Durability: %d/%d", 1, refToShip.getMaxDurability()); swapLineColors(con, line);
+  }
+
 void State_ShipStatus::redrawList()
   {
   console->clear();
   console->setDefaultForeground(TCODColor::white);
 
   int line = 1;
-  console->print(1, line++, (string("The ") + refToShip.getName()).c_str());
+  console->print(1, line++, ("The " + refToShip.getType() + " " + refToShip.getName()).c_str());
   console->print(1, line++, (to_string((long double)refToShip.getMoney()) + string(" ducats")).c_str());
-  console->print(1, line++, (string("Storage: ") + to_string((long double)refToShip.getTotalStorageUsed()) + string("/") +
-                             to_string((long double)refToShip.getMaxStorage())).c_str());
+  printStats(console, line);
   line++; // skip a line
   auto list = refToShip.returnListOfItems();
   /// 
@@ -74,9 +94,7 @@ void State_ShipStatus::redrawList()
 
   for (auto it = list.begin(); it < list.end(); it++)
     {
-    if (line %2)
-      console->setDefaultForeground(TCODColor::lightestGreen);
-    else console->setDefaultForeground(TCODColor::lightestBlue);
+    swapLineColors(console, line);
     console->print(1, line++, assembleOutput(*it).c_str());
     }
 
@@ -98,7 +116,7 @@ void State_ShipStatus::invertLine(const int& line)
 bool State_ShipStatus::Init()
   {
   console->clear();
-  console->setDefaultForeground(TCODColor::white);
+  /*console->setDefaultForeground(TCODColor::white);
 
   int line = 1;
   console->print(1, line++, (string("The ") + refToShip.getName()).c_str());
@@ -119,7 +137,8 @@ bool State_ShipStatus::Init()
 
 
   console->setDefaultForeground(TCODColor(96,71,64));
-  console->printFrame(0, 0, 64, 46, false);
+  console->printFrame(0, 0, 64, 46, false);*/
+  redrawList();
 
   return true;
   }

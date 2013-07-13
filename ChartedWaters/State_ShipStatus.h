@@ -32,6 +32,9 @@ class State_ShipStatus : public GameState
     bool redraw;
     void redrawList();
     void invertLine(const int& line);
+    void printStats(TCODConsole* con, int& line);
+    void swapLineColors(TCODConsole* con, const int& line);
+
     Ship& refToShip;
     std::string newname;
     std::string header();

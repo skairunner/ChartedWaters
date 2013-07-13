@@ -55,7 +55,7 @@
 	},
 	{
 		"ID": "cog_two",
-		"name": "Two-masted cog",
+		"name": "Two-masted Cog",
 		"size": "small",
 		"price": 96000,
 		"specialization": "storage",
@@ -73,7 +73,7 @@
 	},
 	{
 		"ID": "caravel_small",
-		"name": "Small caravel",
+		"name": "Small Caravel",
 		"size": "small",
 		"price": 92000,
 		"specialization": "general",
@@ -163,7 +163,7 @@
 	},
 	{
 		"ID": "cutter_guard",
-		"name": "Guard cutter",
+		"name": "Guard Cutter",
 		"size": "small",
 		"price": 2500000,
 		"specialization": "military",
@@ -181,7 +181,7 @@
 	},
 	{
 		"ID": "cutter_tug",
-		"name": "Tug cutter",
+		"name": "Tug Cutter",
 		"size": "small",
 		"price": 2500000,
 		"specialization": "speed",
@@ -253,7 +253,7 @@
 	},
 	{
 		"ID": "caravel_large",
-		"name": "Large caravel",
+		"name": "Large Caravel",
 		"size": "medium",
 		"price": 1160000,
 		"specialization": "storage",
@@ -271,7 +271,7 @@
 	},
 	{
 		"ID": "caravel_heavy",
-		"name": "Heavy caravel",
+		"name": "Heavy Caravel",
 		"size": "medium",
 		"price": 1250000,
 		"specialization": "military",
@@ -289,7 +289,7 @@
 	},
 	{
 		"ID": "schooner_trade",
-		"name": "Transport schooner",
+		"name": "Transport Schooner",
 		"size": "medium",
 		"price": 2200000,
 		"specialization": "storage",
@@ -325,7 +325,7 @@
 	},
 	{
 		"ID": "clipper_light",
-		"name": "Light clipper",
+		"name": "Light Clipper",
 		"size": "medium",
 		"price": 6000000,
 		"specialization": "speed",
@@ -343,7 +343,7 @@
 	},
 	{
 		"ID": "schooner_long",
-		"name": "Long schooner",
+		"name": "Long Schooner",
 		"size": "large",
 		"price": 11150000,
 		"specialization": "speed",
@@ -361,7 +361,7 @@
 	},
 	{
 		"ID": "galleon_heavy",
-		"name": "Heavy galleon",
+		"name": "Heavy Galleon",
 		"size": "large",
 		"price": 8600000,
 		"specialization": "military",
@@ -379,7 +379,7 @@
 	},
 	{
 		"ID": "galleon_large",
-		"name": "Large galleon",
+		"name": "Large Galleon",
 		"size": "large",
 		"price": 8000000,
 		"specialization": "storage",
@@ -433,7 +433,7 @@
 	},
 	{
 		"ID": "carrack_large",
-		"name": "Large carrack",
+		"name": "Large Carrack",
 		"size": "large",
 		"price": 1800000,
 		"specialization": "storage",
@@ -451,7 +451,7 @@
 	},
 	{
 		"ID": "carrack_heavy",
-		"name": "Heavy carrack",
+		"name": "Heavy Carrack",
 		"size": "large",
 		"price": 3000000,
 		"specialization": "military",
@@ -487,7 +487,7 @@
 	},
 	{
 		"ID": "galleon_naval",
-		"name": "Naval galleon",
+		"name": "Naval Galleon",
 		"size": "large",
 		"price": 4600000,
 		"specialization": "military",
@@ -505,7 +505,7 @@
 	},
 	{
 		"ID": "clipper_large",
-		"name": "Large clipper",
+		"name": "Large Clipper",
 		"size": "large",
 		"price": 11150000,
 		"specialization": "storage",
@@ -523,7 +523,7 @@
 	},
 	{
 		"ID": "clipper_large",
-		"name": "Large clipper",
+		"name": "Large Clipper",
 		"size": "large",
 		"price": 11150000,
 		"specialization": "storage",
