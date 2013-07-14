@@ -147,6 +147,7 @@ if (mouseClick)
 if (pressedPeriod)
   {
   playerMovement = TheWorld->getPlayerShip().getSpeed();
+  TheWorld->step();
   pressedPeriod = false;
   }
 if (playerMovement > 0)

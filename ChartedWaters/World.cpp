@@ -88,9 +88,18 @@ int World::random(const int& min, const int& max)
   return  dist(gen);
   }
 
+void World::step()
+  {
+  for (auto it = cityList.begin(); it != cityList.end(); it++)
+    {
+    it->second.step();
+    }
+  }
+
 void World::populateCities()
   {
   ///// Use z=1.5 for food, 3.5 for industrial, 5.5 for other, 7.5 for luxury;
+  ///// Use z= 10.5 for population.
   const double zoom = 0.01;
 
   auto foodlist = ItemDict.getItemsPerCategory(std::string("Food"));
@@ -113,6 +122,11 @@ void World::populateCities()
     double indust = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 3.5);
     double other = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 5.5);
     double luxury = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 7.5);
+    double population = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 10.5);
+
+    population += 2;
+    population = (int)(100 * abs(population));
+    it->second.population = population;
 
     food += 2; // bump into positive.
     other += 2;

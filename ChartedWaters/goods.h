@@ -31,6 +31,7 @@ class ItemDictionary
     std::string findItemName(const std::string& ID);
     int findBasePrice(const std::string& ID);
     std::string findItemTypeInitials(const std::string& ID);
+    std::string findItemType(const std::string& ID);
     std::pair<double, double> findDecayRates(const std::string& ID);
     std::string findItemDesc(const std::string& ID);
     std::string findItemCategory(const std::string& ID);
@@ -43,11 +44,12 @@ class ItemDictionary
     std::vector<std::pair<int,int>> getCitiesForItem(const std::string& itemID);
     void clearCitiesList();
 
+    std::map<std::string, std::vector<std::string>> itemsPerCategory;
   private:
     std::map<std::string, Item> ItemList;
     std::map<std::string, std::string> InitialList;
     std::map<std::string, std::vector<std::string>> categories;
-    std::map<std::string, std::vector<std::string>> itemsPerCategory;
+    
     std::map<std::string, std::vector<std::pair<int,int>>> citiesPerItem;
     bool sorted;
   };
@@ -62,6 +64,7 @@ class Item
     Item(const Item& item);
     //Item(const int& newID);
     Item(const std::string& newID);
+    Item& operator= (const Item& right);
     bool operator==(const Item& right) const; // An economy item is identical to an Item if the IDs are the same.
     bool operator<(const Item& right) const; // This one sorts by alphabetical order
 
@@ -86,13 +89,13 @@ class EconomyItem: public Item
     int getPrice();
     int howMany();
     void addItem(const int& howMany);
-    void setDemand(const int& equi);
-    void addDemand(const int& increased);
+    void addDemand(const int& howMuch);
+    int getDemand();
+    int getSupply();
 
   private:
     int supply; // this is how many of me I have!
     int demand; // how much demand is current!
-    int spawnRate; // how many are added each time a spawn event is fired
   };
 
 class LedgerItem : public Item

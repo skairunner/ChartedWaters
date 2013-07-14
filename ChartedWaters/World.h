@@ -19,6 +19,7 @@ class World
     ~World();
     std::string getCityName(const coord& coords); // Return empty string if there is no such town.
     void regen();
+    void step();
     Ship& getPlayerShip();
     Pather *pathfinder;
     bool queryShop(Ship& ship);

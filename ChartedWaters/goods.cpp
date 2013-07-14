@@ -177,7 +177,7 @@ ItemDictionary::ItemDictionary()
   types.push_back(string("Fragrances"));
   types.push_back(string("Jewellery"));
   types.push_back(string("Precious stones"));
-  categories[string("Luxury items")] = types;
+  categories[string("Luxury")] = types;
 
   Item buffer;
   buffer.ID = string("null");
@@ -231,6 +231,14 @@ string ItemDictionary::findItemTypeInitials(const std::string& ID)
   if (it == InitialList.end())
     return string("nul");
   return it->second;
+  }
+
+string ItemDictionary::findItemType(const std::string& ID)
+  {
+  auto temp = ItemList.find(ID);
+  if (temp == ItemList.end())
+    return string("null");
+  return temp->second.type;
   }
 
 int ItemDictionary::findBasePrice(const std::string& ID)
@@ -319,6 +327,11 @@ Item::Item()
   {
   }
 
+Item& Item::operator=(const Item& right)
+  {
+
+  }
+
 Item::Item(const Item& item)
   :ID(item.ID),name(item.name), desc(item.desc), basePrice(item.basePrice)
   {
@@ -372,7 +385,7 @@ void EconomyItem::decayDemand()
 
 int EconomyItem::getPrice()
   {
-  const double VERTICAL_SHIFT = 0.25f;
+  const double VERTICAL_SHIFT = 0.5f;
   const double HORIZONTAL_SHIFT = 500.0f;
   const double HORIZONTAL_SCALE = 0.01f;
   const double PRICE_RANGE = 1.5f;
@@ -391,14 +404,21 @@ void EconomyItem::addItem(const int& howMany)
   supply += howMany;
   }
 
-void EconomyItem::setDemand(const int& equi)
+void EconomyItem::addDemand(const int& howMuch)
   {
-  demand = equi;
+  demand += howMuch;
+  if (demand <= 0)
+    demand = 1;
   }
 
-void EconomyItem::addDemand(const int& increased)
+int EconomyItem::getDemand()
   {
-  demand += increased;
+  return demand;
+  }
+
+int EconomyItem::getSupply()
+  {
+  return supply;
   }
 
 ///////////////////////

@@ -25,7 +25,10 @@ class Town
     int faction;
     std::vector<EconomyItem>::iterator getItemIterator(const std::string& ID); //return itemlist.end() if not found.
     double getDistanceFromNearestSource(const std::string& ID);
-    
+    int spawncounter; // for demand
+    void addDemandToItem(const std::string& ID, const int& add);
+    int getDemand(const std::string& ID);
+    std::map<std::string, int> demandList;
 
   public:
     Town();
@@ -36,10 +39,12 @@ class Town
     void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
     void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.
+    void step();
 
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
     int getPriceOf(const std::string& ID);
     double  getSellPrice(const std::string& ID);
+    double getBuyPrice(const std::string& ID);
     double getTaxRate(bool hometown = false);
     int getNumberOf(const std::string& ID);
 
@@ -50,6 +55,7 @@ class Town
     int unitPurchasePriceOfSell;
     std::string lastTransactionItemID;
 
+    int population;
     bool isAgri, isIndustrial, isOther, isLuxury;
     std::pair<int, int> myPosition;
     std::vector<std::string> spawnList;

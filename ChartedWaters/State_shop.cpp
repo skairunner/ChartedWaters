@@ -300,9 +300,10 @@ void State_Shop::redrawRight()
   consoleRight->setDefaultForeground(TCODColor::white);
   int line = 2;
 
-  consoleRight->print(1, line++, (string("The city of ") + refToTown.getName()).c_str());
+  consoleRight->print(1, line++, "The city of %s", refToTown.getName().c_str());
 
-  consoleRight->print(1, line++, (string("Tax rate is ") + to_string((long double)refToTown.getTaxRate(isHometown) * 100) + string("%%")).c_str());
+  consoleRight->print(1, line++, "Tax rate is %d%%.", (int)refToTown.getTaxRate(isHometown)*100);
+  consoleRight->print(1, line++, "Population %d", refToTown.population);
 
   consoleRight->setDefaultForeground(TCODColor::darkerGrey);
   consoleRight->print(1, line, "AIOL");
@@ -396,13 +397,13 @@ void State_Shop::updateShop()
         itemIDToTrade = goods.at(selector-7).itemID;
         if (numberToTrade < 0)
           {
-          numberToTrade = refToShip.getMoney() / (refToTown.getPriceOf(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown)));
+          numberToTrade = refToShip.getMoney() / (refToTown.getBuyPrice(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown)));
           numberToTrade = numberToTrade > refToTown.getNumberOf(itemIDToTrade) ? refToTown.getNumberOf(itemIDToTrade) : numberToTrade;
           }
 
-        int total = numberToTrade * refToTown.getPriceOf(itemIDToTrade) * (double)(1 + refToTown.getTaxRate());
+        int total = numberToTrade * refToTown.getBuyPrice(itemIDToTrade) * (double)(1 + refToTown.getTaxRate());
         
-        string print = string("Really buy ") + to_string((long double)numberToTrade) + string(" ") + itemName + string(" for ") + to_string((long double)total) + string(" ducats?");
+        string print = string("Really buy ") + to_string((long double)numberToTrade) + " " + itemName + " for " + to_string((long double)total) + " ducats?";
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
         pushSomething = true;
 
@@ -439,7 +440,7 @@ void State_Shop::updateShop()
       switch (errors)
         {
       case twSUCCESS:
-        print = string("Successfully bought ") + to_string((long double)numberToTrade) + string(" ") + ItemDict.findItemName(refToTown.lastTransactionItemID) + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
+        print = string("Successfully bought ") + to_string((long double)numberToTrade) + " " + ItemDict.findItemName(refToTown.lastTransactionItemID) + " for " + to_string((long double)refToTown.lastTransaction) + " ducats.";
         nextState = new State_Prompt(print.size()+4, 4, print, throwawayBool);
         pushSomething = true;
         redrawLeft();
