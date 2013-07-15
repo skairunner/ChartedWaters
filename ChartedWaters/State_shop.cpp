@@ -302,7 +302,7 @@ void State_Shop::redrawRight()
 
   consoleRight->print(1, line++, "The city of %s", refToTown.getName().c_str());
 
-  consoleRight->print(1, line++, "Tax rate is %d%%.", (int)refToTown.getTaxRate(isHometown)*100);
+  consoleRight->print(1, line++, "Tax rate is %d%%.", (int)(refToTown.getTaxRate(isHometown)*100));
   consoleRight->print(1, line++, "Population %d", refToTown.population);
 
   consoleRight->setDefaultForeground(TCODColor::darkerGrey);

@@ -88,6 +88,10 @@ void Ship::addItem(const Item& item, const int& numberOf, const int& averagePric
     itemList.push_back(LedgerItem(item, numberOf, averagePrice));
     it = itemList.end() - 1;
     }
+  else
+    {
+    it->addItem(numberOf, averagePrice);
+    }
 
   storage += numberOf;
   }
@@ -272,4 +276,9 @@ int Ship::getMaxDurability()
 string Ship::getSize()
   {
   return size;
+  }
+
+int Ship::getBaseSpeed()
+  {
+  return baseSpeed();
   }

@@ -70,7 +70,7 @@ void State_ShipStatus::printStats(TCODConsole* con, int& line)
   con->print(1, line++, "Total storage: %d", refToShip.getMaxStorage()); swapLineColors(con, line);
   con->print(1, line++, "Goods: %d/%d    Sailors: %d(%d)/%d    Cannons: %d/%d", refToShip.getTotalGoods(), refToShip.getMaxGoods(), 0, refToShip.getMinSailors(), refToShip.getMaxSailors(), 0, refToShip.getMaxCannons()); swapLineColors(con, line);
   con->print(1, line++, "Lateen sails: %d    Square sails: %d", refToShip.getLateen(), refToShip.getSquare()); swapLineColors(con, line);
-  con->print(1, line++, "Base speed: %d", refToShip.getSpeed()); swapLineColors(con, line);
+  con->print(1, line++, "Speed: %d/%d", refToShip.getSpeed(), refToShip.getBaseSpeed()); swapLineColors(con, line);
   con->print(1, line++, "Wave resistance: %d", refToShip.getWaveResistance()); swapLineColors(con, line);
   con->print(1, line++, "Armor: %d", refToShip.getArmor()); swapLineColors(con, line);
   con->print(1, line++, "Durability: %d/%d", 1, refToShip.getMaxDurability()); swapLineColors(con, line);

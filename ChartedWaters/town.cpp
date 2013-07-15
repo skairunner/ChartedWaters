@@ -25,6 +25,14 @@ string Town::getName()
   return TownName;
   }
 
+string Town::toNumber(const int& num)
+  {
+  char price_cstr[50];
+  _snprintf(price_cstr, sizeof(price_cstr), "%d", num);
+  string buffer(price_cstr);
+  return buffer;
+  }
+
 vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
   {
   vector<EconomyItemTuple> returnVal;
@@ -37,16 +45,16 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
     buffer.itemID = it->ID;
     buffer.ItemName = it->name;
 
-    buffer.numberOfItems = to_string((long double)it->howMany());
+    buffer.numberOfItems = toNumber(it->howMany());
     temporary = getBuyPrice(it->ID) * (1 + tax) * 10;
     secondtemp = temporary / 10.0f;
 
-    buffer.BuyPrice = to_string((long double)secondtemp);
+    buffer.BuyPrice = toNumber(secondtemp);
     temporary = getSellPrice(it->ID) * 10 * (1 - tax);
     secondtemp = temporary / 10.0f;
-    buffer.SellPrice = to_string((long double)secondtemp);
+    buffer.SellPrice = toNumber(secondtemp);
     int percentage = (double)it->getPrice()/it->basePrice * 100;
-    buffer.percentageOfBasePrice = to_string((long double)percentage) + string("%%");
+    buffer.percentageOfBasePrice = toNumber(percentage) + string("%%");
 
     returnVal.push_back(buffer);
     }
@@ -171,7 +179,24 @@ int Town::getPriceOf(const std::string& ID)
       return it->getPrice();
     }
   // If it doesn't exist, return the base price influenced by demand
-  EconomyItem temp(ID, 1, 1 + demandList[ID]);
+  // and the items of the same type or category already in the city.
+  int supply = 0;
+  int demand = 0;
+  auto item = ItemDict.getItemTemplate(ID);
+  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
+    {
+    if (it->category == item.category)
+      {
+      supply += 0.01 * it->getSupply();
+      demand += 0.01 * it->getDemand();
+      }
+    if (it->type == item.type)
+      {
+      supply += 0.05 * it->getSupply();
+      demand += 0.05 * it->getDemand();
+      }
+    }
+  EconomyItem temp(ID, supply, 1 + demand + demandList[ID]);
   return temp.getPrice();
   } 
 
@@ -245,7 +270,7 @@ double Town::getBuyPrice(const std::string& ID)
 double Town::getTaxRate(bool hometown)
   {
   if (hometown)
-    return 0;
+    return 0.06;
   return taxRate;
   }
 
@@ -287,8 +312,8 @@ void Town::spawnItems()
   for (auto it = spawnList.begin(); it < spawnList.end(); it++)
     {
     if ((*it)[0] == 'l') // If it's a luxury item.
-      addItems(*it, population);
-    else addItems(*it, rand()%200 + population * 2);
+      addItems(*it, population + 500);
+    else addItems(*it, rand()%200 + population * 2 + 1000);
     }
   }
 
@@ -337,14 +362,14 @@ void Town::step()
       auto item = ItemDict.getItemTemplate(ID);
       auto category = itemlist.find(item.category);
 
-      addDemandToItem(item.ID, 400);
+      addDemandToItem(item.ID, 200);
       //cout << "Spawned demand for " << item.ID << " in city " << TownName << endl;
       for (auto it = category->second.begin(); it < category->second.end(); it++)
         {
         
-        addDemandToItem(*it, 100);
+        addDemandToItem(*it, 50);
         if (ItemDict.findItemType(*it) == item.type)
-          addDemandToItem(*it, 200);
+          addDemandToItem(*it, 100);
         }      
       }
     }

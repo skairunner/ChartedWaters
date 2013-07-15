@@ -19,6 +19,7 @@ struct EconomyItemTuple
 class Town
   {
   private:
+    static std::string toNumber(const int& num);
     std::vector<EconomyItem> itemlist;
     std::string TownName;
     double taxRate;

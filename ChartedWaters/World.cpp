@@ -38,7 +38,7 @@ void World::regen()
 
   for (auto it = WorldMap.cities.begin(); it < WorldMap.cities.end(); it++)
     {
-    cityList[*it] = Town(nameFactory.getName(), 0.1f, WorldMap.ref(it->first, it->second).isInZOC);
+    cityList[*it] = Town(nameFactory.getName(), 0.15f, WorldMap.ref(it->first, it->second).isInZOC);
     cityList[*it].myPosition = *it;
     }
 

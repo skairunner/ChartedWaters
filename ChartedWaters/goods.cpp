@@ -383,8 +383,8 @@ int EconomyItem::getPrice()
   const double VERTICAL_SHIFT = 0.5f;
   const double HORIZONTAL_SHIFT = 500.0f;
   const double HORIZONTAL_SCALE = 0.01f;
-  const double PRICE_RANGE = 1.5f;
-  double adjustedDemand = (1500 + 500 * 0.5 * log(supply / (double)demand)) / 3.0f;
+  const double PRICE_RANGE = 1.0f;
+  double adjustedDemand = (1500 + 500 * 0.5 * log(getSupply() / (double)demand)) / 3.0f;
   double multiplier = VERTICAL_SHIFT + PRICE_RANGE / (1 + exp(HORIZONTAL_SCALE * (adjustedDemand - HORIZONTAL_SHIFT)));
   return multiplier * basePrice;
   }
@@ -413,6 +413,8 @@ int EconomyItem::getDemand()
 
 int EconomyItem::getSupply()
   {
+  if (supply < 100)
+    return 100;
   return supply;
   }
 

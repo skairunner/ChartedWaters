@@ -41,7 +41,8 @@ class Ship : protected ShipPrototype
     int getArmor();
     int getLateen();
     int getSquare();
-    int getSpeed(); // Later should be used to calculate speed from sails.
+    int getSpeed(); 
+    int getBaseSpeed();
     std::string getSize();
 
 
