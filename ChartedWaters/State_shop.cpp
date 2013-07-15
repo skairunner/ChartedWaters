@@ -13,7 +13,7 @@
 using namespace std;
 
 State_Shop::State_Shop(Town& town, Ship& ship)
-  : refToTown(town), refToShip(ship), selector(6), whichConsole(false), redraw(false), startbuy(false), startsell(false),
+  : refToTown(town), refToShip(ship), selector(7), whichConsole(false), redraw(false), startbuy(false), startsell(false),
   calculatebuy(false), calculatesell(false), isHometown(false), state(0), getPrompt(false)
   {
   consoleLeft = new TCODConsole(50, 48);
@@ -267,7 +267,7 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
   consoleLeft->print(1, 0, "(0) Trade shop (1) Drydocks");
   consoleLeft->setDefaultForeground(TCODColor::white);
 
-  int line = 2;
+  int line = 3;
   
 
   consoleLeft->print(1, line++, (string("The ") + refToShip.getName()).c_str());
@@ -393,8 +393,8 @@ void State_Shop::updateShop()
       numberToTrade = 0;
       try {
         numberToTrade = stoi(promptResult);
-        string itemName = goods.at(selector-7).ItemName;
-        itemIDToTrade = goods.at(selector-7).itemID;
+        string itemName = goods.at(selector-8).ItemName;
+        itemIDToTrade = goods.at(selector-8).itemID;
         if (numberToTrade < 0)
           {
           numberToTrade = refToShip.getMoney() / (refToTown.getBuyPrice(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown)));
@@ -422,7 +422,7 @@ void State_Shop::updateShop()
       }
   else if (startbuy)
     {
-      if (selector >= 6 && selector-7 < goods.size()) 
+      if (selector >= 8 && selector-8 < goods.size()) 
       {
       promptResult.clear();
       nextState = new state_StringIn(32, promptResult, string("Buy how many? (-1 is 'all')"));
@@ -478,11 +478,11 @@ void State_Shop::updateShop()
     numberToTrade = 0;
       try {
         numberToTrade = stoi(promptResult);
-        string itemName = inventory.at(selector-7).ItemName;
-        itemIDToTrade = inventory.at(selector-7).itemID;
+        string itemName = inventory.at(selector-8).ItemName;
+        itemIDToTrade = inventory.at(selector-8).itemID;
         if (numberToTrade < 0)
           {
-          numberToTrade = stoi(inventory.at(selector-7).numberOfItems);
+          numberToTrade = stoi(inventory.at(selector-8).numberOfItems);
           }
 
         int total = numberToTrade * refToTown.getSellPrice(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
@@ -510,7 +510,7 @@ void State_Shop::updateShop()
         invertLine(selector, consoleLeft);
         redraw = false;
         }
-      else if (redraw&& whichConsole)
+      else if (redraw && whichConsole)
         {
         redrawRight();
         invertLine(selector, consoleRight);
@@ -519,7 +519,7 @@ void State_Shop::updateShop()
     }
   else if (startsell)
     {
-    if (selector >= 6 && selector-7 < inventory.size()) 
+    if (selector >= 8 && selector-8 < inventory.size()) 
       {
       promptResult.clear();
       nextState = new state_StringIn(32, promptResult, string("Sell how many? (-1 is 'all')"));
@@ -563,15 +563,18 @@ void State_Shop::updateShop()
     yesNo = false;
     }
 
-  if(redraw && !whichConsole)
+  if (redraw)
     {
-    redrawLeft();
-    invertLine(selector, consoleLeft);
-    }
-  else
-    {
-    redrawRight();
-    invertLine(selector, consoleRight);
+    if(!whichConsole)
+      {
+      redrawLeft();
+      invertLine(selector, consoleLeft);
+      }
+    else
+      {
+      redrawRight();
+      invertLine(selector, consoleRight);
+      }
     }
   exit:;
   }
@@ -592,7 +595,7 @@ void State_Shop::keydownShop(const int &key,const int &unicode)
   else if (key == SDLK_LEFT && whichConsole) // If the right side is selected, the left key swaps to the left.
     {
     whichConsole = false;
-    selector = 7;
+    selector = 8;
     
     redrawLeft();
     redrawRight();
@@ -601,7 +604,7 @@ void State_Shop::keydownShop(const int &key,const int &unicode)
   else if (key == SDLK_RIGHT && !whichConsole) // opposite: swap to right
     {
     whichConsole = true;
-    selector = 7;
+    selector = 8;
     
     redrawLeft();
     redrawRight();
@@ -612,7 +615,7 @@ void State_Shop::keydownShop(const int &key,const int &unicode)
      selector++;
      redraw = true;
      }
-   else if (key == SDLK_UP && selector > 7)
+   else if (key == SDLK_UP && selector > 8)
      {
      selector--;
      redraw = true;
@@ -706,7 +709,9 @@ void State_Shop::drydocks_right()
   consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Base armor: %d", ship.getArmor()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Max durability: %d", ship.getMaxDurability()); swapLineColors(consoleRight, line);
-
+  line+=3;
+  consoleRight->setDefaultForeground(TCODColor::yellow);
+  consoleRight->print(1, line++, "Current money = %d", ship.getMoney());
   consoleRight->setDefaultForeground(TCODColor(96,71,64));
   consoleRight->printFrame(0, 1, 50, 22, false);
   consoleRight->printFrame(0, 23, 50, 25, false);

@@ -327,13 +327,8 @@ Item::Item()
   {
   }
 
-Item& Item::operator=(const Item& right)
-  {
-
-  }
-
 Item::Item(const Item& item)
-  :ID(item.ID),name(item.name), desc(item.desc), basePrice(item.basePrice)
+  :ID(item.ID),name(item.name), desc(item.desc), basePrice(item.basePrice), type(item.type), category(item.category)
   {
 
   }

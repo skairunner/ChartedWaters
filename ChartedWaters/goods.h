@@ -64,7 +64,7 @@ class Item
     Item(const Item& item);
     //Item(const int& newID);
     Item(const std::string& newID);
-    Item& operator= (const Item& right);
+    //Item& operator= (const Item& right);
     bool operator==(const Item& right) const; // An economy item is identical to an Item if the IDs are the same.
     bool operator<(const Item& right) const; // This one sorts by alphabetical order
 

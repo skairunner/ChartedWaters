@@ -1,6 +1,7 @@
 #include "town.h"
 #include <cstdlib>
 #include <limits>
+#include <iostream>
 #pragma warning (disable : 4244)
 
 using namespace std;
@@ -306,15 +307,20 @@ void Town::step()
   // Remove items by demand. 
   for (auto it = itemlist.begin(); it < itemlist.end(); it++)
     {
-    /*
-    if (it->category == string("Luxury"))
-      it->addItem(population * -0.02);
-    else
-      it->addItem(population * -0.05);*/
     int toRemove = it->getDemand() * 0.1;
     it->addItem(toRemove * -1);
     it->addDemand(toRemove * -0.5f);
     }
+  vector<string> toRemove;
+  for (auto it = demandList.begin(); it != demandList.end(); it++)
+    {
+    it->second *= 0.9f;
+    if (it->second <= 0)
+      toRemove.push_back(it->first);
+    }
+  for (auto it = toRemove.begin(); it < toRemove.end(); it++)
+    demandList.erase(*it);
+
   // Randomly spawn demand
   if (spawncounter > 14)
     {
@@ -326,18 +332,19 @@ void Town::step()
       auto outerIt = itemlist.begin();
       for (int counter = 0; counter < first; counter++)
         outerIt++;
-      int second = rand()%(outerIt->second.size());
-      string ID = outerIt->second.at(second);
+      int position = rand()%(outerIt->second.size());
+      string ID = outerIt->second.at(position);
       auto item = ItemDict.getItemTemplate(ID);
       auto category = itemlist.find(item.category);
 
-      addDemandToItem(item.ID, 100);
+      addDemandToItem(item.ID, 400);
+      //cout << "Spawned demand for " << item.ID << " in city " << TownName << endl;
       for (auto it = category->second.begin(); it < category->second.end(); it++)
         {
-        addDemandToItem(*it, 25);
-        if (ItemDict.findItemType(*it) == item.type)
-          addDemandToItem(*it, 50);
         
+        addDemandToItem(*it, 100);
+        if (ItemDict.findItemType(*it) == item.type)
+          addDemandToItem(*it, 200);
         }      
       }
     }
