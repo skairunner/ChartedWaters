@@ -1,0 +1,694 @@
+[
+	{
+		"ID": "sail_bonnet",
+		"type": "sail",
+		"name": "Bonnet sail",
+		"price": 38000,
+		"durability": 80,
+		"lateen": 0,
+		"square": 17,
+		"turning": -1,
+		"desc": "A wide square sail attached to the bottom of the main mast."
+	},
+	{
+		"ID": "sail_maingallantbonnet",
+		"type": "sail",
+		"name": "Main gallant bonnet",
+		"price": 200000,
+		"durability": 105,
+		"lateen": 4,
+		"square": 27,
+		"turning": -1,
+		"desc": "A wide square sail attached to the bottom of the main mast."
+	},
+	{
+		"ID": "sail_maingallantstay",
+		"type": "sail",
+		"name": "Main gallant staysail",
+		"price": 24000,
+		"durability": 85,
+		"lateen": 12,
+		"square": 14,
+		"turning": -1,
+		"desc": "A main gallant sail with a jib attached to it."
+	},
+	{
+		"ID": "sail_mainroyal",
+		"type": "sail",
+		"name": "Main royal gallant sail",
+		"price": 31000,
+		"durability": 95,
+		"lateen": 4,
+		"square": 18,
+		"turning": -1,
+		"desc": "Two sails attached to the top of the main mast."
+	},
+	{
+		"ID": "sail_mainroyalstay",
+		"type": "sail",
+		"name": "Main royal staysails",
+		"price": 89000,
+		"durability": 105,
+		"lateen": 23,
+		"square": 5,
+		"turning": -1,
+		"desc": "Three jibs attached to the main mast to take advantage of sidewinds."
+	},
+	{
+		"ID": "sail_mainstay",
+		"type": "sail",
+		"name": "Main stay sail",
+		"price": 14000,
+		"durability": 75,
+		"lateen": 13,
+		"square": 4,
+		"turning": 0,
+		"desc": "A single jib attached to the main mast."
+	},
+	{
+		"ID": "sail_maintopgallant",
+		"type": "sail",
+		"name": "Main top gallant sail",
+		"price": 6300,
+		"durability": 70,
+		"lateen": 3,
+		"square": 12,
+		"turning": 0,
+		"desc": "An extra sail to increase the surface area of the main mast's sails."
+	},
+	{
+		"ID": "sail_maintoproyal",
+		"type": "sail",
+		"name": "Main top royal sails",
+		"price": 56000,
+		"durability": 120,
+		"lateen": 14,
+		"square": 19,
+		"turning": -1,
+		"desc": "Basically a marriage of the main staysail and the main royal gallant sail."
+	},
+	{
+		"ID": "sail_maintopstay",
+		"type": "sail",
+		"name": "Main top staysails",
+		"price": 41000,
+		"durability": 85,
+		"lateen": 18,
+		"square": 4,
+		"turning": -1,
+		"desc": "Two jibs attached to the main mast to take advantage of sidewinds."
+	},
+	{
+		"ID": "sail_mainfullrigged",
+		"type": "sail",
+		"name": "Main full-rigged sail",
+		"price": 260000,
+		"durability": 120,
+		"lateen": 21,
+		"square": 24,
+		"turning": -1,
+		"desc": "Six sails that fit a main mast."
+	},
+	{
+		"ID": "sail_mizzengallantbonnet",
+		"type": "sail",
+		"name": "Mizzen gallant bonnet",
+		"price": 130000,
+		"durability": 90,
+		"lateen": 1,
+		"square": 25,
+		"turning": -1,
+		"desc": "Two square sails attached to the mizzen mast."
+	},
+	{
+		"ID": "sail_mizzengallantstaysail",
+		"type": "sail",
+		"name": "Mizzen gallant staysail",
+		"price": 22000,
+		"durability": 70,
+		"lateen": 10,
+		"square": 10,
+		"turning": -1
+	},
+	{
+		"ID": "sail_mizzenroyalgallant",
+		"type": "sail",
+		"name": "Mizzen royal gallant sail",
+		"price": 21000,
+		"durability": 80,
+		"lateen": 2,
+		"square": 14,
+		"turning": -1
+	},
+	{
+		"ID": "sail_mizzenroyalstaysail",
+		"type": "sail",
+		"name": "Mizzen royal staysail",
+		"price": 79000,
+		"durability": 90,
+		"lateen": 20,
+		"square": 1,
+		"turning": -1
+	},
+	{
+		"ID": "sail_mizzenstaysail",
+		"type": "sail",
+		"name": "Mizzen staysail",
+		"price": 11000,
+		"durability": 60,
+		"lateen": 10,
+		"square": 1,
+		"turning": 0
+	},
+	{
+		"ID": "sail_mizzentopgallant",
+		"type": "sail",
+		"name": "Mizzen top gallant sail",
+		"price": 4200,
+		"durability": 55,
+		"lateen": 0,
+		"square": 9,
+		"turning": 0
+	},
+	{
+		"ID": "sail_mizzentoproyal",
+		"type": "sail",
+		"name": "Mizzen top royal sail",
+		"price": 45000,
+		"durability": 100,
+		"lateen": 10,
+		"square": 15,
+		"turning": -1
+	},
+	{
+		"ID": "sail_mizzentopstaysail",
+		"type": "sail",
+		"name": "Mizzen top staysail",
+		"price": 35000,
+		"durability": 70,
+		"lateen": 15,
+		"square": 1,
+		"turning": -1
+	},
+	{
+		"ID": "sail_mizzenfullrigged",
+		"type": "sail",
+		"name": "Mizzen full-rigged sail",
+		"price": 110000,
+		"durability": 100,
+		"lateen": 18,
+		"square": 23,
+		"turning": -2
+	},
+	{
+		"ID": "sail_innerjib",
+		"type": "sail",
+		"name": "Inner jib",
+		"price": 500,
+		"durability": 50,
+		"lateen": 6,
+		"square": 0,
+		"turning": 0,
+		"desc": "A small, cheap sail used to take advantage of sidewinds."
+	},
+	{
+		"ID": "sail_outerinnerjib",
+		"type": "sail",
+		"name": "Outer-inner jib",
+		"price": 23000,
+		"durability": 70,
+		"lateen": 13,
+		"square": 0,
+		"turning": -1,
+		"desc": "Two small jibs."
+	},
+	{
+		"ID": "sail_outerjibstaysail",
+		"type": "sail",
+		"name": "Outer jib staysail",
+		"price": 28000,
+		"durability": 85,
+		"lateen": 14,
+		"square": 1,
+		"turning": 0,
+		"desc": "Two middling jibs."
+	},
+	{
+		"ID": "sail_innerjibstaysail",
+		"type": "sail",
+		"name": "Inner jib staysail",
+		"price": 3200,
+		"durability": 65,
+		"lateen": 10,
+		"square": 2,
+		"turning": 0
+	},
+	{
+		"ID": "sail_foregallantbonnet",
+		"type": "sail",
+		"name": "Fore gallant bonnet",
+		"price": 110000,
+		"durability": 90,
+		"lateen": 0,
+		"square": 24,
+		"turning": -1,
+		"desc": "A wide square sail attached to the bottom of the fore mast."
+	},
+	{
+		"ID": "sail_foregallantstay",
+		"type": "sail",
+		"name": "Fore gallant staysail",
+		"price": 22000,
+		"durability": 70,
+		"lateen": 9,
+		"square": 11,
+		"turning": -1
+	},
+	{
+		"ID": "sail_foreroyal",
+		"type": "sail",
+		"name": "Fore royal gallant sail",
+		"price": 26000,
+		"durability": 80,
+		"lateen": 1,
+		"square": 15,
+		"turning": -1
+	},
+	{
+		"ID": "sail_foreroyalstay",
+		"type": "sail",
+		"name": "Fore royal staysails",
+		"price": 70000,
+		"durability": 90,
+		"lateen": 19,
+		"square": 2,
+		"turning": -1
+	},
+	{
+		"ID": "sail_forestay",
+		"type": "sail",
+		"name": "Fore stay sail",
+		"price": 8300,
+		"durability": 60,
+		"lateen": 9,
+		"square": 3,
+		"turning": 0
+	},
+	{
+		"ID": "sail_foretopgallant",
+		"type": "sail",
+		"name": "Fore top gallant sail",
+		"price": 2400,
+		"durability": 55,
+		"lateen": 0,
+		"square": 8,
+		"turning": 0
+	},
+	{
+		"ID": "sail_foretoproyal",
+		"type": "sail",
+		"name": "Fore top royal sails",
+		"price": 48000,
+		"durability": 100,
+		"lateen": 9,
+		"square": 16,
+		"turning": -1
+	},
+	{
+		"ID": "sail_foretopstay",
+		"type": "sail",
+		"name": "Fore top staysails",
+		"price": 29000,
+		"durability": 70,
+		"lateen": 14,
+		"square": 2,
+		"turning": -1
+	},
+	{
+		"ID": "sail_forefullrigged",
+		"type": "sail",
+		"name": "Fore full-rigged sail",
+		"price": 100000,
+		"durability": 100,
+		"lateen": 17,
+		"square": 24,
+		"turning": -2
+	},
+	{
+		"ID": "sail_flyingstaysail",
+		"type": "sail",
+		"name": "Flying staysails",
+		"price": 67000,
+		"durability": 95,
+		"lateen": 21,
+		"square": 3,
+		"turning": -1,
+		"desc": "Three jibs attached to the bow."
+	},
+	{
+		"ID": "sail_flyingjib",
+		"type": "sail",
+		"name": "Flying jib",
+		"price": 49000,
+		"durability": 80,
+		"lateen": 18,
+		"square": 0,
+		"turning": -1
+	},
+	{
+		"ID": "sail_militaryfullrigged",
+		"type": "sail",
+		"name": "Military full-rigged sail",
+		"price": 520000,
+		"durability": 200,
+		"lateen": 26,
+		"square": 30,
+		"turning": 0,
+		"desc": "A full-rigged set of sails reinforced to reduce the effect on turning speed."
+	},
+	{
+		"ID": "plate_board",
+		"type": "plate",
+		"name": "Wooden board",
+		"price": 5100,
+		"durability": 100,
+		"armor": 3,
+		"speed": -0.25,
+		"desc": "Heavy, weak, and cheap. Made from unknown types of wood and thrown together in a shoddy way."
+	},
+	{
+		"ID": "plate_wooden",
+		"type": "plate",
+		"name": "Wooden plating",
+		"price": 13000,
+		"durability": 100,
+		"armor": 5,
+		"speed": -0.25,
+		"desc": "A strong and relatively cheap plating made from cedar."
+	},
+	{
+		"ID": "plate_oak",
+		"type": "plate",
+		"name": "Oaken plating",
+		"price": 34000,
+		"durability": 100,
+		"armor": 7,
+		"speed": -0.35,
+		"desc": "Stronger plating made from oak."
+	},
+	{
+		"ID": "plate_copper",
+		"type": "plate",
+		"name": "Copper plating",
+		"price": 73000,
+		"durability": 100,
+		"armor": 9,
+		"speed": -0.45,
+		"desc": "Light plating made from copper."
+	},
+	{
+		"ID": "plate_rosewood",
+		"type": "plate",
+		"name": "Rosewood plating",
+		"price": 100000,
+		"durability": 100,
+		"armor": 10,
+		"speed": -0.5,
+		"desc": "A very rare and heavy wood was used to make this plating."
+	},
+	{
+		"ID": "plate_steel",
+		"type": "plate",
+		"name": "Steel plating",
+		"price": 130000,
+		"durability": 100,
+		"armor": 11,
+		"speed": -0.55,
+		"desc": "Heavy but strong plating made from solid steel."
+	},
+	{
+		"ID": "plate_lightwood",
+		"type": "plate",
+		"name": "Light wooden plating",
+		"price": 7000,
+		"durability": 100,
+		"armor": 4,
+		"speed": -0.15,
+		"desc": "A lighter version of wooden plating."
+	},
+	{
+		"ID": "plate_lightoak",
+		"type": "plate",
+		"name": "Light oaken plating",
+		"price": 38000,
+		"durability": 100,
+		"armor": 7,
+		"speed": -0.3,
+		"desc": "A lighter version of oaken plating."
+	},
+	{
+		"ID": "plate_lightcopper",
+		"type": "plate",
+		"name": "Light copper plating",
+		"price": 81000,
+		"durability": 100,
+		"armor": 9,
+		"speed": -0.4,
+		"desc": "A lighter version of copper plating."
+	},
+	{
+		"ID": "plate_lightrosewood",
+		"type": "plate",
+		"name": "Light rosewood plating",
+		"price": 110000,
+		"durability": 100,
+		"armor": 10,
+		"speed": -0.45,
+		"desc": "A lighter version of rosewood plating."
+	},
+	{
+		"ID": "plate_lightsteel",
+		"type": "plate",
+		"name": "Light steel plating",
+		"price": 150000,
+		"durability": 100,
+		"armor": 11,
+		"speed": -0.5,
+		"desc": "A lighter version of steel plating."
+	},
+	{
+		"ID": "plate_finewooden",
+		"type": "plate",
+		"name": "Fine wooden plating",
+		"price": 14000,
+		"durability": 90,
+		"armor": 4,
+		"speed": -0.1,
+		"desc": "A better version of wooden plating."
+	},
+	{
+		"ID": "plate_fineoak",
+		"type": "plate",
+		"name": "Fine oaken plating",
+		"price": 76000,
+		"durability": 90,
+		"armor": 7,
+		"speed": -0.25,
+		"desc": "A lighter version of oaken plating."
+	},
+	{
+		"ID": "plate_finecopper",
+		"type": "plate",
+		"name": "Fine copper plating",
+		"price": 162000,
+		"durability": 90,
+		"armor": 9,
+		"speed": -0.35,
+		"desc": "A lighter version of copper plating."
+	},
+	{
+		"ID": "plate_finerosewood",
+		"type": "plate",
+		"name": "Fine rosewood plating",
+		"price": 220000,
+		"durability": 90,
+		"armor": 10,
+		"speed": -0.4,
+		"desc": "A lighter version of rosewood plating."
+	},
+	{
+		"ID": "plate_finesteel",
+		"type": "plate",
+		"name": "Fine steel plating",
+		"price": 300000,
+		"durability": 90,
+		"armor": 11,
+		"speed": -0.45,
+		"desc": "A lighter version of steel plating."
+	},
+	{
+		"ID": "plate_reinforcedwooden",
+		"type": "plate",
+		"name": "Reinforced wooden plating",
+		"price": 14000,
+		"durability": 120,
+		"armor": 5,
+		"speed": -0.2
+	},
+	{
+		"ID": "plate_reinforcedoak",
+		"type": "plate",
+		"name": "Reinforced oaken plating",
+		"price": 76000,
+		"durability": 120,
+		"armor": 8,
+		"speed": -0.35
+	},
+	{
+		"ID": "plate_reinforcedcopper",
+		"type": "plate",
+		"name": "Reinforced copper plating",
+		"price": 162000,
+		"durability": 120,
+		"armor": 10,
+		"speed": -0.45
+	},
+	{
+		"ID": "plate_reinforcedrosewood",
+		"type": "plate",
+		"name": "Reinforced rosewood plating",
+		"price": 220000,
+		"durability": 120,
+		"armor": 11,
+		"speed": -0.5
+	},
+	{
+		"ID": "plate_reinforcedsteel",
+		"type": "plate",
+		"name": "Reinforced steel plating",
+		"price": 300000,
+		"durability": 120,
+		"armor": 12,
+		"speed": -0.55
+	},
+	{
+		"ID": "plate_pressedcopper",
+		"type": "plate",
+		"name": "Pressed copper plating",
+		"price": 194400,
+		"durability": 120,
+		"armor": 11,
+		"speed": -0.6,
+		"desc": "Copper plating pressed to fit more copper within the same volume. Strong but even heavier."
+	},
+	{
+		"ID": "plate_pressedsteel",
+		"type": "plate",
+		"name": "Pressed steel plating",
+		"price": 360000,
+		"durability": 120,
+		"armor": 13,
+		"speed": -0.7,
+		"desc": "Steel plating pressed to fit more steel in the same volume. Strong but even slower."
+	},
+	{
+		"ID": "statue_dragon",
+		"type": "statue",
+		"name": "Dragon figurehead",
+		"price": 25000,
+		"durability": 120,
+		"protection": 0,
+		"healing": 0,
+		"dodging": 10
+	},
+	{
+		"ID": "statue_mermaid",
+		"type": "statue",
+		"name": "Mermaid figurehead",
+		"price": 8000,
+		"durability": 80,
+		"protection": 4,
+		"healing": 3,
+		"dodging": 0
+	},
+	{
+		"ID": "statue_griffon",
+		"type": "statue",
+		"name": "Griffon figurehead",
+		"price": 11000,
+		"durability": 80,
+		"protection": 2,
+		"healing": 4,
+		"dodging": 5
+	},
+	{
+		"ID": "statue_seagod",
+		"type": "statue",
+		"name": "Sea god figurehead",
+		"price": 23300,
+		"durability": 80,
+		"protection": 7,
+		"healing": 1,
+		"dodging": 0
+	},
+	{
+		"ID": "statue_remalle",
+		"type": "statue",
+		"name": "Remalle figurehead",
+		"price": 9000,
+		"durability": 60,
+		"protection": 3,
+		"healing": 3,
+		"dodging": 2
+	},
+	{
+		"ID": "statue_firegod",
+		"type": "statue",
+		"name": "Fire god figurehead",
+		"price": 11000,
+		"durability": 70,
+		"protection": 2,
+		"healing": 7,
+		"dodging": 0
+	},
+	{
+		"ID": "statue_seaserpant",
+		"type": "statue",
+		"name": "Sea serpant figurehead",
+		"price": 6000,
+		"durability": 60,
+		"protection": 3,
+		"healing": 0,
+		"dodging": 2
+	},
+	{
+		"ID": "statue_eagle",
+		"type": "statue",
+		"name": "Eagle figurehead",
+		"price": 7000,
+		"durability": 50,
+		"protection": 0,
+		"healing": 3,
+		"dodging": 4
+	},
+	{
+		"ID": "statue_phoenix",
+		"type": "statue",
+		"name": "Phoenix figurehead",
+		"price": 17000,
+		"durability": 60,
+		"protection": 4,
+		"healing": 4,
+		"dodging": 3
+	},
+	{
+		"ID": "statue_phoenix",
+		"type": "statue",
+		"name": "Phoenix figurehead",
+		"price": 17000,
+		"durability": 60,
+		"protection": 4,
+		"healing": 4,
+		"dodging": 3
+	}
+]
