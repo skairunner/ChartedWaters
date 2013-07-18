@@ -81,6 +81,9 @@
     <ClCompile Include="shipPrototype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shipparts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -144,6 +147,9 @@
       <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="shipPrototype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shipparts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

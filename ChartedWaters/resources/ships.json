@@ -13,6 +13,7 @@
 		"lateen sail": 145,
 		"square sail": 20,
 		"wave resistance": 4,
+		"turning": 14,
 		"base armor": 7,
 		"max durability": 100,
 		"desc": "A two-masted ship with lateen sails that was build for close-distance trade."
@@ -31,9 +32,9 @@
 		"lateen sail": 180,
 		"square sail": 25,
 		"wave resistance": 5,
+		"turning": 11,
 		"base armor": 6,
-		"max durability": 135,
-		"desc": "5"
+		"max durability": 135
 	},
 	{
 		"ID": "caravel_small",
@@ -49,6 +50,7 @@
 		"lateen sail": 140,
 		"square sail": 20,
 		"wave resistance": 5,
+		"turning": 13,
 		"base armor": 6,
 		"max durability": 90,
 		"desc": "A small caravel with exceptional seafaring abilities."
@@ -67,6 +69,7 @@
 		"lateen sail": 110,
 		"square sail": 20,
 		"wave resistance": 4,
+		"turning": 12,
 		"base armor": 4,
 		"max durability": 50,
 		"desc": "A small, single-masted ship."
@@ -85,6 +88,7 @@
 		"lateen sail": 160,
 		"square sail": 35,
 		"wave resistance": 3,
+		"turning": 10,
 		"base armor": 4,
 		"max durability": 110,
 		"desc": "A small ship that fits three lateen sails. As a result, it not only can carry a lot of goods but also manages to be fast, too."
@@ -103,6 +107,7 @@
 		"lateen sail": 90,
 		"square sail": 5,
 		"wave resistance": 2,
+		"turning": 14,
 		"base armor": 2,
 		"max durability": 20,
 		"desc": "A small, single-masted ship. It's barely large enough to count as a ship; basically a boat with a mast slapped onto it."
@@ -121,6 +126,7 @@
 		"lateen sail": 185,
 		"square sail": 65,
 		"wave resistance": 6,
+		"turning": 11,
 		"base armor": 10,
 		"max durability": 220,
 		"desc": "A ship with high castles, fore and aft."
@@ -139,6 +145,7 @@
 		"lateen sail": 255,
 		"square sail": 50,
 		"wave resistance": 11,
+		"turning": 14,
 		"base armor": 12,
 		"max durability": 250,
 		"desc": "A cutter that is more heavily armed than usual ones."
@@ -157,6 +164,7 @@
 		"lateen sail": 240,
 		"square sail": 25,
 		"wave resistance": 6,
+		"turning": 13,
 		"base armor": 16,
 		"max durability": 235,
 		"desc": "A small ship with many guns and heavily armored."
@@ -175,9 +183,9 @@
 		"lateen sail": 180,
 		"square sail": 70,
 		"wave resistance": 4,
+		"turning": 9,
 		"base armor": 18,
-		"max durability": 380,
-		"desc": "6"
+		"max durability": 380
 	},
 	{
 		"ID": "corvette",
@@ -193,9 +201,9 @@
 		"lateen sail": 160,
 		"square sail": 220,
 		"wave resistance": 6,
+		"turning": 12,
 		"base armor": 17,
-		"max durability": 320,
-		"desc": "7"
+		"max durability": 320
 	},
 	{
 		"ID": "corvette_flagship",
@@ -211,6 +219,7 @@
 		"lateen sail": 205,
 		"square sail": 295,
 		"wave resistance": 6,
+		"turning": 14,
 		"base armor": 17,
 		"max durability": 480,
 		"desc": "A corvette redesigned to be more resilient and faster, suitable for commanding."
@@ -229,6 +238,7 @@
 		"lateen sail": 110,
 		"square sail": 230,
 		"wave resistance": 7,
+		"turning": 8,
 		"base armor": 30,
 		"max durability": 680,
 		"desc": "A large battleship specifically created for combat. It boasts more cannons than any other ship."
@@ -247,13 +257,14 @@
 		"lateen sail": 110,
 		"square sail": 230,
 		"wave resistance": 7,
+		"turning": 7,
 		"base armor": 36,
 		"max durability": 720,
 		"desc": "A battleship with thicker armor."
 	},
 	{
-		"ID": "battleship_firstclass",
-		"name": "First Class Ship of the Line",
+		"ID": "battleship_firstrate",
+		"name": "First Rate Ship of the Line",
 		"size": "large",
 		"price": 25000000,
 		"specialization": "military",
@@ -265,6 +276,7 @@
 		"lateen sail": 115,
 		"square sail": 250,
 		"wave resistance": 7,
+		"turning": 7,
 		"base armor": 40,
 		"max durability": 790,
 		"desc": "A ship with three cannon decks. It has an immense broadside."
@@ -283,9 +295,9 @@
 		"lateen sail": 180,
 		"square sail": 90,
 		"wave resistance": 6,
+		"turning": 8,
 		"base armor": 25,
-		"max durability": 470,
-		"desc": "6"
+		"max durability": 470
 	},
 	{
 		"ID": "frigate_royal",
@@ -301,9 +313,9 @@
 		"lateen sail": 157,
 		"square sail": 278,
 		"wave resistance": 11,
+		"turning": 11,
 		"base armor": 26,
-		"max durability": 726,
-		"desc": "8"
+		"max durability": 726
 	},
 	{
 		"ID": "galleon_heavy",
@@ -319,9 +331,9 @@
 		"lateen sail": 110,
 		"square sail": 240,
 		"wave resistance": 8,
+		"turning": 9,
 		"base armor": 34,
-		"max durability": 700,
-		"desc": "6"
+		"max durability": 700
 	},
 	{
 		"ID": "galleon_naval",
@@ -337,9 +349,9 @@
 		"lateen sail": 115,
 		"square sail": 210,
 		"wave resistance": 6,
+		"turning": 10,
 		"base armor": 26,
-		"max durability": 590,
-		"desc": "6"
+		"max durability": 590
 	},
 	{
 		"ID": "turtle",
@@ -355,9 +367,9 @@
 		"lateen sail": 230,
 		"square sail": 90,
 		"wave resistance": 1,
+		"turning": 9,
 		"base armor": 22,
-		"max durability": 630,
-		"desc": "7"
+		"max durability": 630
 	},
 	{
 		"ID": "cutter",
@@ -373,6 +385,7 @@
 		"lateen sail": 270,
 		"square sail": 60,
 		"wave resistance": 12,
+		"turning": 15,
 		"base armor": 11,
 		"max durability": 230,
 		"desc": "A ship constructed for speed. It is slightly faster than a sloop, but requires more crew."
@@ -391,6 +404,7 @@
 		"lateen sail": 290,
 		"square sail": 70,
 		"wave resistance": 12,
+		"turning": 13,
 		"base armor": 10,
 		"max durability": 220,
 		"desc": "A cutter fitted with larger sails than normal cutters. Though it was originally made to tug ships into harbor, its increased sails make for a fast ship, too."
@@ -409,6 +423,7 @@
 		"lateen sail": 270,
 		"square sail": 30,
 		"wave resistance": 6,
+		"turning": 14,
 		"base armor": 8,
 		"max durability": 210,
 		"desc": "A fast, light, small ship. Made for quick transport of goods. It has the advantage that only a small amount of crew is needed to man it."
@@ -427,9 +442,9 @@
 		"lateen sail": 177,
 		"square sail": 268,
 		"wave resistance": 8,
+		"turning": 11,
 		"base armor": 15,
-		"max durability": 350,
-		"desc": "8"
+		"max durability": 350
 	},
 	{
 		"ID": "schooner",
@@ -445,9 +460,28 @@
 		"lateen sail": 265,
 		"square sail": 55,
 		"wave resistance": 8,
+		"turning": 13,
 		"base armor": 14,
 		"max durability": 300,
 		"desc": "A fast, middle-sized ship made for middling to long journeys."
+	},
+	{
+		"ID": "schooner_large0",
+		"name": "Large Schooner",
+		"size": "large",
+		"price": 7230000,
+		"specialization": "speed",
+		"max storage": 560,
+		"max cargo": 502,
+		"max cannons": 18,
+		"max sailors": 40,
+		"min sailors": 22,
+		"lateen sail": 275,
+		"square sail": 120,
+		"wave resistance": 9,
+		"turning": 15,
+		"base armor": 15,
+		"max durability": 520
 	},
 	{
 		"ID": "clipper",
@@ -463,9 +497,9 @@
 		"lateen sail": 205,
 		"square sail": 295,
 		"wave resistance": 10,
+		"turning": 10,
 		"base armor": 16,
-		"max durability": 600,
-		"desc": "10"
+		"max durability": 600
 	},
 	{
 		"ID": "schooner_long",
@@ -481,6 +515,7 @@
 		"lateen sail": 398,
 		"square sail": 104,
 		"wave resistance": 8,
+		"turning": 6,
 		"base armor": 13,
 		"max durability": 660,
 		"desc": "A large schooner with six masts. It uses only fore-and-aft sails, except for the jibs. It has exceptional speed and transportation ability."
@@ -499,6 +534,7 @@
 		"lateen sail": 130,
 		"square sail": 25,
 		"wave resistance": 4,
+		"turning": 10,
 		"base armor": 4,
 		"max durability": 90,
 		"desc": "A cog with two masts instead of one. It has better transportation capability."
@@ -517,6 +553,7 @@
 		"lateen sail": 80,
 		"square sail": 205,
 		"wave resistance": 7,
+		"turning": 10,
 		"base armor": 10,
 		"max durability": 310,
 		"desc": "A ship made for mass transport of goods. It has one the highest transport capabilities of all medium ships, but it is very slow as a result."
@@ -535,6 +572,7 @@
 		"lateen sail": 195,
 		"square sail": 70,
 		"wave resistance": 4,
+		"turning": 10,
 		"base armor": 18,
 		"max durability": 330,
 		"desc": "A larger version of the caravel. It's better suited for sailing in the open sea."
@@ -553,9 +591,9 @@
 		"lateen sail": 250,
 		"square sail": 55,
 		"wave resistance": 8,
+		"turning": 12,
 		"base armor": 13,
-		"max durability": 305,
-		"desc": "7"
+		"max durability": 305
 	},
 	{
 		"ID": "carrack_large",
@@ -571,9 +609,9 @@
 		"lateen sail": 195,
 		"square sail": 100,
 		"wave resistance": 7,
+		"turning": 9,
 		"base armor": 20,
-		"max durability": 420,
-		"desc": "7"
+		"max durability": 420
 	},
 	{
 		"ID": "clipper_large",
@@ -589,6 +627,7 @@
 		"lateen sail": 215,
 		"square sail": 300,
 		"wave resistance": 9,
+		"turning": 9,
 		"base armor": 16,
 		"max durability": 750,
 		"desc": "An absolutely massive clipper. It is the alpha and omega of pure transport ability, though it is outclassed by long schooners in speed."
@@ -607,9 +646,9 @@
 		"lateen sail": 120,
 		"square sail": 225,
 		"wave resistance": 7,
+		"turning": 9,
 		"base armor": 24,
-		"max durability": 560,
-		"desc": "6"
+		"max durability": 560
 	},
 	{
 		"ID": "galleon_large",
@@ -625,9 +664,9 @@
 		"lateen sail": 115,
 		"square sail": 255,
 		"wave resistance": 9,
+		"turning": 9,
 		"base armor": 33,
-		"max durability": 650,
-		"desc": "7"
+		"max durability": 650
 	},
 	{
 		"ID": "frigate_heavy",
@@ -643,9 +682,9 @@
 		"lateen sail": 110,
 		"square sail": 220,
 		"wave resistance": 8,
+		"turning": 11,
 		"base armor": 22,
-		"max durability": 390,
-		"desc": "6"
+		"max durability": 390
 	},
 	{
 		"ID": "frigate",
@@ -661,9 +700,9 @@
 		"lateen sail": 110,
 		"square sail": 220,
 		"wave resistance": 8,
+		"turning": 12,
 		"base armor": 22,
-		"max durability": 290,
-		"desc": "6"
+		"max durability": 290
 	},
 	{
 		"ID": "frigate",
@@ -679,8 +718,8 @@
 		"lateen sail": 110,
 		"square sail": 220,
 		"wave resistance": 8,
+		"turning": 12,
 		"base armor": 22,
-		"max durability": 290,
-		"desc": "6"
+		"max durability": 290
 	}
 ]

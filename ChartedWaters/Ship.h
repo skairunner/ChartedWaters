@@ -2,6 +2,7 @@
 #include <string>
 #include "goods.h"
 #include "shipPrototype.h"
+#include "shipparts.h"
 
 struct LedgerItemTuple
   {
@@ -10,6 +11,10 @@ struct LedgerItemTuple
   std::string numberOfItems;
   std::string averagePurchasePrice;
   };
+
+// success: delete original. swapped: don't delete original.
+enum ShipErrors {shipSUCCESS = 1, shipSWAPPED = 2, shipNOTENOUGHSPACE};
+
 
 class Ship : protected ShipPrototype
   {
@@ -41,25 +46,35 @@ class Ship : protected ShipPrototype
     int getArmor();
     int getLateen();
     int getSquare();
-    int getSpeed(); 
+    double getSpeed(); 
     int getBaseSpeed();
+    int getTurning();
     std::string getSize();
 
 
     std::vector<LedgerItemTuple> returnListOfItems();
+    
     void setPosition(const std::pair<int, int>& newPos);
     void setPath(const std::vector<std::pair<int, int>>& ppath);
     void updatePos(); // If a day went by.
+    int addSail(int pos, ShipSails& sail);
+    int removeSail(int pos, ShipSails& sail);
+    int addArmor(int pos, ShipArmor& armor);
+    int addFigurehead(ShipArmor& figurehead);
 
     std::pair<int, int> getPosition();
 
     int character; // default 127, a triangle
     int waveResistance;
     std::vector<std::pair<int,int>> path;
+    std::map<int, ShipSails> sailList;
+    std::map<int, ShipArmor> armorList;
+    ShipStatue figurehead;
     int faction; //default 0
 
 
-  private:   
+  private:
+    double getArmorSlowing();
     bool removeFromList(const std::string& itemID);
     std::string shipName;
     int ducats;

@@ -68,6 +68,7 @@ void JSONToShip::readShips(ShipDictionary& dict)
     buffer.square = ship["square sail"].asInt();
     buffer.minimumsailors = ship["min sailors"].asInt();
     buffer.waveResistance = ship["wave resistance"].asInt();
+    buffer.turning = ship["turning"].asInt();
     buffer.baseArmor = ship["base armor"].asInt();
     buffer.maxDurability = ship["max durability"].asInt();
     if (buffer.maxstorage != buffer.maxcannons + buffer.maxcargo + buffer.maxsailors)
@@ -77,12 +78,9 @@ void JSONToShip::readShips(ShipDictionary& dict)
     }
   };
 
-int ShipPrototype::baseSpeed()
+int ShipPrototype::baseSpeed(const int& lateens, const int& squares)
   {
-  double temp = 1.3f * lateen + 0.7f * square;
-  temp /= 49.1666666666667f;
-  temp += 0.5f;
-  return temp;
+  return baseSpeed_d(lateens, squares);
   }
 
 ShipPrototype ShipDictionary::getRandomShip()
@@ -93,4 +91,12 @@ ShipPrototype ShipDictionary::getRandomShip()
   for(; counter > 0; counter--)
     it++;
   return it->second;
+  }
+
+double ShipPrototype::baseSpeed_d(const int& lateens, const int& squares)
+  {
+  double temp = 1.3f * lateens + 0.7f * squares;
+  temp /= 49.1666666666667f;
+  temp += 0.5f;
+  return temp;
   }

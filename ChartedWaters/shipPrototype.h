@@ -18,8 +18,10 @@ class ShipPrototype
     int maxstorage;
     int maxcargo, maxsailors, maxcannons;
     int minimumsailors;
-    int baseSpeed(); // calc base speed from sails.
+    static int baseSpeed(const int& lateens, const int& squares); // calc base speed from sails.
+    static double baseSpeed_d(const int& lateens, const int& squares); // double speed.
     int lateen, square; // sails
+    int turning;
     int waveResistance;
     int baseArmor;
     int maxDurability;

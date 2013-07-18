@@ -20,6 +20,7 @@ int focusX = screenwidth/2;
 int focusY = screenheight/2;
 
 int playerMovement = 0;
+int daysPassed = 0;
 
 World* TheWorld;
 TCODConsole* cityscreen;
@@ -36,6 +37,7 @@ GameState* newState;
 bool mouseClick = false;
 bool pressedPeriod = false;
 bool lockedToShip = false;
+bool pressedArrow = false; // ">"
 
 void lockToShip () // sets camera to ship.
   {
@@ -48,10 +50,12 @@ void lockToShip () // sets camera to ship.
 
 bool Engine::EngineInit()
 {
-JSONToItem jsonParser;
-jsonParser.readItems(ItemDict); // Read items into dictionary.
-JSONToShip parser;
-parser.readShips(ShipDict);
+JSONToItem itemparser;
+itemparser.readItems(ItemDict); // Read items into dictionary.
+JSONToShip shipparser;
+shipparser.readShips(ShipDict);
+JSONToShipPart partparser;
+partparser.readShipParts(ShipPartDict);
 
 TheWorld = new World(width, height);
 
@@ -144,11 +148,19 @@ if (mouseClick)
   for (auto iterator = it.begin()+1; iterator < it.end(); iterator++)
     PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
   }
+if (pressedArrow)
+  {
+  if (TheWorld->getPlayerShip().path.size() == 1)
+    pressedArrow = false;
+  if (!pressedPeriod && playerMovement <= 0)
+    pressedPeriod = true;
+  }
 if (pressedPeriod)
   {
-  playerMovement = TheWorld->getPlayerShip().getSpeed();
+  playerMovement = (int)TheWorld->getPlayerShip().getSpeed();
   TheWorld->step();
   pressedPeriod = false;
+  daysPassed++;
   }
 if (playerMovement > 0)
   {
@@ -165,6 +177,7 @@ if (playerMovement > 0)
 void Engine::Render(TCODConsole *root)
 {
 root->setKeyColor(TCODColor::magenta);
+root->setDefaultBackground(TCODColor(96,71,64));
 TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
 //TCODConsole::blit(AccessibleScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 
@@ -175,6 +188,8 @@ TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 
 TCODConsole::blit(PathScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
+
+root->print(0, 49, "Day %d.", daysPassed);
 }
 
 void Engine::EngineEnd()
@@ -200,6 +215,8 @@ void Engine::KeyUp(const int &key,const int &unicode)
 
 const int scrollspeed = 2;
 
+ShipArmor testarmor;
+
 void Engine::KeyDown(const int &key,const int &unicode)
 {
 if (key == SDLK_RIGHT)
@@ -215,6 +232,10 @@ else if (key == SDLK_RETURN)
 
 switch (unicode)
   {
+case '>':
+  pressedArrow = true;
+  break;
+
 case 'S':
   newState = new State_ShipStatus(TheWorld->getPlayerShip());
   PushState(newState);
@@ -224,9 +245,12 @@ case '.':
   pressedPeriod = true;
   break;
 
-case 'T':  // Test shop
-  newState = new State_Shop(TheWorld->getFirstTown(), TheWorld->getPlayerShip());
-  PushState(newState);
+case 'T':  // Add a Pressed Iron item to the player's ship as a test.
+  testarmor = ShipPartDict.getArmor(string("plate_finesteel"));
+  TheWorld->getPlayerShip().addArmor(0, testarmor);
+  TheWorld->getPlayerShip().addArmor(1, testarmor);
+  TheWorld->getPlayerShip().addArmor(2, testarmor);
+  TheWorld->getPlayerShip().addArmor(3, testarmor);
   break;
 
 case 's': // Check for shop.

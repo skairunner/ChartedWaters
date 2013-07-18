@@ -118,7 +118,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
     return twNOT_ENOUGH_ITEMS; // not enough items to buy!
 
   /// Finally, actually buy them items.
-  ship.addItem(Item(ID), numberOf, it->getPrice() * (1 + currentTax));
+  ship.addItem(Item(ID), numberOf, getBuyPrice(ID) * (1 + currentTax));
   ship.addMoney(-price);
   it->addItem(-numberOf);
   it->addDemand(numberOf);

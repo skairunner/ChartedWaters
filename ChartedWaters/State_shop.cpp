@@ -46,12 +46,14 @@ string drydocksHeader()
   return returnval;
   }
 
-string rightAlignNumber(const int& input, const int& size)
+string rightAlignNumber(const int& input, const int& size = -1)
   {
   char price_cstr[50];
   _snprintf(price_cstr, sizeof(price_cstr), "%d", input);
   string buffer(price_cstr);
-  //string buffer = to_string((long double)input);
+  if (size == -1) // default
+    return buffer;
+
   string returnval;
   if (buffer.size() < size)
     for (int counter = 0; counter < size - buffer.size(); counter++)
@@ -151,7 +153,7 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   {
   /// i: item id, _: space, n:name, p: purchase price, m: how many
   /// ID
-  /// iiii_n{30}_ppppp_xmmm~
+  /// iiii_n{18}_ppppp_xmmm~
   string blank(" ");
 
   string type = ItemDict.findItemTypeInitials(tuple.itemID);
@@ -160,20 +162,20 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   returnval += type;
   returnval += blank;
 
-  returnval += tuple.ItemName.substr(0, 19);
-  if(tuple.ItemName.size() < 19)
-    for (int counter = 0; counter < 19 - tuple.ItemName.size(); counter++)
+  returnval += tuple.ItemName.substr(0, 18);
+  if(tuple.ItemName.size() < 18)
+    for (int counter = 0; counter < 18 - tuple.ItemName.size(); counter++)
       returnval += blank;
 
   returnval += blank;
   string buffer = tuple.BuyPrice;
   buffer = changeToDecimal(buffer);
-  if (buffer.size() < 6)
-    for (int counter = 0; counter < 6 - buffer.size(); counter++)
+  if (buffer.size() < 7)
+    for (int counter = 0; counter < 7 - buffer.size(); counter++)
       returnval += blank;
-  if (buffer.size() > 6)
+  if (buffer.size() > 7)
     returnval += string("xxxxxxx");
-  else returnval += buffer.substr(0, 6);
+  else returnval += buffer.substr(0, 7);
 
   returnval += blank;
 
@@ -271,7 +273,7 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
   
 
   consoleLeft->print(1, line++, (string("The ") + refToShip.getName()).c_str());
-  consoleLeft->print(1, line++, (to_string((long double)refToShip.getMoney()) + string(" ducats")).c_str());
+  consoleLeft->print(1, line++, (rightAlignNumber(refToShip.getMoney()) + string(" ducats")).c_str());
   consoleLeft->print(1, line++, ("Storage " + to_string((long double)refToShip.getTotalGoods()) + "/" +
                              to_string((long double)refToShip.getMaxGoods())).c_str());
   line++; // skip a line
@@ -687,7 +689,7 @@ void State_Shop::drydocks_right()
     consoleRight->print(1, line++, "Total storage: %d", ship.maxstorage); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.maxcargo, ship.minimumsailors, ship.maxsailors, ship.maxcannons); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.lateen, ship.square); swapLineColors(consoleRight, line);
-    consoleRight->print(1, line++, "Base speed: %d", ship.baseSpeed()); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Base speed: %d", ship.baseSpeed(ship.lateen, ship.square)); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Wave resistance: %d", ship.waveResistance); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Base armor: %d", ship.baseArmor); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Max durability: %d", ship.maxDurability); swapLineColors(consoleRight, line);
@@ -705,7 +707,7 @@ void State_Shop::drydocks_right()
   consoleRight->print(1, line++, "Total storage: %d", ship.getMaxStorage()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.getMaxGoods(), ship.getMinSailors(), ship.getMaxSailors(), ship.getMaxCannons()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.getLateen(), ship.getSquare()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Base speed: %d", ship.getSpeed()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Base speed: %d", ship.getBaseSpeed()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Base armor: %d", ship.getArmor()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Max durability: %d", ship.getMaxDurability()); swapLineColors(consoleRight, line);
