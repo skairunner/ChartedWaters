@@ -370,6 +370,12 @@ EconomyItem::EconomyItem(const std::string& ID, const int& newSupply, const int&
 
   }
 
+EconomyItem::EconomyItem()
+  : Item(string("null")), supply(5), demand(5)
+  {
+
+  }
+
 void EconomyItem::decayDemand()
   {
   if (demand > supply)

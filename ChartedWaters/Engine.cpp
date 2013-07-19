@@ -177,7 +177,6 @@ if (playerMovement > 0)
 void Engine::Render(TCODConsole *root)
 {
 root->setKeyColor(TCODColor::magenta);
-root->setDefaultBackground(TCODColor(96,71,64));
 TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
 //TCODConsole::blit(AccessibleScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 
@@ -189,7 +188,7 @@ TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(PathScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 
-root->print(0, 49, "Day %d.", daysPassed);
+root->print(0, 49, "Day %d", daysPassed);
 }
 
 void Engine::EngineEnd()

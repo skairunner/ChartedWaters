@@ -37,23 +37,23 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
   {
   vector<EconomyItemTuple> returnVal;
   double tax = getTaxRate(isHometown);
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
+  for (auto it = itemlist.begin(); it != itemlist.end(); it++)
     {
     EconomyItemTuple buffer;
     int temporary;
     double secondtemp; // To change the raw floats into 'clean', 1-decimal point numbers.
-    buffer.itemID = it->ID;
-    buffer.ItemName = it->name;
+    buffer.itemID = it->second.ID;
+    buffer.ItemName = it->second.name;
 
-    buffer.numberOfItems = toNumber(it->howMany());
-    temporary = getBuyPrice(it->ID) * (1 + tax) * 10;
+    buffer.numberOfItems = toNumber(it->second.howMany());
+    temporary = getBuyPrice(it->second.ID) * (1 + tax) * 10;
     secondtemp = temporary / 10.0f;
 
     buffer.BuyPrice = toNumber(secondtemp);
-    temporary = getSellPrice(it->ID) * 10 * (1 - tax);
+    temporary = getSellPrice(it->second.ID) * 10 * (1 - tax);
     secondtemp = temporary / 10.0f;
     buffer.SellPrice = toNumber(secondtemp);
-    int percentage = (double)it->getPrice()/it->basePrice * 100;
+    int percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
     buffer.percentageOfBasePrice = toNumber(percentage) + string("%%");
 
     returnVal.push_back(buffer);
@@ -64,26 +64,21 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
 
 void Town::addItems(const std::string& ID, const int& numberOf)
   {
-  auto it = itemlist.begin();
-  for (; it < itemlist.end(); it++)
-    if (it->ID == ID)
-      {
-      it->addItem(numberOf);
-      return;
-      }
+  auto it = itemlist.find(ID);
+  if (it != itemlist.end())
+    {
+    it->second.addItem(numberOf);
+    return;
+    }
+
   // since the item doesn't exist
-  itemlist.push_back(EconomyItem(ID, numberOf, demandList[ID]));
+  itemlist[ID] = EconomyItem(ID, numberOf, demandList[ID]);
   demandList.erase(ID);
   }
 
-vector<EconomyItem>::iterator Town::getItemIterator(const string& ID)
+map<std::string, EconomyItem>::iterator Town::getItemIterator(const string& ID)
   {
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
-    {
-    if (it->ID == ID)
-      return it;
-    }
-  return itemlist.end();
+  return itemlist.find(ID);
   }
 
 int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
@@ -92,15 +87,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
     return 0;
   lastTransaction = 0;
   lastTransactionItemID.clear();
-  auto it = itemlist.begin();
-
-  // implicit else, as if will return.
-  for (; it < itemlist.end(); it++)
-    if (it->ID == ID)
-      {
-  //    it->addItem(numberOf);
-      break;
-      }
+  auto it = itemlist.find(ID);
 
   if (it == itemlist.end())
     return twNO_SUCH_ITEM; // item doesn't exist!
@@ -108,20 +95,20 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   double currentTax = getTaxRate(hometown);
   if (numberOf < 0)
     {
-    numberOf = ship.getMoney() / (getBuyPrice(it->ID) * (1 + currentTax)); // FLOOR ( money / price ) = number of items buyable.
-    numberOf = numberOf > it->howMany() ? it->howMany() : numberOf; // If the possible number of items buyable is more than the total.
+    numberOf = ship.getMoney() / (getBuyPrice(it->second.ID) * (1 + currentTax)); // FLOOR ( money / price ) = number of items buyable.
+    numberOf = numberOf > it->second.howMany() ? it->second.howMany() : numberOf; // If the possible number of items buyable is more than the total.
     }
-  int price = getBuyPrice(it->ID) * numberOf * (1 + currentTax);
+  int price = getBuyPrice(it->second.ID) * numberOf * (1 + currentTax);
   if (price > ship.getMoney())
     return twNOT_ENOUGH_MONEY; // don't have money to buy all that
-  if (numberOf > it->howMany())
+  if (numberOf > it->second.howMany())
     return twNOT_ENOUGH_ITEMS; // not enough items to buy!
 
   /// Finally, actually buy them items.
   ship.addItem(Item(ID), numberOf, getBuyPrice(ID) * (1 + currentTax));
   ship.addMoney(-price);
-  it->addItem(-numberOf);
-  it->addDemand(numberOf);
+  it->second.addItem(-numberOf);
+  it->second.addDemand(numberOf);
   lastTransaction = price;
   numberOfLastTransaction = numberOf;
   unitPurchasePriceOfSell = 0;
@@ -173,27 +160,26 @@ double Town::getDistanceFromNearestSource(const std::string& ID)
 
 int Town::getPriceOf(const std::string& ID)
   {
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
-    {
-    if (it->ID == ID)
-      return it->getPrice();
-    }
+  auto itemIt = itemlist.find(ID);
+  if (itemIt != itemlist.end())
+    return itemIt->second.getPrice();
+
   // If it doesn't exist, return the base price influenced by demand
   // and the items of the same type or category already in the city.
   int supply = 0;
   int demand = 0;
   auto item = ItemDict.getItemTemplate(ID);
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
+  for (auto it = itemlist.begin(); it != itemlist.end(); it++)
     {
-    if (it->category == item.category)
+    if (it->second.category == item.category)
       {
-      supply += 0.01 * it->getSupply();
-      demand += 0.01 * it->getDemand();
+      supply += 0.01 * it->second.getSupply();
+      demand += 0.01 * it->second.getDemand();
       }
-    if (it->type == item.type)
+    if (it->second.type == item.type)
       {
-      supply += 0.05 * it->getSupply();
-      demand += 0.05 * it->getDemand();
+      supply += 0.05 * it->second.getSupply();
+      demand += 0.05 * it->second.getDemand();
       }
     }
   EconomyItem temp(ID, supply, 1 + demand + demandList[ID]);
@@ -286,23 +272,17 @@ int Town::getFactionID()
 
 int Town::getNumberOf(const std::string& itemID)
   {
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
-    if (it->ID == itemID)
-      {
-      return it->howMany();
-      }
-  return -1;
+  auto it = itemlist.find(itemID);
+  if (it != itemlist.end())
+    return it->second.howMany();
+  else return -1;
   }
 
 void Town::addDemandToItem(const std::string& itemID, const int& add)
   {
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
-    {
-    if (it->ID == itemID)
-      {
-      it->addDemand(add);
-      }
-    }
+  auto it = itemlist.find(itemID);
+  if (it != itemlist.end())
+    it->second.addDemand(add);
   // since by this point we haven't found it in the list.
   demandList[itemID] += add;
   }
@@ -329,14 +309,24 @@ void Town::step()
       if (getNumberOf(*it) < 8192)
         addItems(*it, population * 0.1);
     }
-  // Remove items by demand. 
-  for (auto it = itemlist.begin(); it < itemlist.end(); it++)
+  // Remove items by demand & if there are less than one of it. 
+  for (auto it = itemlist.begin(); it != itemlist.end(); it++)
     {
-    int toRemove = it->getDemand() * 0.1;
-    it->addItem(toRemove * -1);
-    it->addDemand(toRemove * -0.5f);
+    int toRemove = it->second.getDemand() * 0.1 + 1;
+    it->second.addItem(toRemove * -1);
+    it->second.addDemand(toRemove * -0.5f);
     }
+
   vector<string> toRemove;
+  for (auto it = itemlist.begin(); it != itemlist.end(); it++)
+    {
+    if (it->second.howMany() <= 0)
+      toRemove.push_back(it->first);
+    }
+  for (auto it = toRemove.begin(); it < toRemove.end(); it++)
+    itemlist.erase(*it);
+  toRemove.clear();
+
   for (auto it = demandList.begin(); it != demandList.end(); it++)
     {
     it->second *= 0.9f;

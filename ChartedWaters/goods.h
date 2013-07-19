@@ -84,6 +84,7 @@ class EconomyItem: public Item
   {
   public:
     EconomyItem(const std::string& ID, const int& newSupply = 50, const int& newDemand = 50);
+    EconomyItem();
 
     void decayDemand();
     int getPrice();

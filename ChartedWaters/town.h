@@ -20,11 +20,12 @@ class Town
   {
   private:
     static std::string toNumber(const int& num);
-    std::vector<EconomyItem> itemlist;
+    //std::vector<EconomyItem> itemlist;
+    std::map<std::string, EconomyItem> itemlist;
     std::string TownName;
     double taxRate;
     int faction;
-    std::vector<EconomyItem>::iterator getItemIterator(const std::string& ID); //return itemlist.end() if not found.
+    std::map<std::string, EconomyItem>::iterator getItemIterator(const std::string& ID); //return itemlist.end() if not found.
     double getDistanceFromNearestSource(const std::string& ID);
     int spawncounter; // for demand
     void addDemandToItem(const std::string& ID, const int& add);
