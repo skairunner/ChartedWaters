@@ -32,6 +32,7 @@ class Ship : protected ShipPrototype
     void addItem(const Item& item, const int& numberOf, const int& averagePrice);
     bool removeItem(const std::string& ItemID, const int& numberOf); // return false in case there are not enough items to remove.
 
+    int getEstimatedRationsNeeded();
     int getNumberOfItems(const std::string& ID);
     int getPurchasePriceOf(const std::string& ID);
     int getShipPrice();

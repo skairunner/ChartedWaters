@@ -179,7 +179,7 @@ bool Ship::removeFromList(const std::string& itemID)
 
 int Ship::getTotalGoods()
   {
-  return storage;
+  return storage + ceil((float)rations/10.0f);
   }
 
 int Ship::getMaxGoods()
@@ -402,4 +402,10 @@ int Ship::removeSail(int pos, ShipSails& sail)
   sail = it->second;
   sailList.erase(it);
   return shipSUCCESS;
+  }
+
+int Ship::getEstimatedRationsNeeded()
+  {
+  int daysNeeded = ceil(path.size() / floor((double)getSpeed()));
+  return daysNeeded * sailors;
   }

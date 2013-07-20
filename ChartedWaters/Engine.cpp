@@ -96,6 +96,8 @@ Ship& ship = TheWorld->getPlayerShip();
 ship.captain.faction = 1;
 ship.addMoney(424242);
 ship.changeShip(ShipDict.getShip(string("sloop")));
+ship.sailors = 15;
+ship.rations = 500;
 pressedPeriod = true;
 lockToShip();
 
@@ -190,6 +192,33 @@ TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 
 TCODConsole::blit(PathScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
 TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
+
+
+Ship& refToShip = TheWorld->getPlayerShip();
+root->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
+root->setColorControl(TCOD_COLCTRL_2, TCODColor::red, TCODColor::black);
+root->setColorControl(TCOD_COLCTRL_3, TCODColor::lighterYellow, TCODColor::black);
+root->setColorControl(TCOD_COLCTRL_4, TCODColor::lightSea, TCODColor::black);
+
+TCOD_colctrl_t fatiguecol = (TCOD_colctrl_t)8;
+TCOD_colctrl_t rationcol = (TCOD_colctrl_t)8;
+TCOD_colctrl_t durabilitycol = (TCOD_colctrl_t)8;
+
+if (refToShip.fatigue > 900)
+  fatiguecol = (TCOD_colctrl_t)2;
+else if (refToShip.fatigue > 500)
+  fatiguecol = (TCOD_colctrl_t)3;
+if (refToShip.rations < 50)
+  rationcol = (TCOD_colctrl_t)2;
+if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.1)
+  durabilitycol = (TCOD_colctrl_t)2;
+else if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.5)
+  durabilitycol = (TCOD_colctrl_t)3;
+
+root->setDefaultForeground(TCODColor::lightestGrey);
+root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c Estimated rations for path: %c%.1f%c", durabilitycol, refToShip.durability, TCOD_COLCTRL_STOP, refToShip.getMaxDurability(), 
+                        fatiguecol, refToShip.fatigue/10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToShip.rations/10.0f, TCOD_COLCTRL_STOP,
+                        TCOD_COLCTRL_4, refToShip.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
 
 root->print(0, 49, "Day %d", daysPassed);
 }
