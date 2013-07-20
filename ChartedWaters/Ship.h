@@ -3,6 +3,7 @@
 #include "goods.h"
 #include "shipPrototype.h"
 #include "shipparts.h"
+#include "player.h"
 
 struct LedgerItemTuple
   {
@@ -22,6 +23,7 @@ class Ship : protected ShipPrototype
     Ship();
     Ship(const ShipPrototype& prototype);
     void changeShip(const ShipPrototype& prototype);
+    Player captain;
 
     void setName(const std::string& newName);
     std::string getName();
@@ -47,6 +49,7 @@ class Ship : protected ShipPrototype
     int getLateen();
     int getSquare();
     double getSpeed(); 
+    std::string getDescription();
     int getBaseSpeed();
     int getTurning();
     std::string getSize();
@@ -56,7 +59,9 @@ class Ship : protected ShipPrototype
     
     void setPosition(const std::pair<int, int>& newPos);
     void setPath(const std::vector<std::pair<int, int>>& ppath);
-    void updatePos(); // If a day went by.
+    void updatePos(); // move 1 step along the path
+    virtual void step(); // run the simulations for 1 day
+
     int addSail(int pos, ShipSails& sail);
     int removeSail(int pos, ShipSails& sail);
     int addArmor(int pos, ShipArmor& armor);
@@ -66,18 +71,23 @@ class Ship : protected ShipPrototype
 
     int character; // default 127, a triangle
     int waveResistance;
+    int rations;
+    int sailors;
+    int fatigue; // divide by 10
+    int sailorsDied;
+    int training; // divide by 10
+    int durability;
+
+    bool starving;
     std::vector<std::pair<int,int>> path;
     std::map<int, ShipSails> sailList;
     std::map<int, ShipArmor> armorList;
     ShipStatue figurehead;
-    int faction; //default 0
-
 
   private:
     double getArmorSlowing();
     bool removeFromList(const std::string& itemID);
     std::string shipName;
-    int ducats;
     int storage; // counting only goods
     std::vector<LedgerItem> itemList;
     std::pair<int, int> position;

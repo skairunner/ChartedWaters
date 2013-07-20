@@ -1,17 +1,23 @@
 #include "Ship.h"
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
 Ship::Ship()
-  : ducats(1000), storage(0), character(127), waveResistance(6), faction(0)
+  : storage(0), character(127), waveResistance(6), rations(50), sailors(5), fatigue(0), training(500), durability(0)
   {
+  captain.faction = 0;
+  captain.ducats = 1000;
   maxstorage = 212;
+  turning = 0;
   }
 
 Ship::Ship(const ShipPrototype& prototype)
-  : ducats(1000), storage(0), character(127), faction(0)
+  : storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0)
   {
+  captain.faction = 0;
+  captain.ducats = 1000;
   typeID = prototype.typeID;
   typeName = prototype.typeName;
   specialization = prototype.specialization;
@@ -26,6 +32,7 @@ Ship::Ship(const ShipPrototype& prototype)
   lateen = prototype.lateen;
   square = prototype.square;
   waveResistance = prototype.waveResistance;
+  turning = prototype.turning;
   baseArmor = prototype.baseArmor;
   maxDurability = prototype.maxDurability;
   }
@@ -46,8 +53,10 @@ void Ship::changeShip(const ShipPrototype& prototype)
   lateen = prototype.lateen;
   square = prototype.square;
   waveResistance = prototype.waveResistance;
+  turning = prototype.turning;
   baseArmor = prototype.baseArmor;
   maxDurability = prototype.maxDurability;
+  durability = maxDurability;
   }
 
 string Ship::getName()
@@ -68,10 +77,10 @@ void Ship::setName(const string& newName)
 
 bool Ship::addMoney(const int& amount)
   {
-  if (amount + ducats < 0)
+  if (amount + captain.ducats < 0)
     return false;
   else
-    ducats += amount;
+    captain.ducats += amount;
   return true;
   }
 
@@ -98,7 +107,7 @@ void Ship::addItem(const Item& item, const int& numberOf, const int& averagePric
 
 int Ship::getMoney()
   {
-  return ducats;
+  return captain.ducats;
   }
 
 int Ship::getNumberOfItems(const std::string& ID)
@@ -193,10 +202,24 @@ double Ship::getArmorSlowing()
 
 double Ship::getSpeed()
   {
-  double mult;
-  mult = (1-(double)getTotalStorageUsed()/getMaxStorage()) + 0.5; // if total == max, 0.5f. 
-  mult = mult > 1 ? 1 : mult;
-  int result = mult * ( baseSpeed_d(getLateen(), getSquare()) + getArmorSlowing() );
+  double weight, crew, starved, trained;
+  crew = starved = trained = 1;
+  weight = (1-(double)getTotalStorageUsed()/getMaxStorage()) + 0.5; // if total == max, 0.5f. 
+  weight = weight > 1 ? 1 : weight;
+  double basespeed = baseSpeed_d(getLateen(), getSquare()) + getArmorSlowing();
+
+  if (sailors < getMinSailors())
+    {
+    crew = pow((double)sailors / getMinSailors(), (double)1.0f/3.0f);
+    crew = crew > 1 ? 1 : crew;
+    }
+
+  if (starving)
+    starved = 0.8;
+  trained = 1 + training / 1000.0f;
+
+  double result = weight * crew * basespeed * starved;
+
   if (result < 1)
     return 1;
   else return result;
@@ -229,6 +252,27 @@ void Ship::updatePos()
     }
   }
 
+void Ship::step()
+  {
+  starving = false;
+  sailorsDied = 0;
+  fatigue++;
+  training += 5;
+  rations -=  sailors;
+  if (rations < 0)
+    {
+    rations = 0;
+    starving = true;
+    }
+  if (starving)
+    fatigue+=10;
+  if (fatigue > 1000)
+    {
+    sailors -= sailors * 0.1 + 1.5;
+    sailors = sailors < 0 ? 0 : sailors;
+    }
+  }
+
 int Ship::getShipPrice()
   {
   return price;
@@ -241,7 +285,7 @@ int Ship::getMaxCannons()
 
 int Ship::getTotalStorageUsed()
   {
-  return storage;
+  return storage + ceil((float)rations/10.0f);
   }
 
 int Ship::getMaxStorage()
@@ -291,6 +335,11 @@ int Ship::getWaveResistance()
 int Ship::getMaxDurability()
   {
   return maxDurability;
+  }
+
+std::string Ship::getDescription()
+  {
+  return desc;
   }
 
 int Ship::getTurning()

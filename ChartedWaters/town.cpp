@@ -9,7 +9,7 @@ using namespace std;
 Town::Town()
   :taxRate(0.10f), isLuxury(false), isOther(false), isIndustrial(false), isAgri(false), faction(0)
   {
-  spawncounter = rand()%14 + 1;
+  spawncounter = rand()%30 + 1;
 
   }
 
@@ -17,7 +17,7 @@ Town::Town(const std::string& newName, const double& tax, const int& ffaction)
   : TownName(newName), taxRate(tax), faction(ffaction), isLuxury(false), isOther(false), isIndustrial(0), isAgri(0)
   {
   TownName[0] = toupper(TownName[0]);
-  spawncounter = rand()%14 + 1;
+  spawncounter = rand()%30 + 1;
   }
 
 string Town::getName()
@@ -337,7 +337,7 @@ void Town::step()
     demandList.erase(*it);
 
   // Randomly spawn demand
-  if (spawncounter > 14)
+  if (spawncounter > 30)
     {
     spawncounter = 0;
     map<string, vector<string>>& itemlist = ItemDict.itemsPerCategory;
@@ -356,7 +356,6 @@ void Town::step()
       //cout << "Spawned demand for " << item.ID << " in city " << TownName << endl;
       for (auto it = category->second.begin(); it < category->second.end(); it++)
         {
-        
         addDemandToItem(*it, 50);
         if (ItemDict.findItemType(*it) == item.type)
           addDemandToItem(*it, 100);

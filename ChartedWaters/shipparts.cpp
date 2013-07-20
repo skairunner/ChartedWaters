@@ -1,5 +1,6 @@
 #include "shipparts.h"
 #include <fstream>
+#include "utility.h"
 
 using namespace std;
 
@@ -87,6 +88,7 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
       {
       ShipSails sails;
       sails.ID = shippart["ID"].asString();
+      sails.name = shippart["name"].asString();
       sails.price = shippart["price"].asInt();
       sails.lateen = shippart["lateen"].asInt();
       sails.square = shippart["square"].asInt();

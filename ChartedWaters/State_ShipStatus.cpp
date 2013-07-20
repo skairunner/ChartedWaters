@@ -64,26 +64,56 @@ void State_ShipStatus::swapLineColors(TCODConsole* con, const int& line)
 
 void State_ShipStatus::printStats(TCODConsole* con, int& line)
   {
+  con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
+  con->setColorControl(TCOD_COLCTRL_2, TCODColor::red, TCODColor::black);
+  con->setColorControl(TCOD_COLCTRL_3, TCODColor::lighterYellow, TCODColor::black);
+  TCOD_colctrl_t typeToUse = (TCOD_colctrl_t)8;
+
   swapLineColors(con, line);
   con->print(1, line++, "Type : %s", refToShip.getType().c_str()); swapLineColors(con, line);
   con->print(1, line++, "Size : %s", refToShip.getSize().c_str()); swapLineColors(con, line);
   con->print(1, line++, "Total storage: %d", refToShip.getMaxStorage()); swapLineColors(con, line);
-  con->print(1, line++, "Goods: %d/%d    Sailors: %d(%d)/%d    Cannons: %d/%d", refToShip.getTotalGoods(), refToShip.getMaxGoods(), 0, refToShip.getMinSailors(), refToShip.getMaxSailors(), 0, refToShip.getMaxCannons()); swapLineColors(con, line);
+  con->print(1, line++, "Goods: %d/%d    Sailors: %d%c(%d)%c/%d    Cannons: %d%c/%d", refToShip.getTotalGoods(), refToShip.getMaxGoods(), refToShip.sailors, TCOD_COLCTRL_1, refToShip.getMinSailors(), TCOD_COLCTRL_STOP, refToShip.getMaxSailors(), 0, TCOD_COLCTRL_1, refToShip.getMaxCannons()); swapLineColors(con, line);
   con->print(1, line++, "Lateen sails: %d    Square sails: %d", refToShip.getLateen(), refToShip.getSquare()); swapLineColors(con, line);
-  con->print(1, line++, "Speed: %.1f/%d", refToShip.getSpeed(), refToShip.getBaseSpeed()); swapLineColors(con, line);
+  con->print(1, line++, "Speed: %.1f%c/%d.0", refToShip.getSpeed(), TCOD_COLCTRL_1, refToShip.getBaseSpeed()); swapLineColors(con, line);
   con->print(1, line++, "Wave resistance: %d", refToShip.getWaveResistance()); swapLineColors(con, line);
+  con->print(1, line++, "Turning: %d", refToShip.getTurning()); swapLineColors(con, line);
   con->print(1, line++, "Armor: %d", refToShip.getArmor()); swapLineColors(con, line);
-  con->print(1, line++, "Durability: %d/%d", 1, refToShip.getMaxDurability()); swapLineColors(con, line);
+  line++;
+
+  if (refToShip.fatigue > 900)
+    typeToUse = (TCOD_colctrl_t)2;
+  else if (refToShip.fatigue > 500)
+    typeToUse = (TCOD_colctrl_t)3;
+  
+  con->print(1, line++, "Fatigue: %c%.1f%c/100%c", typeToUse, refToShip.fatigue/10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  con->print(1, line++, "Training: %.1f%c/100%c", refToShip.training/10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+  typeToUse = (TCOD_colctrl_t)8;
+  if (refToShip.rations < 50)
+    typeToUse = (TCOD_colctrl_t)2;
+
+  con->print(1, line++, "Rations: %c%.1f%c", typeToUse, refToShip.rations/10.0f, TCOD_COLCTRL_STOP);
+  
+  typeToUse = (TCOD_colctrl_t)8;
+  if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.1)
+    typeToUse = (TCOD_colctrl_t)2;
+  else if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.5)
+    typeToUse = (TCOD_colctrl_t)3;
+  con->print(1, line++, "Durability: %c%d%c/%d", typeToUse, refToShip.durability, TCOD_COLCTRL_STOP, refToShip.getMaxDurability()); swapLineColors(con, line);
+  line+=2;
   }
 
 void State_ShipStatus::redrawList()
   {
   console->clear();
   console->setDefaultForeground(TCODColor::white);
+  console->setColorControl(TCOD_COLCTRL_1, TCODColor::silver, TCODColor::black);
 
   int line = 1;
   console->print(1, line++, ("The " + refToShip.getType() + " " + refToShip.getName()).c_str());
-  console->print(1, line++, (to_string((long double)refToShip.getMoney()) + string(" ducats")).c_str());
+  line++;
+  console->print(1, line++,  ("%c" + to_string((long double)refToShip.getMoney()) + string("%c ducats")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   printStats(console, line);
   line++; // skip a line
   auto list = refToShip.returnListOfItems();

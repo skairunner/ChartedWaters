@@ -101,6 +101,7 @@
     <ClCompile Include="TCODEngine.cpp" />
     <ClCompile Include="TCODTools.cpp" />
     <ClCompile Include="town.cpp" />
+    <ClCompile Include="utility.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
@@ -115,6 +116,7 @@
     <ClInclude Include="goods.h" />
     <ClInclude Include="json\json-forwards.h" />
     <ClInclude Include="json\json.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="shipparts.h" />
     <ClInclude Include="shipPrototype.h" />
     <ClInclude Include="State_ItemDescription.h" />
@@ -128,6 +130,7 @@
     <ClInclude Include="TCODEngine.h" />
     <ClInclude Include="TCODTools.h" />
     <ClInclude Include="town.h" />
+    <ClInclude Include="utility.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="worldMap.h" />
   </ItemGroup>

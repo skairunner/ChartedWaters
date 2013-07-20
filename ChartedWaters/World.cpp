@@ -257,7 +257,7 @@ void Renderer::getShipBitmap(TCODConsole* shipmap, World& world)
   for (auto it = world.shipList.begin(); it < world.shipList.end(); it++)
     {
     auto pos = it->getPosition();
-    shipmap->putCharEx(pos.first, pos.second, it->character, findFactionColor(it->faction), TCODColor::black);
+    shipmap->putCharEx(pos.first, pos.second, it->character, findFactionColor(it->captain.faction), TCODColor::black);
     }
   Ship& ship = world.getPlayerShip();
   auto pos = ship.getPosition();

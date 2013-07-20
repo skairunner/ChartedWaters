@@ -93,7 +93,7 @@ ZOCscreen = new TCODConsole(width, height);
 tooltip = new TCODConsole(30, 1);
 
 Ship& ship = TheWorld->getPlayerShip();
-ship.faction = 1;
+ship.captain.faction = 1;
 ship.addMoney(424242);
 ship.changeShip(ShipDict.getShip(string("sloop")));
 pressedPeriod = true;
@@ -144,6 +144,8 @@ if (mouseClick)
   mouseClick = false;
   auto it = TheWorld->pathfinder->path(TheWorld->getPlayerShip().getPosition(), coord(mouseX, mouseY), 6);
   TheWorld->getPlayerShip().setPath(it);
+
+
   PathScreen->clear();
   for (auto iterator = it.begin()+1; iterator < it.end(); iterator++)
     PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
@@ -158,6 +160,7 @@ if (pressedArrow)
 if (pressedPeriod)
   {
   playerMovement = (int)TheWorld->getPlayerShip().getSpeed();
+  TheWorld->getPlayerShip().step();
   TheWorld->step();
   pressedPeriod = false;
   daysPassed++;
@@ -214,7 +217,7 @@ void Engine::KeyUp(const int &key,const int &unicode)
 
 const int scrollspeed = 2;
 
-ShipArmor testarmor;
+ShipSails testsail;
 
 void Engine::KeyDown(const int &key,const int &unicode)
 {
@@ -245,16 +248,17 @@ case '.':
   break;
 
 case 'T':  // Add a Pressed Iron item to the player's ship as a test.
-  testarmor = ShipPartDict.getArmor(string("plate_finesteel"));
-  TheWorld->getPlayerShip().addArmor(0, testarmor);
-  TheWorld->getPlayerShip().addArmor(1, testarmor);
-  TheWorld->getPlayerShip().addArmor(2, testarmor);
-  TheWorld->getPlayerShip().addArmor(3, testarmor);
+  testsail = ShipPartDict.getSail(string("sail_mainfullrigged"));
+  TheWorld->getPlayerShip().addSail(0, testsail);
+  TheWorld->getPlayerShip().addSail(1, testsail);
+  TheWorld->getPlayerShip().addSail(2, testsail);
+  TheWorld->getPlayerShip().addSail(3, testsail);
   break;
 
 case 's': // Check for shop.
   if (TheWorld->queryShop(TheWorld->getPlayerShip()))
     {
+    daysPassed = 0;
     newState = new State_Shop(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
     PushState(newState);
     }

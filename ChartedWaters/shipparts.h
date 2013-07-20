@@ -9,6 +9,7 @@ struct ShipPart
   {
   ShipPart();
   std::string ID;
+  std::string name;
   int price;
   std::string desc;
   };

@@ -3,6 +3,7 @@
 #include <string>
 #include <SDL.h>
 #include "State_prompt.h"
+#include "utility.h"
 #include <iostream>
 #include <regex>
 
@@ -18,7 +19,7 @@ State_Shop::State_Shop(Town& town, Ship& ship)
   {
   consoleLeft = new TCODConsole(50, 48);
   consoleRight = new TCODConsole(50, 48);
-  if(ship.faction == town.getFactionID())
+  if(ship.captain.faction == town.getFactionID())
     isHometown = true;
   }
 
@@ -46,24 +47,7 @@ string drydocksHeader()
   return returnval;
   }
 
-string rightAlignNumber(const int& input, const int& size = -1)
-  {
-  char price_cstr[50];
-  _snprintf(price_cstr, sizeof(price_cstr), "%d", input);
-  string buffer(price_cstr);
-  if (size == -1) // default
-    return buffer;
 
-  string returnval;
-  if (buffer.size() < size)
-    for (int counter = 0; counter < size - buffer.size(); counter++)
-      returnval += " ";
-  if (buffer.size() > size)
-    for (int counter = 0; counter < size; counter++)
-      returnval += "x";
-  else returnval += buffer.substr(0, size);
-  return returnval;
-  }
 
 string rightAlign(const string& input, const int& size)
   {
@@ -691,8 +675,13 @@ void State_Shop::drydocks_right()
     consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.lateen, ship.square); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Base speed: %d", ship.baseSpeed(ship.lateen, ship.square)); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Wave resistance: %d", ship.waveResistance); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Turning: %d", ship.turning); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Base armor: %d", ship.baseArmor); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Max durability: %d", ship.maxDurability); swapLineColors(consoleRight, line);
+    consoleRight->setDefaultForeground(TCODColor::silver);
+    line++;
+    int height = consoleRight->printRect(1, line, 48, 0, "%s", ship.desc.c_str());
+    line += height;
     }
   auto ship = refToShip;
   line=24;
@@ -709,8 +698,13 @@ void State_Shop::drydocks_right()
   consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.getLateen(), ship.getSquare()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Base speed: %d", ship.getBaseSpeed()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);
+  consoleRight->print(1, line++, "Turning: %d", ship.getTurning()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Base armor: %d", ship.getArmor()); swapLineColors(consoleRight, line);
   consoleRight->print(1, line++, "Max durability: %d", ship.getMaxDurability()); swapLineColors(consoleRight, line);
+  consoleRight->setDefaultForeground(TCODColor::silver);
+  line++;
+  int height = consoleRight->printRect(1, line, 48, 0, "%s", ship.getDescription().c_str());
+  line += height;
   line+=3;
   consoleRight->setDefaultForeground(TCODColor::yellow);
   consoleRight->print(1, line++, "Current money = %d", ship.getMoney());
