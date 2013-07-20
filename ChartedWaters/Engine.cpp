@@ -216,11 +216,11 @@ else if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.5)
   durabilitycol = (TCOD_colctrl_t)3;
 
 root->setDefaultForeground(TCODColor::lightestGrey);
-root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c Estimated rations for path: %c%.1f%c", durabilitycol, refToShip.durability, TCOD_COLCTRL_STOP, refToShip.getMaxDurability(), 
+root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c    Estimated rations for path: %c%.1f%c", durabilitycol, refToShip.durability, TCOD_COLCTRL_STOP, refToShip.getMaxDurability(), 
                         fatiguecol, refToShip.fatigue/10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToShip.rations/10.0f, TCOD_COLCTRL_STOP,
                         TCOD_COLCTRL_4, refToShip.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
 
-root->print(0, 49, "Day %d", daysPassed);
+root->print(0, 49, "Day %d    ETA: %c%d%c days", daysPassed, TCOD_COLCTRL_4, refToShip.getETA(), TCOD_COLCTRL_STOP);
 }
 
 void Engine::EngineEnd()

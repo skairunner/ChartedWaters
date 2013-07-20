@@ -33,6 +33,7 @@ class Ship : protected ShipPrototype
     bool removeItem(const std::string& ItemID, const int& numberOf); // return false in case there are not enough items to remove.
 
     int getEstimatedRationsNeeded();
+    int getETA();
     int getNumberOfItems(const std::string& ID);
     int getPurchasePriceOf(const std::string& ID);
     int getShipPrice();

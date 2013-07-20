@@ -409,3 +409,8 @@ int Ship::getEstimatedRationsNeeded()
   int daysNeeded = ceil(path.size() / floor((double)getSpeed()));
   return daysNeeded * sailors;
   }
+
+int Ship::getETA()
+  {
+  return ceil(path.size() / floor((double)getSpeed()));;
+  }
