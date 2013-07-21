@@ -275,7 +275,7 @@ case '.':
   pressedPeriod = true;
   break;
 
-case 'T':  // Add a Pressed Iron item to the player's ship as a test.
+case 'T': 
   testsail = ShipPartDict.getSail(string("sail_mainfullrigged"));
   TheWorld->getPlayerShip().addSail(0, testsail);
   TheWorld->getPlayerShip().addSail(1, testsail);

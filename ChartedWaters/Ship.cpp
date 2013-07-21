@@ -265,7 +265,7 @@ void Ship::step()
     starving = true;
     }
   if (starving)
-    fatigue+=10;
+    fatigue+=100;
   if (fatigue > 1000)
     {
     sailors -= sailors * 0.1 + 1.5;
