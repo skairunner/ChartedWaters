@@ -4,10 +4,10 @@
 #include "Ship.h"
 #include <libtcod.h>
 
-class State_Shop : public GameState
+class State_Drydocks : public GameState
   {
   public:
-    State_Shop(Town& town, Ship& ship);
+    State_Drydocks(Town& town, Ship& ship);
     bool Init();
     void Render(TCODConsole *root);
     void Update();
@@ -20,16 +20,16 @@ class State_Shop : public GameState
     virtual void RecoverFromPush();
 
   private:
-    void updateShop();
-    void keydownShop(const int &key,const int &unicode);
+    void updateDrydocks();
+    void keydownDrydocks(const int &key,const int &unicode);
 
     std::string assembleOutput(const LedgerItemTuple& tuple);
     std::string assembleOutput(const EconomyItemTuple& tuple);
+    std::string assembleOutput(const ShipPrototype& sp);
     void swapLineColors(TCODConsole* con, const int& counter);
 
     TCODConsole* consoleLeft; // ship
     TCODConsole* consoleRight; // shop
-    bool whichConsole; // false: left, true: right
     bool redraw; bool swappedToShop;
     bool startbuy; // Start the buying process! Get a number.
     bool startsell;

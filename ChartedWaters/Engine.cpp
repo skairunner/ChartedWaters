@@ -3,9 +3,10 @@
 #include "World.h"
 #include "State_ShipStatus.h"
 #include <string>
-#include "State_shop.h"
+//#include "State_shop.h"
 #include "State_MainGame.h"
 #include "shipPrototype.h"
+#include "State_townmenu.h"
 
 Engine CursesEngine;
 
@@ -154,8 +155,10 @@ if (mouseClick)
   }
 if (pressedArrow)
   {
-  if (TheWorld->getPlayerShip().path.size() == 1)
+  if (TheWorld->getPlayerShip().path.size() <= 1)
+    {
     pressedArrow = false;
+    }
   if (!pressedPeriod && playerMovement <= 0)
     pressedPeriod = true;
   }
@@ -173,10 +176,6 @@ if (playerMovement > 0)
   playerMovement--;
   Renderer::getShipBitmap(ShipScreen, *TheWorld);
   }
-
-// Write the tooltip!
-//tooltip->clear();
-//tooltip->print(0, 0, to_string((long double)worldmap->ref(mouseX, mouseY).owner).c_str());
 }
 
 void Engine::Render(TCODConsole *root)
@@ -198,7 +197,7 @@ Ship& refToShip = TheWorld->getPlayerShip();
 root->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
 root->setColorControl(TCOD_COLCTRL_2, TCODColor::red, TCODColor::black);
 root->setColorControl(TCOD_COLCTRL_3, TCODColor::lighterYellow, TCODColor::black);
-root->setColorControl(TCOD_COLCTRL_4, TCODColor::lightSea, TCODColor::black);
+root->setColorControl(TCOD_COLCTRL_4, TCODColor::lightGreen, TCODColor::black);
 
 TCOD_colctrl_t fatiguecol = (TCOD_colctrl_t)8;
 TCOD_colctrl_t rationcol = (TCOD_colctrl_t)8;
@@ -288,7 +287,7 @@ case 's': // Check for shop.
   if (TheWorld->queryShop(TheWorld->getPlayerShip()))
     {
     daysPassed = 0;
-    newState = new State_Shop(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
+    newState = new State_TownMenu(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
     PushState(newState);
     }
     break;
