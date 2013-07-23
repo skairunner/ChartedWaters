@@ -8,8 +8,18 @@
 #include "A_star.h"
 #include "include/noise.h"
 #include <random>
+#include "AI_ship.h"
 
 class Renderer;
+/*
+class EntityMap
+  {
+  public:
+    EntityMap(const int& w, const int& h);
+    std::vector<std::vector<Ship*>> grid;
+  private:
+
+  };*/
 
 class World
   {
@@ -26,14 +36,17 @@ class World
     Town& getTown(Ship& ship);
     Town& getFirstTown();
     int random(const int& min, const int& max);
+    coord getRandomCityCoord();
     std::map<coord, Town> cityList;
-    std::vector<Ship> shipList;
+    std::vector<AIShip> shipList;
+//    std::map<coord, AIShip> shipList;
     WorldMapClass WorldMap;
 
   private:
     NameFactory nameFactory;
     
     void populateCities(); // With items.
+    void populateShips(); // AI ships.
     
     noise::module::Perlin ItemMaps; 
     std::mt19937 gen;
@@ -54,5 +67,4 @@ class Renderer // Accesses World and returns bitmaps.
     static void getAccessBitmap(TCODConsole* accessmap, PathMap& pm);
     static void getShipBitmap(TCODConsole* shipmap, World& world);
   private:
-
   };

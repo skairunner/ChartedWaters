@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <time.h>
 
-
 World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true)
   {
@@ -52,6 +51,7 @@ void World::regen()
     it++;
   auto pos = it->first;
   PlayerShip.setPosition(pos);
+  populateShips();
 
   if (!pathfinder)
     delete pathfinder;
@@ -88,11 +88,27 @@ int World::random(const int& min, const int& max)
   return  dist(gen);
   }
 
+coord World::getRandomCityCoord()
+  {
+  int number = random(0, cityList.size()-1);
+  auto it = cityList.begin();
+  for (int counter = 0; counter < number; counter++)
+    it++;
+
+  return it->first;
+  }
+
 void World::step()
   {
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     {
     it->second.step();
+    }
+  for (auto it = shipList.begin(); it != shipList.end(); it++)
+    {
+    if (queryShop(*it))
+      it->think(*pathfinder, cityList, getTown(*it));
+    else it->think(*pathfinder, cityList);
     }
   }
 
@@ -180,6 +196,23 @@ void World::populateCities()
     }
   }
 
+void World::populateShips()
+  {
+  for (int counter = 0; counter < 50; counter++)
+    {
+    auto position = getRandomCityCoord();
+    AIShip ship;
+    ship.changeShip(ShipDict.getRandomShip());
+    ship.setPosition(position);
+    ship.sailors = 20;
+    ship.rations = 500;
+    ship.captain.faction = random(0, 8);
+    for (int counter = 0; counter < 5; counter++)
+      ship.cityList[getRandomCityCoord()] = true;
+    shipList.push_back(ship);
+    }
+  }
+
 /////
 ///
 /// Renderer
@@ -254,14 +287,15 @@ void Renderer::getAccessBitmap(TCODConsole* accessmap, PathMap& pm)
 void Renderer::getShipBitmap(TCODConsole* shipmap, World& world)
   {
   shipmap->clear();
-  for (auto it = world.shipList.begin(); it < world.shipList.end(); it++)
+  for (auto it = world.shipList.begin(); it != world.shipList.end(); it++)
     {
-    auto pos = it->getPosition();
+    auto pos = it->getPosition();   
+
     shipmap->putCharEx(pos.first, pos.second, it->character, findFactionColor(it->captain.faction), TCODColor::black);
     }
   Ship& ship = world.getPlayerShip();
   auto pos = ship.getPosition();
-  shipmap->putCharEx(pos.first, pos.second, ship.character, findFactionColor(1), TCODColor::black);
+  shipmap->putCharEx(pos.first, pos.second, ship.character, findFactionColor(ship.captain.faction), TCODColor::black);
   }
 
 TCODColor Renderer::findFactionColor(const int& faction)

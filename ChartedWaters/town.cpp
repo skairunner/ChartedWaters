@@ -9,6 +9,7 @@ using namespace std;
 Town::Town()
   :taxRate(0.10f), isLuxury(false), isOther(false), isIndustrial(false), isAgri(false), faction(0)
   {
+  TownName = "null";
   spawncounter = rand()%30 + 1;
 
   }
@@ -141,6 +142,15 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometo
   return twSUCCESS;
   }
 
+int Town::buyRations(Ship& ship, const int& number)
+  {
+  const int rationPrice = 50;
+  if (ship.captain.ducats < number * rationPrice)
+    return -1;
+  ship.rations += 10 * number;
+  ship.captain.ducats -= 50 * number;
+  return 0;
+  }
 
 double Town::getDistanceFromNearestSource(const std::string& ID)
   {

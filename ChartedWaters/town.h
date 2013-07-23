@@ -42,6 +42,7 @@ class Town
     int getFactionID();
     void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.
     void step();
+    int buyRations(Ship& ship, const int& number); // actual rations added = 10 * number
 
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
     int getPriceOf(const std::string& ID);

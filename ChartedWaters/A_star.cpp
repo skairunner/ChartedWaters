@@ -162,7 +162,10 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
     closedset[current.position] = current;
 
     if (current.position == dest) // if we've arrived!
+      {
+      cout << "r";
       return reconstructPath(closedset, dest);
+      }
 
     openset.erase(current.position);
     neighbors = map.findNeighborList(current.position);
@@ -248,7 +251,7 @@ std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const co
   if (paths.find(dest) != paths.end() && paths.find(dest)->second.cameFrom != dest ) // if in the map and it doesn't lead to itself
     {
     auto pos = paths.find(dest)->second.cameFrom;
-    cout << "r";
+
     paths.erase(dest);
     auto it = reconstructPath(paths, pos);
     output.reserve(output.size() + it.size());
@@ -358,7 +361,6 @@ void Pather::completeFloodfill()
   {
 start:
   cout << "p";
-//  console->clear();
   metTop = metBot = metLeft = false;
   start.first = rand()%map.width;
   start.second = rand()%map.height;

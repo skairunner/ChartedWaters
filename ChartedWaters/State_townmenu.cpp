@@ -45,19 +45,21 @@ void State_TownMenu::KeyDown(const int &key,const int &unicode)
       }
     }
 
-  switch (unicode)
+  switch (key)
     {
-  case 'T':
+  case SDLK_t:
     nextState = new State_Shop(refToTown, refToShip);
     pushSomething = true;
     break;
-  case 'D':
+  case SDLK_d:
     nextState = new State_Drydocks(refToTown, refToShip);
     pushSomething = true;
     break;
-  case 'H':
+  case SDLK_h:
     break;
-  case 'v':
+  case SDLK_v:
+    break;
+  case SDLK_s:
     break;
   default:
     break;
@@ -74,6 +76,7 @@ void State_TownMenu::drawMenu()
   line++;
   console->print(1, line++, "%cT%crading post", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "%cD%crydocks", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->print(1, line++, "%cS%chip parts", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "%cH%carbor", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "Ta%cv%cern", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 

@@ -86,7 +86,7 @@ class Ship : protected ShipPrototype
     std::map<int, ShipArmor> armorList;
     ShipStatue figurehead;
 
-  private:
+  protected:
     double getArmorSlowing();
     bool removeFromList(const std::string& itemID);
     std::string shipName;

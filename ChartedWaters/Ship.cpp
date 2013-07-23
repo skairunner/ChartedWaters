@@ -18,23 +18,7 @@ Ship::Ship(const ShipPrototype& prototype)
   {
   captain.faction = 0;
   captain.ducats = 1000;
-  typeID = prototype.typeID;
-  typeName = prototype.typeName;
-  specialization = prototype.specialization;
-  desc = prototype.desc;
-  size = prototype.size;
-  price = prototype.price;
-  maxstorage = prototype.maxstorage;
-  maxcargo = prototype.maxcargo;
-  maxsailors = prototype.maxsailors;
-  maxcannons = prototype.maxcannons;
-  minimumsailors = prototype.minimumsailors;
-  lateen = prototype.lateen;
-  square = prototype.square;
-  waveResistance = prototype.waveResistance;
-  turning = prototype.turning;
-  baseArmor = prototype.baseArmor;
-  maxDurability = prototype.maxDurability;
+  changeShip(prototype);
   }
 
 void Ship::changeShip(const ShipPrototype& prototype)
@@ -44,6 +28,15 @@ void Ship::changeShip(const ShipPrototype& prototype)
   specialization = prototype.specialization;
   desc = prototype.desc;
   size = prototype.size;
+
+  if (size == std::string("small"))
+    character = 9;
+  else if (size == std::string("medium"))
+    character = 127;
+  else if (size == std::string("large"))
+    character = 30;
+  else character = 63;
+
   price = prototype.price;
   maxstorage = prototype.maxstorage;
   maxcargo = prototype.maxcargo;
@@ -266,8 +259,9 @@ void Ship::step()
     }
   if (starving)
     fatigue+=100;
-  if (fatigue > 1000)
+  if (fatigue >= 1000)
     {
+    fatigue = 1000;
     sailors -= sailors * 0.1 + 1.5;
     sailors = sailors < 0 ? 0 : sailors;
     }
