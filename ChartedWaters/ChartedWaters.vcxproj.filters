@@ -96,6 +96,9 @@
     <ClCompile Include="AI_ship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="State_tavern.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="AI_ship.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_tavern.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

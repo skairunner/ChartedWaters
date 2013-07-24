@@ -4,6 +4,7 @@
 #include <string>
 #include "State_prompt.h"
 #include "State_drydock.h"
+#include "State_tavern.h"
 using namespace std;
 
 State_TownMenu::State_TownMenu(Town& town, Ship& ship)
@@ -11,7 +12,7 @@ State_TownMenu::State_TownMenu(Town& town, Ship& ship)
   {
   int potenwidth = 14 + town.getName().size();
   potenwidth = potenwidth > 18 ? potenwidth : 18;
-  console = new TCODConsole(potenwidth, 8);
+  console = new TCODConsole(potenwidth, 9);
   }
 
 bool State_TownMenu::Init()
@@ -58,6 +59,8 @@ void State_TownMenu::KeyDown(const int &key,const int &unicode)
   case SDLK_h:
     break;
   case SDLK_v:
+    nextState = new State_Tavern(refToShip);
+    pushSomething = true;
     break;
   case SDLK_s:
     break;
@@ -76,8 +79,12 @@ void State_TownMenu::drawMenu()
   line++;
   console->print(1, line++, "%cT%crading post", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "%cD%crydocks", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-  console->print(1, line++, "%cS%chip parts", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-  console->print(1, line++, "%cH%carbor", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  //console->print(1, line++, "%cS%chip parts", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  //console->print(1, line++, "%cH%carbor", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->setDefaultForeground(TCODColor::grey);
+  console->print(1, line++, "Ship parts");
+  console->print(1, line++, "Harbor");
+  console->setDefaultForeground(TCODColor::white);
   console->print(1, line++, "Ta%cv%cern", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
   console->setDefaultForeground(TCODColor(96,71,64));

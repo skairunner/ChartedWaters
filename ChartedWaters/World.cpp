@@ -198,7 +198,7 @@ void World::populateCities()
 
 void World::populateShips()
   {
-  for (int counter = 0; counter < 50; counter++)
+  for (int counter = 0; counter < 0; counter++)
     {
     auto position = getRandomCityCoord();
     AIShip ship;

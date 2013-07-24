@@ -203,10 +203,12 @@ root->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
 root->setColorControl(TCOD_COLCTRL_2, TCODColor::red, TCODColor::black);
 root->setColorControl(TCOD_COLCTRL_3, TCODColor::lighterYellow, TCODColor::black);
 root->setColorControl(TCOD_COLCTRL_4, TCODColor::lightGreen, TCODColor::black);
+root->setColorControl(TCOD_COLCTRL_5, TCODColor::yellow, TCODColor::black);
 
 TCOD_colctrl_t fatiguecol = (TCOD_colctrl_t)8;
 TCOD_colctrl_t rationcol = (TCOD_colctrl_t)8;
 TCOD_colctrl_t durabilitycol = (TCOD_colctrl_t)8;
+TCOD_colctrl_t sailorcol = (TCOD_colctrl_t)8;
 
 if (refToShip.fatigue > 900)
   fatiguecol = (TCOD_colctrl_t)2;
@@ -218,13 +220,17 @@ if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.1)
   durabilitycol = (TCOD_colctrl_t)2;
 else if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.5)
   durabilitycol = (TCOD_colctrl_t)3;
+if (refToShip.sailors < refToShip.getMinSailors())
+  sailorcol = TCOD_COLCTRL_2;
 
 root->setDefaultForeground(TCODColor::lightestGrey);
 root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c    Estimated rations for path: %c%.1f%c", durabilitycol, refToShip.durability, TCOD_COLCTRL_STOP, refToShip.getMaxDurability(), 
                         fatiguecol, refToShip.fatigue/10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToShip.rations/10.0f, TCOD_COLCTRL_STOP,
                         TCOD_COLCTRL_4, refToShip.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
 
-root->print(0, 49, "Day %d    ETA: %c%d%c days", daysPassed, TCOD_COLCTRL_4, refToShip.getETA(), TCOD_COLCTRL_STOP);
+root->print(0, 49, "Day %d    ETA: %c%d%c days    Sailors: %c%d%c(%d)%c/%d    Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToShip.getETA(), TCOD_COLCTRL_STOP, 
+                                                  sailorcol, refToShip.sailors, TCOD_COLCTRL_1, refToShip.getMinSailors(), TCOD_COLCTRL_STOP, refToShip.getMaxSailors(),
+                                                  TCOD_COLCTRL_5, refToShip.captain.ducats, TCOD_COLCTRL_STOP);
 }
 
 void Engine::EngineEnd()

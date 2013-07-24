@@ -1,5 +1,6 @@
 #include "utility.h"
 #include <regex>
+#include <iostream>
 
 using namespace std;
 
@@ -56,4 +57,19 @@ std::string changeToDecimal(const std::string& input)
     return input + string(".0");
   else
     return input;
+  }
+
+int stringToDecimal(const std::string& input)
+  {
+  int result = -555555;
+  try {
+    result = stoi(input);
+    
+    }
+  catch (invalid_argument e)
+    {
+    cout << "<debug> Invalid argument in utility.cpp: " << e.what() << endl;
+    }
+
+  return result;
   }

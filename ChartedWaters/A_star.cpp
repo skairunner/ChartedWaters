@@ -359,9 +359,10 @@ void Pather::stepFloodfill()
 
 void Pather::completeFloodfill()
   {
-start:
+restart:
   cout << "p";
   metTop = metBot = metLeft = false;
+  done = false;
   start.first = rand()%map.width;
   start.second = rand()%map.height;
   fill_openset.clear();
@@ -370,7 +371,7 @@ start:
   while (!done)
     stepFloodfill();
   if (metTop == false || metBot == false || metLeft == false)
-    goto start;
+    goto restart;
   
   //for (auto it = fill_closedset.begin(); it != fill_closedset.end(); it++)
   //  console->putCharEx(it->first.first % map.width, it->first.second % map.height, 249, TCODColor::peach, TCODColor::black);
