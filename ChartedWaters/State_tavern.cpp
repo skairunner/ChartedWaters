@@ -3,6 +3,7 @@
 #include <string>
 #include "State_stringIn.h"
 #include "utility.h"
+#include <cmath>
 #include "State_prompt.h"
 
 using std::string;
@@ -37,10 +38,10 @@ void State_Tavern::KeyDown(const int &key,const int &unicode)
     nextState = new State_buySailors(refToShip);
     pushSomething = true;
     break;
-  /*case SDLK_r:
+  case SDLK_r:
     nextState = new State_buyRations(refToShip);
     pushSomething = true;
-    break;*/
+    break;
   case SDLK_ESCAPE:
     popMe = true;
     break;
@@ -96,6 +97,7 @@ void State_buySailors::Update()
         {
         string output = "You can't fire that many sailors.";
         nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
         }
       else
         {
@@ -128,15 +130,17 @@ void State_buySailors::Update()
     int result = stringToDecimal(prompt);
     if (result > 0)
       {
-      if (refToShip.sailors + result < refToShip.getMaxSailors())
+      if (refToShip.sailors + result > refToShip.getMaxSailors())
         {
         string output = "You can't hire that many sailors.";
         nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
         }
       else if (result * price > refToShip.captain.ducats)
         {
         string output = "You don't have enough money to hire that many sailors.";
         nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
         }
       else
         {
@@ -147,6 +151,7 @@ void State_buySailors::Update()
           refToShip.addSailors(result, 500);
         else if (green)
           refToShip.addSailors(result, 200);
+        refToShip.captain.ducats -= result * price;
         nextState = new State_Prompt(output.length()+4, 4, output, yesno);
         pushSomething = true;
         }
@@ -162,7 +167,7 @@ void State_buySailors::Update()
     {
     buy = false;
     getSomething = false;
-    green = exp = false;
+    green = exp = master = false;
     prompt.clear();
     }
   else if (buy)
@@ -239,6 +244,173 @@ void State_buySailors::drawMenu()
   line += 2;
   console->setDefaultForeground(TCODColor::lightestRed);
   console->print(1, line++, "%cF%cire sailors", TCOD_COLCTRL_2, TCOD_COLCTRL_STOP);
+
+  console->setDefaultForeground(TCODColor(96,71,64));
+  console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
+  }
+
+
+//////
+//////
+//////
+
+State_buyRations::State_buyRations(Ship& ship)
+  :refToShip(ship), buy(0), yesno(0), getSomething(0), sell(0), daysworth(0)
+  {
+  console = new TCODConsole(45, 12);
+  }
+
+void State_buyRations::End()
+  {
+  delete console;
+  }
+
+bool State_buyRations::Init()
+  {
+  drawMenu();
+  return true;
+  }
+
+void State_buyRations::Update()
+  {
+  if (getSomething && !prompt.empty() && sell)
+    {
+    int result = stringToDecimal(prompt);
+    if (result > 0)
+      {
+      if (refToShip.rations < 10 * result)
+        {
+        string output = "You can't sell that many rations.";
+        nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
+        }
+      else
+        {
+        string output = "Sold " + rightAlignNumber(result) + " rations.";
+        refToShip.rations -= 10 * result;
+        refToShip.captain.ducats += 40 * result;
+        nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
+        }
+      prompt.clear();
+      sell = false;
+      getSomething = false;
+      }
+    }
+    else if (getSomething && prompt.empty() && sell)
+      {
+      sell = false;
+      getSomething = false;
+      prompt.clear();
+      }
+    else if (sell)
+      {
+      string output = "Sell how many cargo units of rations?";
+      nextState = new state_StringIn(output.length()+4, prompt, output);
+      pushSomething = true;
+      getSomething = true;
+      }
+
+  if (getSomething && !prompt.empty() && buy)
+    {
+    int result = stringToDecimal(prompt);
+    if (result > 0)
+      {
+      if (daysworth)
+        {
+        double tempresult = result * refToShip.sailors;
+        result = (int)ceil(tempresult/10.0f);
+        }
+
+      if (result * 50 > refToShip.captain.ducats)
+        {
+        string output = "You don't have enough money to buy that much.";
+        nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
+        }
+      else
+        {
+        string output = "Bought " + rightAlignNumber(result) + " rations for " + rightAlignNumber(result * 50) + " ducats.";
+        refToShip.rations += 10 * result;
+        refToShip.captain.ducats -= 50 * result;
+        nextState = new State_Prompt(output.length()+4, 4, output, yesno);
+        pushSomething = true;
+        }
+      prompt.clear();
+      result = 0;
+      buy = false;
+      getSomething = false;
+      daysworth = false;
+      }
+    }
+  else if (getSomething && prompt.empty() && buy)
+    {
+    buy = false;
+    getSomething = false;
+    daysworth = false;
+    prompt.clear();
+    }
+  else if (buy && daysworth)
+    {
+    string output = "Buy how many day's worth of rations?";
+    nextState = new state_StringIn(output.length()+4, prompt, output);
+    pushSomething = true;
+    getSomething = true;
+    }
+  else if (buy)
+    {
+    string output = "Buy how many cargo units of rations?";
+    nextState = new state_StringIn(output.length()+4, prompt, output);
+    pushSomething = true;
+    getSomething = true;
+    }
+  }
+
+void State_buyRations::Render(TCODConsole* root)
+  {
+  TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - console->getWidth() / 2, root->getHeight() / 2 - console->getHeight() / 2, 1.0f, 0.98f);
+  }
+
+void State_buyRations::KeyDown(const int &key,const int &unicode)
+  {
+  switch (key)
+    {
+  case SDLK_ESCAPE:
+    popMe = true;
+    break;
+  case SDLK_s:
+    sell = true;
+    break;
+  case SDLK_b:
+    buy = true;
+    break;
+  case SDLK_g:
+    buy = true;
+    daysworth = true;
+    break;
+  default:
+    break;
+    }
+  }
+
+void State_buyRations::drawMenu()
+  {
+  console->setDefaultForeground(TCODColor::white);
+  console->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
+  console->setColorControl(TCOD_COLCTRL_2, TCODColor::red, TCODColor::black);
+
+  int line = 1;
+  console->print(1, line++, "Tavern: ration");
+  console->setDefaultForeground(TCODColor::grey);
+  console->print(1, line++, "1 sailor consumes .1 rations per day.");
+  console->print(1, line++, "1 units of rations takes up 1 cargo unit.");
+  console->print(1, line++, "You may buy or sell rations in units of 1.");
+  console->setDefaultForeground(TCODColor::white);
+  line+= 2;
+  console->print(1, line++, "%cB%cuy rations -  50 / 1 cargo unit", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->print(1, line++, "    %cG%cet day's worth of rations", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->setDefaultForeground(TCODColor::lightestRed);
+  console->print(1, line++, "%cS%cell rations - 40 / 1 cargo unit", TCOD_COLCTRL_2, TCOD_COLCTRL_STOP);
 
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);

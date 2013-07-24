@@ -17,6 +17,7 @@ State_TownMenu::State_TownMenu(Town& town, Ship& ship)
 
 bool State_TownMenu::Init()
   {
+  refToShip.fatigue = refToShip.fatigue > 50 ? refToShip.fatigue - 50 : 0;
   drawMenu();
   return true;
   }

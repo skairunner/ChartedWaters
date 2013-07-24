@@ -68,11 +68,11 @@ class State_buyRations: public GameState
   {
   public:
     State_buyRations(Ship& ship);
-    virtual bool Init(){return true;}
+    virtual bool Init();
 
-    virtual void Update(){}
-    virtual void Render(TCODConsole *root){}
-    virtual void End(){}
+    virtual void Update();
+    virtual void Render(TCODConsole *root);
+    virtual void End();
     virtual void RecoverFromPush() {if (!nextState) delete nextState; pushSomething = false;}
     //
     virtual void Resize(int new_w,int new_h){}
@@ -83,4 +83,16 @@ class State_buyRations: public GameState
     virtual void MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
     virtual void MouseButtonUp(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
     virtual void MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
+
+  private:
+
+    void drawMenu();
+    std::string prompt;
+    bool yesno;
+    bool buy;
+    bool sell;
+    bool daysworth;
+    bool getSomething;
+    Ship& refToShip;
+    TCODConsole* console;
   };
