@@ -42,11 +42,11 @@ bool pressedArrow = false; // ">"
 
 void lockToShip () // sets camera to ship.
   {
-  //auto pos = TheWorld->getPlayerShip().getPosition();
-  coord pos;
+  auto pos = TheWorld->getPlayerShip().getPosition();
+  /*coord pos;
   if (TheWorld->shipList.begin() != TheWorld->shipList.end())
     pos = TheWorld->shipList.begin()->getPosition();
-  else pos = TheWorld->getPlayerShip().getPosition();
+  else pos = TheWorld->getPlayerShip().getPosition();*/
   focusX = pos.first < screenwidth / 2 ? screenwidth/2 : pos.first; // Make sure it's within bounds.
   focusY = pos.second < screenheight /2 ? screenheight /2 : pos.second;
   focusX = focusX > width - screenwidth / 2 ? width - screenwidth /2 : focusX;

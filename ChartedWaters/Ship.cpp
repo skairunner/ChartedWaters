@@ -251,6 +251,7 @@ void Ship::step()
   sailorsDied = 0;
   fatigue++;
   training += 5;
+  training = training > 100 ? 100 : training;
   rations -=  sailors;
   if (rations < 0)
     {
