@@ -398,6 +398,22 @@ int Ship::removeSail(int pos, ShipSails& sail)
   return shipSUCCESS;
   }
 
+void Ship::addSailors(const int& num, const int& addedtraining)
+  {
+  if (num > 0)
+    {
+    int totalTraining = sailors * training;
+    sailors += num;
+    totalTraining += addedtraining * num;
+    training = totalTraining / sailors;
+    }
+  }
+
+void Ship::removeSailors(const int& num)
+  {
+  sailors -= num;
+  }
+
 int Ship::getEstimatedRationsNeeded()
   {
   int daysNeeded = ceil(path.size() / floor((double)getSpeed()));

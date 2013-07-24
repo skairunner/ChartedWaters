@@ -68,6 +68,8 @@ class Ship : protected ShipPrototype
     int removeSail(int pos, ShipSails& sail);
     int addArmor(int pos, ShipArmor& armor);
     int addFigurehead(ShipArmor& figurehead);
+    void addSailors(const int& num, const int& addedtraining);
+    void removeSailors(const int& num);
 
     std::pair<int, int> getPosition();
 
@@ -81,6 +83,8 @@ class Ship : protected ShipPrototype
     int durability;
 
     bool starving;
+    bool unpaid;
+
     std::vector<std::pair<int,int>> path;
     std::map<int, ShipSails> sailList;
     std::map<int, ShipArmor> armorList;
