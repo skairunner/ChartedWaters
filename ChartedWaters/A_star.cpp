@@ -1,9 +1,90 @@
 #include "A_star.h"
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 
 using namespace std;
+
+bool comp(const std::pair<double, node>& val1, const std::pair<double, node>& val2)
+  {
+  if (val1.first > val2.first)
+        return true;
+    return false;
+  }
+
+void HeapMap::insertOpen(const coord& key, const node& val)
+  {
+  open[key] = val;
+  heap.push_back(pair<double, node>(val.f_score, val));
+  push_heap(heap.begin(), heap.end(), comp);
+  }
+
+void HeapMap::insertClosed(const coord& key, const node& val)
+  {
+  closed[key] = val;
+  }
+
+node HeapMap::findLowestF()
+  {
+  while (heap.size() != 0)
+    {
+    pop_heap(heap.begin(), heap.end(), comp);
+    node temp = heap.back().second;
+    heap.pop_back();
+    auto it = closed.find(temp.position);
+    if (it == closed.end())
+      return temp;
+    }
+  }
+
+bool HeapMap::isInClosedset(const coord& key)
+  {
+  auto it = closed.find(key);
+  if (it == closed.end())
+    return false;
+  else return true;
+  }
+
+bool HeapMap::isInOpenset(const coord& key)
+  {
+  auto it = open.find(key);
+  if (it == open.end())
+    return false;
+  else return true;
+  }
+
+node HeapMap::findClosed(const coord& key)
+  {
+  auto it = closed.find(key);
+  return it->second;
+  }
+
+void HeapMap::removeClosed(const coord& key)
+  {
+  if (isInClosedset(key))
+    closed.erase(key);
+  }
+
+void HeapMap::removeOpen(const coord& key)
+  {
+  if (isInOpenset(key))
+    open.erase(key);
+  }
+
+int HeapMap::openmapSize()
+  {
+  return open.size();
+  }
+
+std::map<coord, node>& HeapMap::refToClosedSet()
+  {
+  return closed;
+  }
+
+//////
+//////
+//////
 
 cell::cell(const int& xx, const int& yy)
   : xy(coord(xx, yy)), shallowCost(0), deepCost(0), accessible(true), null(false)
@@ -145,52 +226,56 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
     return vector<coord>(2, starting);
     }
 
-  std::map<coord, node> closedset;
-  std::map<coord, node> openset;
+ // std::map<coord, node> closedset;
+ // std::map<coord, node> openset;
+  HeapMap heapmap;
 
   coord start = starting;
   coord dest = destination;
-  openset[start] = node(start, 0, heuristic(start, dest), true);
+  heapmap.insertOpen(start, node(start, 0, heuristic(start, dest), true));
+ // openset[start] = node(start, 0, heuristic(start, dest), true);
 
   vector<cell> neighbors;
   neighbors.clear();
-  while (openset.size() != 0)
+  while (heapmap.openmapSize() != 0)
     {
-   // cout << "e";
-    node current = findLowestF(openset);
+    //cout << "e";
+    node current = heapmap.findLowestF();
     // Push current onto closed, and pop current from open.
-    closedset[current.position] = current;
+    heapmap.insertClosed(current.position, current);
+    heapmap.removeOpen(current.position);
+    //closedset[current.position] = current;
 
     if (current.position == dest) // if we've arrived!
       {
       cout << "r";
-      return reconstructPath(closedset, dest);
+      return reconstructPath(heapmap.refToClosedSet(), dest);
       }
 
-    openset.erase(current.position);
     neighbors = map.findNeighborList(current.position);
     for (auto it = neighbors.begin(); it < neighbors.end(); it++)
       {
       double tentative_g = current.g_score + costTo(it->xy, waveResistance);
       // if it's in the closedset, AND (since it exists there should be a value) the existing value is cheaper.
-      auto neighborInClosedSet = closedset.find(it->xy);
-      if (neighborInClosedSet != closedset.end() && tentative_g >= neighborInClosedSet->second.g_score)
+      node neighborInClosedSet;
+      bool existsInClosedSet = heapmap.isInClosedset(it->xy);
+      if (existsInClosedSet)
+        neighborInClosedSet = heapmap.findClosed(it->xy);
+      if (existsInClosedSet && tentative_g >= neighborInClosedSet.g_score)
         continue; // skip
+    //  auto neighborInClosedSet = heapmap.findClosed(it->xy); //closedset.find(it->xy);
+      
       // if the neighbor isn't in openset, or the tentative g is cheaper
-      if (openset.find(it->xy) == openset.end() || (neighborInClosedSet != closedset.end() && tentative_g < neighborInClosedSet->second.g_score))
+      if (!heapmap.isInOpenset(it->xy) || (existsInClosedSet && tentative_g < neighborInClosedSet.g_score))
         {
-        auto InClosedSet = closedset.find(it->xy);
-        if (InClosedSet != closedset.end()) // if in the closed set
-          closedset.erase(InClosedSet);
+        heapmap.removeClosed(it->xy); 
 
-        // neighborInOpenSet
-       // auto InOpenSet = openset[it->xy]; 
         node InOpenSet;
         InOpenSet.position = it->xy;
         InOpenSet.cameFrom = current.position;
         InOpenSet.g_score = tentative_g;
         InOpenSet.f_score = InOpenSet.g_score + heuristic(InOpenSet.position, dest);
-        openset[it->xy] = InOpenSet; // This implicitly adds this neighbor to openset if it wasn't there before.
+        heapmap.insertOpen(it->xy, InOpenSet); //openset[it->xy] = InOpenSet; // This implicitly adds this neighbor to openset if it wasn't there before.
         }
       }
     }

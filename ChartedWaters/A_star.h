@@ -25,6 +25,30 @@ struct node
   bool start;
   };
 
+class HeapMap
+  {
+  public:
+    node findLowestF();
+    //node& refOpenset(const coord& cor);
+    //node& refClosedset(const coord& cor);
+    void insertOpen(const coord& key, const node& val);
+    void insertClosed(const coord& key, const node& val);
+    bool isInOpenset(const coord& key);
+    bool isInClosedset(const coord& key);
+    node findClosed(const coord& key);
+    void removeClosed(const coord& key); // if exists
+    void removeOpen(const coord& key);
+    int openmapSize();
+    std::map<coord, node>& refToClosedSet();
+
+  private:
+    
+    std::vector<std::pair<double, node>> heap;
+    std::map<coord, node> open;
+    std::map<coord, node> closed;
+  };
+
+
 class PathMap
   {
   friend class Pather;
