@@ -2,7 +2,7 @@
 #include "worldMap.h"
 #include <map>
 #include <vector>
-//#include <libtcod.hpp> /// testing only.
+#include <unordered_map>
 
 struct cell
   {
@@ -25,9 +25,20 @@ struct node
   bool start;
   };
 
+struct KeyHash
+  {
+  std::size_t operator()(const coord& val) const;
+  };
+
+struct KeyEquals
+  {
+  bool operator()(const coord& left, const coord& right) const;
+  };
+
 class HeapMap
   {
   public:
+    HeapMap();
     node findLowestF();
     //node& refOpenset(const coord& cor);
     //node& refClosedset(const coord& cor);
@@ -39,13 +50,16 @@ class HeapMap
     void removeClosed(const coord& key); // if exists
     void removeOpen(const coord& key);
     int openmapSize();
-    std::map<coord, node>& refToClosedSet();
+   // std::map<coord, node>& refToClosedSet();
+    std::unordered_map<coord, node, KeyHash, KeyEquals>& refToClosedSet();
 
   private:
     
     std::vector<std::pair<double, node>> heap;
-    std::map<coord, node> open;
-    std::map<coord, node> closed;
+    //std::map<coord, node> open;
+    //std::map<coord, node> closed;
+    std::unordered_map<coord, node, KeyHash, KeyEquals> open;
+    std::unordered_map<coord, node, KeyHash, KeyEquals> closed;
   };
 
 
@@ -91,5 +105,6 @@ class Pather
     double heuristic(const coord& xy1, const coord& xy2);
     double costTo(const coord& c2, const int& waveResistance);
     node& findLowestF(std::map<coord, node>& input);
-    std::vector<coord> reconstructPath(std::map<coord, node> paths, const coord& dest);
+   // std::vector<coord> reconstructPath(std::map<coord, node> paths, const coord& dest);
+     std::vector<coord> reconstructPath(std::unordered_map<coord, node, KeyHash, KeyEquals>& paths, const coord& dest);
   };

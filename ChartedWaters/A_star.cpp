@@ -3,14 +3,31 @@
 #include <iostream>
 #include <algorithm>
 
-
 using namespace std;
+
+
 
 bool comp(const std::pair<double, node>& val1, const std::pair<double, node>& val2)
   {
   if (val1.first > val2.first)
         return true;
     return false;
+  }
+
+size_t KeyHash::operator()(const coord& val) const
+  {
+  size_t hash = val.first + ((val.second & 0x8000000)>>1) + (val.second<<16);
+  return hash;
+  }
+
+bool KeyEquals::operator()(const coord& left, const coord& right) const
+  {
+  return (left.first == right.first) && (left.second == right.second);
+  }
+
+HeapMap::HeapMap()
+  {
+
   }
 
 void HeapMap::insertOpen(const coord& key, const node& val)
@@ -76,8 +93,14 @@ int HeapMap::openmapSize()
   {
   return open.size();
   }
-
+/*
 std::map<coord, node>& HeapMap::refToClosedSet()
+  {
+  return closed;
+  }
+  */
+
+std::unordered_map<coord, node, KeyHash, KeyEquals>& HeapMap::refToClosedSet()
   {
   return closed;
   }
@@ -297,7 +320,7 @@ double Pather::costTo(const coord& c2, const int& waveResistance)
 
 double Pather::heuristic(const coord& xy1, const coord& xy2)
   {
-  const double scalingFactor = 2; //// making this larger can make the pathfinding faster, at the cost of accuracy
+  const double scalingFactor = 3; //// making this larger can make the pathfinding faster, at the cost of accuracy
 
   double dY = xy1.second - xy2.second;
   dY *= dY; // dY^2
@@ -329,8 +352,29 @@ node& Pather::findLowestF(std::map<coord, node>& input)
     }
   return it->second;
   }
-
+/*
 std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const coord& dest)
+  {
+  vector<coord> output;
+  if (paths.find(dest) != paths.end() && paths.find(dest)->second.cameFrom != dest ) // if in the map and it doesn't lead to itself
+    {
+    auto pos = paths.find(dest)->second.cameFrom;
+
+    paths.erase(dest);
+    auto it = reconstructPath(paths, pos);
+    output.reserve(output.size() + it.size());
+    output.insert(output.end(), it.begin(), it.end());
+    output.push_back(dest);
+    return output;
+    }
+  else
+    {
+    output.push_back(dest);
+    return output;
+    }
+  }*/
+
+std::vector<coord> Pather::reconstructPath(std::unordered_map<coord, node, KeyHash, KeyEquals>& paths, const coord& dest)
   {
   vector<coord> output;
   if (paths.find(dest) != paths.end() && paths.find(dest)->second.cameFrom != dest ) // if in the map and it doesn't lead to itself
