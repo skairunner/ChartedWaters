@@ -213,8 +213,8 @@ double Ship::getSpeed()
 
   double result = weight * crew * basespeed * starved;
 
-  if (result < 1)
-    return 1;
+  if (result < 0)
+    return 0;
   else return result;
   }
 
@@ -263,7 +263,7 @@ void Ship::step()
   if (fatigue >= 1000)
     {
     fatigue = 1000;
-    sailors -= sailors * 0.1 + 1.5;
+    sailors -= sailors * 0.1 + 0.5;
     sailors = sailors < 0 ? 0 : sailors;
     }
   }
@@ -417,11 +417,15 @@ void Ship::removeSailors(const int& num)
 
 int Ship::getEstimatedRationsNeeded()
   {
+  if (getSpeed() < 1)
+    return 99999999;
   int daysNeeded = ceil(path.size() / floor((double)getSpeed()));
   return daysNeeded * sailors;
   }
 
 int Ship::getETA()
   {
+  if (getSpeed() < 1)
+    return 99999999;
   return ceil(path.size() / floor((double)getSpeed()));;
   }

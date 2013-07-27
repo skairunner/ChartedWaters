@@ -160,7 +160,7 @@ if (mouseClick)
   }
 if (pressedArrow)
   {
-  if (TheWorld->getPlayerShip().path.size() <= 1)
+  if (TheWorld->getPlayerShip().path.size() <= 1 || TheWorld->getPlayerShip().getSpeed() < 1)
     {
     pressedArrow = false;
     }
