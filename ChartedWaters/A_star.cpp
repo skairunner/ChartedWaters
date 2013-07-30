@@ -224,7 +224,6 @@ coord PathMap::getDimensions()
 Pather::Pather(WorldMapClass& wmc)
   : map(wmc)
   {
-//  console = new TCODConsole(map.width, map.height);
   done = false;
   metTop = metBot = metLeft = false;
   start = coord(0, 0);
@@ -352,27 +351,6 @@ node& Pather::findLowestF(std::map<coord, node>& input)
     }
   return it->second;
   }
-/*
-std::vector<coord> Pather::reconstructPath(std::map<coord, node> paths, const coord& dest)
-  {
-  vector<coord> output;
-  if (paths.find(dest) != paths.end() && paths.find(dest)->second.cameFrom != dest ) // if in the map and it doesn't lead to itself
-    {
-    auto pos = paths.find(dest)->second.cameFrom;
-
-    paths.erase(dest);
-    auto it = reconstructPath(paths, pos);
-    output.reserve(output.size() + it.size());
-    output.insert(output.end(), it.begin(), it.end());
-    output.push_back(dest);
-    return output;
-    }
-  else
-    {
-    output.push_back(dest);
-    return output;
-    }
-  }*/
 
 std::vector<coord> Pather::reconstructPath(std::unordered_map<coord, node, KeyHash, KeyEquals>& paths, const coord& dest)
   {

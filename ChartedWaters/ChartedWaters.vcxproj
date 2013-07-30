@@ -87,6 +87,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="entitymap.cpp" />
     <ClCompile Include="goods.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="main.cpp" />
@@ -117,6 +118,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="entitymap.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="goods.h" />
     <ClInclude Include="json\json-forwards.h" />

@@ -99,6 +99,9 @@
     <ClCompile Include="State_tavern.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
+    <ClCompile Include="entitymap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="State_tavern.h">
       <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="entitymap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

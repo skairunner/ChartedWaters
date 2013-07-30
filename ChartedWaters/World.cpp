@@ -3,7 +3,7 @@
 #include <time.h>
 
 World::World(const int& w, const int& h)
-  : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true)
+  : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true), entityMap(w, h)
   {
   nameFactory = NameFactory(rand());
 
@@ -34,6 +34,7 @@ void World::regen()
   WorldMap.gen();
   ItemMaps.SetSeed(rand());
   gen.seed(rand()); 
+  entityMap.clear();
 
   for (auto it = WorldMap.cities.begin(); it < WorldMap.cities.end(); it++)
     {
@@ -100,16 +101,21 @@ coord World::getRandomCityCoord()
 
 void World::step()
   {
+  entityMap.step();
   for (auto it = cityList.begin(); it != cityList.end(); it++)
     {
     it->second.step();
     }
+  int position = 0;
   for (auto it = shipList.begin(); it != shipList.end(); it++)
     {
     if (queryShop(*it))
       it->think(*pathfinder, cityList, getTown(*it));
     else it->think(*pathfinder, cityList);
+    entityMap.setEntity(position, it->getPosition());
+    position++;
     }
+  
   }
 
 void World::populateCities()
@@ -198,11 +204,17 @@ void World::populateCities()
 
 void World::populateShips()
   {
+#ifdef NDEBUG
   for (int counter = 0; counter < 50; counter++)
+#endif
+#ifndef NDEBUG
+  for (int counter = 0; counter < 5; counter++)
+#endif
     {
     auto position = getRandomCityCoord();
     AIShip ship;
     ship.changeShip(ShipDict.getRandomShip());
+    ship.setName(nameFactory.getName());
     ship.setPosition(position);
     ship.sailors = 20;
     ship.rations = 500;
@@ -298,6 +310,27 @@ void Renderer::getShipBitmap(TCODConsole* shipmap, World& world)
   shipmap->putCharEx(pos.first, pos.second, ship.character, findFactionColor(ship.captain.faction), TCODColor::black);
   }
 
+void Renderer::getTooltip(TCODConsole* tooltip, World& world, const int& mouseX, const int& mouseY)
+  {
+  std::string name = findCityName(coord(mouseX, mouseY), world); 
+  tooltip->clear();
+  int line = 0;
+  tooltip->setDefaultForeground(TCODColor::yellow);
+
+  if (name.size() != 0)
+    tooltip->print(0, line, "City of %s", name.c_str());
+    line++;
+
+  auto shiplist = world.entityMap.getEntityList(mouseX, mouseY);
+  tooltip->setDefaultForeground(TCODColor::white);
+  for (auto it = shiplist.begin(); it < shiplist.end(); it++)
+    tooltip->print(0, line++, "The %s", world.shipList[*it].getName().c_str());
+
+  auto pos = world.getPlayerShip().getPosition();
+  if (pos.first == mouseX && pos.second == mouseY)
+    tooltip->print(0, line++, "The %s", world.getPlayerShip().getName().c_str());
+  }
+
 TCODColor Renderer::findFactionColor(const int& faction)
   {
   switch(faction) // Choose the city color
@@ -322,3 +355,4 @@ std::string Renderer::findCityName(const coord& coords, World& world)
     return it->second.getName();
   return std::string("");
   }
+

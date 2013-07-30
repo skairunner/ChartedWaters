@@ -9,17 +9,10 @@
 #include "include/noise.h"
 #include <random>
 #include "AI_ship.h"
+#include "entitymap.h"
 
 class Renderer;
-/*
-class EntityMap
-  {
-  public:
-    EntityMap(const int& w, const int& h);
-    std::vector<std::vector<Ship*>> grid;
-  private:
 
-  };*/
 
 class World
   {
@@ -39,8 +32,8 @@ class World
     coord getRandomCityCoord();
     std::map<coord, Town> cityList;
     std::vector<AIShip> shipList;
-//    std::map<coord, AIShip> shipList;
     WorldMapClass WorldMap;
+    EntityMap entityMap;
 
   private:
     NameFactory nameFactory;
@@ -66,5 +59,6 @@ class Renderer // Accesses World and returns bitmaps.
     static std::string findCityName(const coord& coords, World& world);
     static void getAccessBitmap(TCODConsole* accessmap, PathMap& pm);
     static void getShipBitmap(TCODConsole* shipmap, World& world);
+    static void getTooltip(TCODConsole* tooltip, World& world, const int& mouseX, const int& mouseY);
   private:
   };
