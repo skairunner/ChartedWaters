@@ -2,6 +2,7 @@
 #include "State_stringIn.h"
 #include <SDL.h>
 #include <string>
+#include "utility.h"
 
 using namespace std;
 
@@ -113,7 +114,7 @@ void State_ShipStatus::redrawList()
   int line = 1;
   console->print(1, line++, ("The " + refToShip.getType() + " " + refToShip.getName()).c_str());
   line++;
-  console->print(1, line++,  ("%c" + to_string((long double)refToShip.getMoney()) + string("%c ducats")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->print(1, line++,  ("%c" + rightAlignNumber(refToShip.captain.ducats) + string("%c ducats")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   printStats(console, line);
   line++; // skip a line
   auto list = refToShip.returnListOfItems();

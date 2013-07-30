@@ -51,8 +51,9 @@ class Ship : protected ShipPrototype
     int getLateen();
     int getSquare();
     double getSpeed(); 
-    std::string getDescription();
     int getBaseSpeed();
+    int getMovementCounters(); // This one keeps the decimals. Used for movement, not stat display. Alters the class.
+    std::string getDescription();
     int getTurning();
     std::string getSize();
 
@@ -81,9 +82,12 @@ class Ship : protected ShipPrototype
     int sailorsDied;
     int training; // divide by 10
     int durability;
+    std::string lastVisitedCity;
 
     bool starving;
     bool unpaid;
+
+    double movementcounter;
 
     std::vector<std::pair<int,int>> path;
     std::map<int, ShipSails> sailList;

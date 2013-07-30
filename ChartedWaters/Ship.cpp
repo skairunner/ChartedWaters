@@ -5,7 +5,7 @@
 using namespace std;
 
 Ship::Ship()
-  : storage(0), character(127), waveResistance(6), rations(50), sailors(5), fatigue(0), training(500), durability(0)
+  : storage(0), character(127), waveResistance(6), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
   {
   captain.faction = 0;
   captain.ducats = 1000;
@@ -14,7 +14,7 @@ Ship::Ship()
   }
 
 Ship::Ship(const ShipPrototype& prototype)
-  : storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0)
+  : storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
   {
   captain.faction = 0;
   captain.ducats = 1000;
@@ -428,4 +428,12 @@ int Ship::getETA()
   if (getSpeed() < 1)
     return 99999999;
   return ceil(path.size() / floor((double)getSpeed()));;
+  }
+
+int Ship::getMovementCounters()
+  {
+  movementcounter += getBaseSpeed();
+  int used = (int)movementcounter;
+  movementcounter -= used;
+  return used;
   }

@@ -169,13 +169,13 @@ if (pressedArrow)
   }
 if (pressedPeriod)
   {
-  playerMovement = (int)TheWorld->getPlayerShip().getSpeed();
+  playerMovement = (int)TheWorld->getPlayerShip().getMovementCounters();
   TheWorld->getPlayerShip().step();
   TheWorld->step();
   pressedPeriod = false;
   daysPassed++;
   }
-if (playerMovement > 0)
+if (playerMovement >= 0)
   {
   TheWorld->getPlayerShip().updatePos();
   playerMovement--;
@@ -287,11 +287,8 @@ case '.':
   break;
 
 case 'T': 
-  testsail = ShipPartDict.getSail(string("sail_mainfullrigged"));
+  testsail = ShipPartDict.getSail(string("sail_maintoproyal"));
   TheWorld->getPlayerShip().addSail(0, testsail);
-  TheWorld->getPlayerShip().addSail(1, testsail);
-  TheWorld->getPlayerShip().addSail(2, testsail);
-  TheWorld->getPlayerShip().addSail(3, testsail);
   break;
 
 case 's': // Check for shop.
