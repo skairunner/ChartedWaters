@@ -22,6 +22,12 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{504e819b-f1aa-45bd-bb65-75064b10c211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Combat">
+      <UniqueIdentifier>{349b6131-d02e-4a56-b0b5-235b370e3088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Combat">
+      <UniqueIdentifier>{bc69561e-22fb-45ff-9c82-2ea0e2179fd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -101,6 +107,15 @@
     </ClCompile>
     <ClCompile Include="entitymap.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="asciiModel.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="vector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State_Combat.cpp">
+      <Filter>Source Files\Combat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +204,15 @@
       <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="entitymap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_Combat.h">
+      <Filter>Header Files\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="asciiModel.h">
+      <Filter>Header Files\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

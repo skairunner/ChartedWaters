@@ -24,16 +24,18 @@ class WorldMapClass
   public:
     friend class randomBoat;
     WorldMapClass(const int& width, const int& height);
-    void gen();
+    virtual void gen();
     maptile& ref(const int& x, const int& y);
     int getWidth();
     int getHeight();
     std::vector<coord> cities;
+    long moistureSeed, altitudeSeed;
 
-  private:
+  protected:
     void setCoastFlags();
     void setCityFlags();
     bool setCoastal(const int& xcounter, const int& ycounter);
+    
     int w, h;
     maptile null;
     std::vector<maptile> grid;

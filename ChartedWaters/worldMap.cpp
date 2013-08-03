@@ -23,8 +23,10 @@ void WorldMapClass::gen()
   cities.clear();
   noise::module::Perlin moisture;
   noise::module::Perlin altitude;
-  moisture.SetSeed(rand());
-  altitude.SetSeed(rand());
+  moistureSeed = rand();
+  altitudeSeed = rand();
+  moisture.SetSeed(moistureSeed);
+  altitude.SetSeed(altitudeSeed);
 
   vector<float> buffer(w * h, 0);
   double zoom = 0.07;

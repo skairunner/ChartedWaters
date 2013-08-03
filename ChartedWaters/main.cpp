@@ -19,8 +19,8 @@ int main(int argc,char *argv[])
   {  
   srand(time(0));
 
-  
- CursesEngine.Init("Chartered Waters","resources/asciisquare.bmp",100,50);
+
+  CursesEngine.Init("Chartered Waters","resources/asciisquare.bmp",100,50);
   //CursesEngine.Init("Charted Waters","resources/terminal.png",100,48);
   CursesEngine.Start();
   CursesEngine.End();

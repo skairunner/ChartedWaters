@@ -53,7 +53,8 @@ class World
 class Renderer // Accesses World and returns bitmaps.
   {
   public:
-    static void getTerrainBitmap(TCODConsole* map, World& world);
+    static void getTerrainBitmap(TCODConsole* map, WorldMapClass& wm);
+    static void getHighResTerrainBitmap(TCODConsole* map, WorldMapClass& wm);
     static void getCityBitmap(TCODConsole* cities, World& world);
     static TCODColor findFactionColor(const int& faction);
     static std::string findCityName(const coord& coords, World& world);

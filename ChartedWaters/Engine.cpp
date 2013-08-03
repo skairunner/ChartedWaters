@@ -6,6 +6,7 @@
 //#include "State_shop.h"
 #include "State_MainGame.h"
 #include "shipPrototype.h"
+#include "State_Combat.h"
 #include "State_townmenu.h"
 
 Engine CursesEngine;
@@ -17,8 +18,7 @@ const int height = 256;
 
 const int screenwidth = 100;
 const int screenheight = 48;
-int focusX = screenwidth/2;
-int focusY = screenheight/2;
+
 
 int playerMovement = 0;
 int daysPassed = 0;
@@ -41,7 +41,7 @@ bool lockedToShip = false;
 bool pressedArrow = false; // ">"
 bool mouseRightClick = false;
 
-void lockToShip () // sets camera to ship.
+void Engine::lockToShip () // sets camera to ship.
   {
   auto pos = TheWorld->getPlayerShip().getPosition();
   /*coord pos;
@@ -56,6 +56,9 @@ void lockToShip () // sets camera to ship.
 
 bool Engine::EngineInit()
   {
+  int focusX = screenwidth/2;
+  int focusY = screenheight/2;
+
   JSONToItem itemparser;
   itemparser.readItems(ItemDict); // Read items into dictionary.
   JSONToShip shipparser;
@@ -88,7 +91,7 @@ bool Engine::EngineInit()
   AccessibleScreen = new TCODConsole(width, height);
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
 
-  Renderer::getTerrainBitmap(mapscreen, *TheWorld);
+  Renderer::getTerrainBitmap(mapscreen, TheWorld->WorldMap);
   Renderer::getCityBitmap(cityscreen, *TheWorld);
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
   Renderer::getShipBitmap(ShipScreen, *TheWorld);
@@ -131,7 +134,7 @@ void Engine::Update()
     PathScreen->clear();
     lockToShip();
     redo = false;
-    Renderer::getTerrainBitmap(mapscreen, *TheWorld);
+    Renderer::getTerrainBitmap(mapscreen, TheWorld->WorldMap);
     Renderer::getCityBitmap(cityscreen, *TheWorld);
     Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
     for (int ycounter = 0; ycounter < height; ycounter++)
@@ -197,7 +200,6 @@ void Engine::Update()
 
 void Engine::Render(TCODConsole *root)
   {
-  root->setKeyColor(TCODColor::magenta);
   TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
 
   //TCODConsole::blit(ZOCscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 0.8f, 0.0f);
@@ -278,6 +280,12 @@ void Engine::KeyDown(const int &key,const int &unicode)
     focusY = focusY + scrollspeed <= height - screenheight/2 ? focusY + scrollspeed : height - screenheight /2;
   else if (key == SDLK_RETURN)
     TheWorld->queryShop(TheWorld->getPlayerShip());
+  else if (key == SDLK_SPACE)
+    {
+    auto pos = TheWorld->getPlayerShip().getPosition();
+    newState = new State_Combat(TheWorld->getPlayerShip(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second);
+    PushState(newState);
+    }
 
   switch (unicode)
     {

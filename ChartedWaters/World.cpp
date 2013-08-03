@@ -231,7 +231,7 @@ void World::populateShips()
 ///
 /////
 
-void Renderer::getTerrainBitmap(TCODConsole* map, World& world)
+void Renderer::getHighResTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
   {
   const double thresholdMoisture = 0;
   const TCODColor sandcolor = TCODColor(123, 107, 57);
@@ -241,11 +241,53 @@ void Renderer::getTerrainBitmap(TCODConsole* map, World& world)
   /*const TCODColor sandcolor = TCODColor(193, 177, 127);
   const TCODColor coastalBrown = TCODColor(231,194,141);*/
 
-  for (int ycounter = 0; ycounter < world.height; ycounter++)
-    for (int xcounter = 0; xcounter < world.width; xcounter++)
+  for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
+    for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
       {
       int character = 219;
-      auto it = world.WorldMap.ref(xcounter, ycounter);
+      auto it = wm.ref(xcounter, ycounter);
+      if (it.altitude >= 0)
+        {
+        TCODColor fore = TCODColor::desaturatedGreen;
+        TCODColor back;
+
+        if (it.moisture < thresholdMoisture)
+          {
+          fore = sandcolor;
+          }
+        fore = TCODColor::lerp(fore, TCODColor::black, it.altitude / 20.0f);
+        back = fore;
+
+        if (it.isCoastal)
+          {
+          character = 178;
+          back = coastalBrown;
+          fore = sandcolor;
+          }
+
+        map->putCharEx(xcounter, ycounter, character, fore, back);
+        }
+
+      else
+        map->putCharEx(xcounter, ycounter, 178, TCODColor::lerp(TCODColor::blue, TCODColor::black, -1 * it.altitude / 40.0f), TCODColor::darkBlue);
+      }
+  }
+
+void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
+  {
+  const double thresholdMoisture = 0;
+  const TCODColor sandcolor = TCODColor(123, 107, 57);
+  const TCODColor coastalBrown = TCODColor(141,124, 71);
+
+  // Originals
+  /*const TCODColor sandcolor = TCODColor(193, 177, 127);
+  const TCODColor coastalBrown = TCODColor(231,194,141);*/
+
+  for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
+    for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
+      {
+      int character = 219;
+      auto it = wm.ref(xcounter, ycounter);
       if (it.altitude >= 0)
         {
         TCODColor fore = TCODColor::desaturatedGreen;

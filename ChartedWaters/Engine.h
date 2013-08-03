@@ -16,5 +16,8 @@ class Engine: public TCODEngine
 	void MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
 	void MouseButtonUp(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
 	void MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
+
+  int focusX, focusY;
+  void lockToShip ();
 };
 extern Engine CursesEngine;

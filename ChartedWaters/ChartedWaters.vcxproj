@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI_ship.cpp" />
+    <ClCompile Include="asciiModel.cpp" />
     <ClCompile Include="A_star.cpp" />
     <ClCompile Include="A_star_test.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -93,6 +94,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shipparts.cpp" />
     <ClCompile Include="shipPrototype.cpp" />
+    <ClCompile Include="State_Combat.cpp" />
     <ClCompile Include="State_drydock.cpp" />
     <ClCompile Include="State_MainGame.cpp" />
     <ClCompile Include="nameFactory.cpp" />
@@ -107,11 +109,13 @@
     <ClCompile Include="TCODTools.cpp" />
     <ClCompile Include="town.cpp" />
     <ClCompile Include="utility.cpp" />
+    <ClCompile Include="vector3.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI_ship.h" />
+    <ClInclude Include="asciiModel.h" />
     <ClInclude Include="A_star.h" />
     <ClInclude Include="A_star_test.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -128,6 +132,7 @@
     <ClInclude Include="shipPrototype.h" />
     <ClInclude Include="State_drydock.h" />
     <ClInclude Include="State_ItemDescription.h" />
+    <ClInclude Include="State_Combat.h" />
     <ClInclude Include="State_MainGame.h" />
     <ClInclude Include="nameFactory.h" />
     <ClInclude Include="Ship.h" />
@@ -141,6 +146,7 @@
     <ClInclude Include="TCODTools.h" />
     <ClInclude Include="town.h" />
     <ClInclude Include="utility.h" />
+    <ClInclude Include="vector3.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="worldMap.h" />
   </ItemGroup>
