@@ -208,7 +208,7 @@ void World::populateShips()
   for (int counter = 0; counter < 50; counter++)
 #endif
 #ifndef NDEBUG
-  for (int counter = 0; counter < 5; counter++)
+  for (int counter = 0; counter < 3; counter++)
 #endif
     {
     auto position = getRandomCityCoord();
