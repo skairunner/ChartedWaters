@@ -6,6 +6,7 @@ using namespace std;
 
 Ship::Ship()
   : storage(0), character(127), waveResistance(6), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
+  , wrecked(false)
   {
   captain.faction = 0;
   captain.ducats = 1000;
@@ -15,6 +16,7 @@ Ship::Ship()
 
 Ship::Ship(const ShipPrototype& prototype)
   : storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
+  , wrecked(false)
   {
   captain.faction = 0;
   captain.ducats = 1000;
@@ -195,8 +197,8 @@ double Ship::getArmorSlowing()
 
 double Ship::getSpeed()
   {
-  double weight, crew, starved, trained;
-  crew = starved = trained = 1;
+  double weight, crew, starved, trained, shipwrecked;
+  crew = starved = trained = shipwrecked = 1;
   weight = (1-(double)getTotalStorageUsed()/getMaxStorage()) + 0.5; // if total == max, 0.5f. 
   weight = weight > 1 ? 1 : weight;
   double basespeed = baseSpeed_d(getLateen(), getSquare()) + getArmorSlowing();
@@ -211,7 +213,10 @@ double Ship::getSpeed()
     starved = 0.8;
   trained = 1 + training / 1000.0f;
 
-  double result = weight * crew * basespeed * starved;
+  if (wrecked)
+    shipwrecked = 0;
+
+  double result = weight * crew * basespeed * starved * shipwrecked;
 
   if (result < 0)
     return 0;
@@ -265,6 +270,11 @@ void Ship::step()
     fatigue = 1000;
     sailors -= sailors * 0.1 + 0.5;
     sailors = sailors < 0 ? 0 : sailors;
+    }
+  if (durability <= 0)
+    {
+    durability = 0;
+    wrecked = true;
     }
   }
 

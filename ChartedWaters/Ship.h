@@ -86,6 +86,7 @@ class Ship : protected ShipPrototype
 
     bool starving;
     bool unpaid;
+    bool wrecked;
 
     double movementcounter;
 

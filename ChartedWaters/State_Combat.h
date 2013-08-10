@@ -38,6 +38,8 @@ class CombatMap : public WorldMapClass
   public:
     CombatMap(const long& altSeed, const long& moistSeed, const int& xc, const int& yc);
     virtual void gen();
+    maptile& ref(const coord& pos);
+    virtual maptile& ref(const int& x, const int& y);
   private:
     int x, y; // coords
   };
@@ -69,6 +71,7 @@ class State_Combat : public GameState
     CombatShip player;
     void lockToShip();
     bool mouseClick, mouseRightClick;
+    coord displace(const coord& pos);
     /*
     SinglePieSlice forward;
     SinglePieSlice backward;

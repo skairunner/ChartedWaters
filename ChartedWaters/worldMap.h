@@ -25,7 +25,7 @@ class WorldMapClass
     friend class randomBoat;
     WorldMapClass(const int& width, const int& height);
     virtual void gen();
-    maptile& ref(const int& x, const int& y);
+    virtual maptile& ref(const int& x, const int& y);
     int getWidth();
     int getHeight();
     std::vector<coord> cities;

@@ -71,6 +71,19 @@ void CombatMap::gen()
     setCoastFlags();
   }
 
+maptile& CombatMap::ref(const int& x, const int& y)
+  {
+  if (y >= 0 && y < h && x >= 0 && x < w)
+      return grid[x + y * w];
+  else
+    return null;
+  }
+
+maptile& CombatMap::ref(const coord& pos)
+  {
+  return ref(pos.first, pos.second);
+  }
+
 //////
 //////
 //////
@@ -107,19 +120,22 @@ void CombatShip::step()
     break;
     }
 
-  if (targetAngle > angle)
+  if (speed > 0)
     {
-    angle += refToShip.getTurning() * 0.04;
+    if (targetAngle > angle)
+      {
+      angle += refToShip.getTurning() * 0.04;
+      if (angle > targetAngle)
+        angle = targetAngle;
+      speed *= 0.9;
+      }
     if (angle > targetAngle)
-      angle = targetAngle;
-    speed *= 0.9;
-    }
-  if (angle > targetAngle)
-    {
-    angle -= refToShip.getTurning() * 0.04;
-    if (angle < targetAngle)
-      angle = targetAngle;
-    speed *= 0.9;
+      {
+      angle -= refToShip.getTurning() * 0.04;
+      if (angle < targetAngle)
+        angle = targetAngle;
+      speed *= 0.9;
+      }
     }
 
   if (speed > refToShip.getSpeed()) 
@@ -279,6 +295,21 @@ void State_Combat::Update()
     mouseRightClick = false;
     }
 
+  if (map.ref(player.localPosition).altitude > 0) // ON LAND
+    {
+    player.localPosition = displace(player.localPosition);
+    if (player.localPosition.first == -1 && player.localPosition.second == -1)
+      {
+      cout << "Error: did not find a land tile?\n";
+      popMe = true;
+      return;
+      }
+    player.refToShip.durability -= player.speed * player.speed + 1;
+    player.speed = 0;
+    player.trail.clear();
+    }
+
+
 
   if (player.localPosition.first < 0 || player.localPosition.first > 200 || player.localPosition.second < 0 || player.localPosition.second > 200)
     popMe = true;
@@ -399,7 +430,6 @@ void State_Combat::KeyDown(const int &key,const int &unicode)
     }
   }
 
-
 void State_Combat::lockToShip() // sets camera to ship.
   {
   auto pos = player.localPosition;
@@ -425,4 +455,42 @@ void State_Combat::MouseButtonDown(const int &iButton,const int &iX,const int &i
     mouseClick = true;*/
   if (iButton == SDL_BUTTON_RIGHT)
     mouseRightClick = true;
+  }
+
+coord State_Combat::displace(const coord& pos)
+  {
+  for(int counter = 1; ; counter++)
+    {
+
+    int length = counter * 2 + 1;
+    // top edge, bottom edge
+    for (int edge = 0; edge < length; edge++)
+      {
+      maptile& refToTile = map.ref(pos.first - counter + edge, pos.second - counter);
+      if (refToTile.altitude <= 0 && !refToTile.isNull && !refToTile.isCoastal)
+        return coord(pos.first - counter + edge, pos.second - counter);
+      }
+    for (int edge = 0; edge < length; edge++)
+      {
+      maptile& refToTile = map.ref(pos.first - counter + edge, pos.second + counter);
+      if (refToTile.altitude <= 0 && !refToTile.isNull && !refToTile.isCoastal)
+        return coord(pos.first - counter + edge, pos.second + counter);
+      }
+
+    // left, right edges
+    for (int edge = 0; edge < length; edge++)
+      {
+      maptile& refToTile = map.ref(pos.first - counter, pos.second - counter + edge);
+      if (refToTile.altitude <= 0 && !refToTile.isNull && !refToTile.isCoastal)
+        return coord(pos.first - counter, pos.second - counter + edge);
+      }
+    for (int edge = 0; edge < length; edge++)
+      {
+      maptile& refToTile = map.ref(pos.first + counter, pos.second - counter + edge);
+      if (refToTile.altitude <= 0 && !refToTile.isNull && !refToTile.isCoastal)
+        return coord(pos.first + counter, pos.second - counter + edge);
+      }
+
+    }
+  return coord(-1, -1);
   }
