@@ -7,6 +7,8 @@
 #include <string>
 #include <iostream>
 
+#pragma warning(disable: 4244)
+
 using namespace std;
 
 CombatMap::CombatMap(const long& altSeed, const long& moistSeed, const int& xc, const int& yc)
@@ -90,8 +92,9 @@ maptile& CombatMap::ref(const coord& pos)
 
 CombatShip::CombatShip(Ship& rToShip)
   : refToShip(rToShip), angle(0), localPosition(50, 50), speed(0), sailState(SS_CLOSED), targetAngle(0)
+  ,testrange(5, 10, PieSlice::pi / 2)
   {
-
+  testrange.color = TCODColor::green;
   }
 
 void CombatShip::step()
@@ -100,21 +103,22 @@ void CombatShip::step()
   switch (sailState)
     {
   case SS_ANCHOR:
-    speed -= 1;
+    speed -= 0.1;
     break;
   case SS_CLOSED:
+    speed += 0.3;
     break;
   case SS_QUARTER:
     speed += 0.7;
     break;
   case SS_HALF:
-    speed += 1.0;
+    speed += 1.1;
     break;
   case SS_THREEQUARTERS:
     speed += 1.5;
     break;
   case SS_FULL:
-    speed += 2.2;
+    speed += 1.9;
     break;
   default:
     break;
@@ -128,6 +132,7 @@ void CombatShip::step()
       if (angle > targetAngle)
         angle = targetAngle;
       speed *= 0.9;
+      testrange.setDirection(-angle);
       }
     if (angle > targetAngle)
       {
@@ -135,6 +140,7 @@ void CombatShip::step()
       if (angle < targetAngle)
         angle = targetAngle;
       speed *= 0.9;
+      testrange.setDirection(-angle);
       }
     }
 
@@ -147,12 +153,12 @@ void CombatShip::step()
     if (trail.size() > 10)
       trail.pop_front();
 
-  double newPosX = localPosition.first +   cos(angle) * speed;
-  double newPosY = localPosition.second - sin(angle) * speed;
+  double newPosX = localPosition.first +   cos(angle) * speed / 2;
+  double newPosY = localPosition.second - sin(angle) * speed / 2;
   for (int counter = 0; counter < 10; counter++)
     {
-    localPosition.first +=   cos(angle) * speed / 10;
-    localPosition.second += - sin(angle) * speed / 10;
+    localPosition.first  +=   cos(angle) * speed / 20;
+    localPosition.second += - sin(angle) * speed / 20;
     trail.push_back(localPosition);
     }
 
@@ -260,18 +266,53 @@ State_Combat::State_Combat(const int& wwidth, const int& hheight)
   backward.redraw();
   }*/
 
-State_Combat::State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord)
-  : map(altSeed, moistSeed, xcoord, ycoord), scrollspeed(5), player(aShip), mouseX(0), mouseY(0), mouseRightClick(false)
+State_Combat::State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord, const std::vector<Ship*> ships)
+  : map(altSeed, moistSeed, xcoord, ycoord), scrollspeed(5), player(aShip), mouseX(0), mouseY(0), mouseRightClick(false), shipRefList(ships)
+ // , testPair(5, 10, PieSlice::pi / 2)
   {
   focusX = 50;
   focusY = 50;
   console = new TCODConsole(200, 200);
   shipconsole = new TCODConsole(200, 200);
+  rangeconsole = new TCODConsole(200, 200);
+  for(auto it = shipRefList.begin(); it < shipRefList.end(); it++)
+    {
+    shipList.push_back(CombatShip(**it));
+    shipList.back().localPosition = coord_d(rand() % 200, rand() % 200);
+    }
   }
 
 bool State_Combat::Init()
   {
   Renderer::getHighResTerrainBitmap(console, map);
+  rangeconsole->setDefaultBackground(TCODColor(255,0,255));
+  rangeconsole->setKeyColor(TCODColor(255,0,255));
+  rangeconsole->clear();
+  TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)player.localPosition.first - player.testrange.maxrange, (int)player.localPosition.second - player.testrange.maxrange, 1.0f, 1.0f);
+  if (map.ref(player.localPosition).altitude > 0)
+    {
+    player.localPosition = displace(player.localPosition);
+    if (player.localPosition.first == -1 && player.localPosition.second == -1)
+      {
+      cout << "Error: did not find a land tile for player ship\n";
+      popMe = true;
+      return true;
+      }
+    }
+  for (auto it = shipList.begin(); it < shipList.end(); it++)
+    {
+    if (map.ref(it->localPosition).altitude > 0)
+      {
+      it->localPosition = displace(it->localPosition);
+      if (it->localPosition.first == -1 && it->localPosition.second == -1)
+        {
+        cout << "Error: did not find a land tile for NPC ship\n";
+        popMe = true;
+        return true;
+        }
+      }
+    }
+
   return true;
   }
 
@@ -308,6 +349,22 @@ void State_Combat::Update()
     player.speed = 0;
     player.trail.clear();
     }
+  for (auto it = shipList.begin(); it < shipList.end(); it++)
+    {
+    if (map.ref(it->localPosition).altitude > 0)
+      {
+      it->localPosition = displace(it->localPosition);
+      if (it->localPosition.first == -1 && it->localPosition.second == -1)
+        {
+        cout << "Error: did not find a land tile for NPC ship\n";
+        popMe = true;
+        return;
+        }
+      it->refToShip.durability -= player.speed * player.speed + 1;
+      it->speed = 0;
+      it->trail.clear();
+      }
+    }
 
 
 
@@ -318,6 +375,7 @@ void State_Combat::Update()
     update = false;
     player.step();
     shipconsole->clear();
+    rangeconsole->clear();
 
     double intensity = 1;
     for (auto it = player.trail.rbegin(); it < player.trail.rend(); it++)
@@ -327,11 +385,17 @@ void State_Combat::Update()
       }
 
     shipconsole->putCharEx(player.localPosition.first, player.localPosition.second, player.refToShip.character, Renderer::findFactionColor(player.refToShip.captain.faction), TCODColor::black);
+    TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)player.localPosition.first - player.testrange.maxrange, (int)player.localPosition.second - player.testrange.maxrange, 1.0f, 1.0f);
+
+    for (auto it = shipList.begin(); it < shipList.end(); it++)
+      {
+      shipconsole->putCharEx(it->localPosition.first, it->localPosition.second, it->refToShip.character, Renderer::findFactionColor(it->refToShip.captain.faction), TCODColor::black);
+     // TCODConsole::blit(it->testrange.image, 0, 0, 0, 0, rangeconsole, (int)it->localPosition.first - it->testrange.maxrange, (int)it->localPosition.second - it->testrange.maxrange, 1.0f, 1.0f);
+      }
     }
+  
   if (lock)
     lockToShip();
-
-
 /*  angle += 0.05;
   angle2 -= 0.05;
   left.setDirection(vector3(cos(angle), sin(angle), 0));
@@ -342,8 +406,14 @@ void State_Combat::Update()
 
 void State_Combat::Render(TCODConsole *root)
   {
+  root->setKeyColor(TCODColor(255,0,255));
+
   TCODConsole::blit(console, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
+  //testPair.setDirection(-player.angle);
+  TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)player.localPosition.first - player.testrange.maxrange, (int)player.localPosition.second - player.testrange.maxrange, 1.0f, 1.0f);
   TCODConsole::blit(shipconsole, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
+  TCODConsole::blit(rangeconsole, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
+
 
   string state;
   switch (player.sailState)

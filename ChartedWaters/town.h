@@ -16,6 +16,16 @@ struct EconomyItemTuple
   std::string percentageOfBasePrice;
   };
 
+struct AIEconomyItemTuple
+  {
+  std::string itemID;
+  std::string ItemName;
+  int numberofItems;
+  double BuyPrice;
+  double SellPrice;
+  double percentageOfBasePrice;
+  };
+
 class Town
   {
   private:
@@ -45,6 +55,7 @@ class Town
     int buyRations(Ship& ship, const int& number); // actual rations added = 10 * number
 
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
+    std::vector<AIEconomyItemTuple> returnListOfItems_AI(bool isHometown = false);
     int getPriceOf(const std::string& ID);
     double  getSellPrice(const std::string& ID);
     double getBuyPrice(const std::string& ID);

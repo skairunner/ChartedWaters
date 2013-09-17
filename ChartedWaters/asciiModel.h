@@ -25,19 +25,21 @@ class ASCIIImage
 class PieSlice
   {
   public:
-    PieSlice(const int& r);
-    PieSlice(const int& r, const double& angle);
+    PieSlice(const double& r);
+    PieSlice(const double& r, const double& angle);
+    PieSlice(const double& minR, const double& maxR, const double& angle);
     ~PieSlice();
     vector3 direction;
     double arcAngle;
     void setAngle(const double& val); // redraws the map.
     void setDirection(const vector3& vec);
+    void setDirection(const double& ang);
     virtual void redraw();
     TCODConsole* image;
     TCODColor color;
     static const double pi;
-    int maxrange;
-    int minrange;
+    double maxrange;
+    double minrange;
 
   private:
 

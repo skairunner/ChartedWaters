@@ -208,10 +208,12 @@ void World::populateShips()
   for (int counter = 0; counter < 50; counter++)
 #endif
 #ifndef NDEBUG
-  for (int counter = 0; counter < 3; counter++)
+  for (int counter = 0; counter < 1; counter++)
 #endif
     {
-    auto position = getRandomCityCoord();
+   // auto position = getRandomCityCoord();
+    coord position;
+    position = getPlayerShip().getPosition();
     AIShip ship;
     ship.changeShip(ShipDict.getRandomShip());
     ship.setName(nameFactory.getName());
@@ -221,6 +223,7 @@ void World::populateShips()
     ship.captain.faction = random(0, 8);
     for (int counter = 0; counter < 5; counter++)
       ship.cityList[getRandomCityCoord()] = true;
+    ship.initItemDB(cityList);
     shipList.push_back(ship);
     }
   }

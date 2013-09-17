@@ -93,6 +93,7 @@ class Ship : protected ShipPrototype
     std::vector<std::pair<int,int>> path;
     std::map<int, ShipSails> sailList;
     std::map<int, ShipArmor> armorList;
+    
     ShipStatue figurehead;
 
   protected:

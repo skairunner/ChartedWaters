@@ -25,10 +25,13 @@ class CombatShip
     int sailState;
     void step();
     std::deque<coord_d> trail;
+
+    PieSlice testrange;
   private:
     double targetAngle;
     void normalizeAngles(); // if angle > 2pi + a, angle = a. 
                             // if angle < -2pi + a (a < 0), angle = a
+    
     int getDirectionToTurn(const double& target);
     double getAngleDifference(const double& target);
   };
@@ -48,7 +51,7 @@ class State_Combat : public GameState
   {
   public:
    // State_Combat(const int& wwidth, const int& hheight);
-    State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord);
+    State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord, const std::vector<Ship*> ships = std::vector<Ship*>());
     virtual bool Init();
 
     virtual void Update();
@@ -67,11 +70,16 @@ class State_Combat : public GameState
 
   private:
    // PieSlice test;
+
     CombatMap map;
     CombatShip player;
     void lockToShip();
     bool mouseClick, mouseRightClick;
     coord displace(const coord& pos);
+    std::vector<Ship*> shipRefList;
+    std::vector<CombatShip> shipList;
+    //PieSlice testPair;
+
     /*
     SinglePieSlice forward;
     SinglePieSlice backward;
@@ -82,6 +90,7 @@ class State_Combat : public GameState
     bool lock;
     TCODConsole* console;
     TCODConsole* shipconsole;
+    TCODConsole* rangeconsole;
     int x, y;
     int mouseX, mouseY;
     int focusX, focusY;

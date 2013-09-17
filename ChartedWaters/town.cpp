@@ -63,6 +63,30 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
   return returnVal;
   }
 
+vector<AIEconomyItemTuple> Town::returnListOfItems_AI(bool isHometown)
+  {
+  vector<AIEconomyItemTuple> returnVal;
+  double tax = getTaxRate(isHometown);
+  for (auto it = itemlist.begin(); it != itemlist.end(); it++)
+    {
+    AIEconomyItemTuple buffer;
+    buffer.itemID = it->second.ID;
+    buffer.ItemName = it->second.name;
+
+    buffer.numberofItems = it->second.howMany();
+
+    buffer.BuyPrice = getBuyPrice(it->second.ID) * (1 + tax) * 10;
+    buffer.SellPrice = getSellPrice(it->second.ID) * 10 * (1 - tax);
+
+    int percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
+    buffer.percentageOfBasePrice = percentage;
+
+    returnVal.push_back(buffer);
+    }
+
+  return returnVal;
+  }
+
 void Town::addItems(const std::string& ID, const int& numberOf)
   {
   auto it = itemlist.find(ID);

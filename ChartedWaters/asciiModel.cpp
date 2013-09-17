@@ -21,8 +21,8 @@ void ASCIIImage::setAngle(const double& val)
   
   }
 
-PieSlice::PieSlice(const int& r)
-  : arcAngle(pi/4), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
+PieSlice::PieSlice(const double& r)
+  : arcAngle(pi/2), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
   {
   image = new TCODConsole(2 * r + 1, 2 * r + 1);
   image->setKeyColor(TCODColor(255,0,255));
@@ -31,13 +31,23 @@ PieSlice::PieSlice(const int& r)
   setAngle(arcAngle);
   }
 
-PieSlice::PieSlice(const int& r, const double& angle)
+PieSlice::PieSlice(const double& r, const double& angle)
   : arcAngle(angle), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
   {
   image = new TCODConsole(2 * r + 1 , 2 * r + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
-  color = TCODColor::blue;
+  color = TCODColor::lighterBlue;
+  setAngle(arcAngle);
+  }
+
+PieSlice::PieSlice(const double& minR, const double& maxR, const double& angle)
+  : arcAngle(angle), maxrange(maxR), minrange(minR), direction(maxR, maxR, 0, maxR, 0, 0)
+  {
+  image = new TCODConsole(2 * maxR + 1 , 2 * maxR + 1);
+  image->setKeyColor(TCODColor(255,0,255));
+  image->setDefaultBackground(TCODColor(255, 0, 255));
+  color = TCODColor::lighterBlue;
   setAngle(arcAngle);
   }
 
@@ -56,6 +66,11 @@ void PieSlice::setDirection(const vector3& vec)
   {
   direction = vec;
   redraw();
+  }
+
+void PieSlice::setDirection(const double& ang)
+  {
+  setDirection(vector3(cos(ang), sin(ang), 0));
   }
 
 void PieSlice::redraw()

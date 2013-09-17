@@ -114,3 +114,26 @@ class LedgerItem : public Item
     void countItems();
     std::vector<std::pair<int, int>> ledger; // numberOf, price.
   };
+
+class MemoryItem : public Item // This class is for each ship/merchant's personal memory of prices per city
+  {
+  public:
+    struct City
+      {
+      City()
+        {
+        sell = buy = 0;
+        date = 0;
+        }
+      City(double Buy, double Sell, long unsigned int Date)
+        {
+        sell = Sell;
+        buy = Buy;
+        date = Date;
+        }
+      double sell;
+      double buy;
+      long unsigned int date;
+      };
+    std::map<std::pair<int,int>, City> cities;
+  };

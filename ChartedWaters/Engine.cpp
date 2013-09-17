@@ -283,7 +283,14 @@ void Engine::KeyDown(const int &key,const int &unicode)
   else if (key == SDLK_SPACE)
     {
     auto pos = TheWorld->getPlayerShip().getPosition();
-    newState = new State_Combat(TheWorld->getPlayerShip(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second);
+    auto shipTokenList = TheWorld->entityMap.getEntityList(pos);
+    vector<Ship*> shipPointers;
+    for (auto it = shipTokenList.begin(); it < shipTokenList.end(); it++)
+      {
+      shipPointers.push_back(&TheWorld->shipList.at(*it));
+      }
+
+    newState = new State_Combat(TheWorld->getPlayerShip(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second, shipPointers);
     PushState(newState);
     }
 
