@@ -41,10 +41,12 @@ bool lockedToShip = false;
 bool pressedArrow = false; // ">"
 bool mouseRightClick = false;
 
+Ship* lockedShip;
+
 void Engine::lockToShip () // sets camera to ship.
   {
- // auto pos = TheWorld->getPlayerShip().getPosition();
-  auto pos = TheWorld->shipList.front().getPosition();
+  auto pos = lockedShip->getPosition();
+
   /*coord pos;
   if (TheWorld->shipList.begin() != TheWorld->shipList.end())
     pos = TheWorld->shipList.begin()->getPosition();
@@ -109,6 +111,7 @@ bool Engine::EngineInit()
   ship.sailors = 15;
   ship.rations = 500;
   pressedPeriod = true;
+  lockedShip = &(TheWorld->getPlayerShip());
   lockToShip();
 
   return true;
@@ -325,6 +328,17 @@ void Engine::KeyDown(const int &key,const int &unicode)
     break;
 
   case 'Y':
+    if (!lockedToShip)
+      {
+      auto entityList = TheWorld->entityMap.getEntityList(mouseX, mouseY);
+      if (entityList.size()) // if there is a ship on the tile, and we're not following a ship
+        lockedShip = &(TheWorld->shipList[entityList.front()]);
+      else 
+        {
+        lockedShip = &(TheWorld->getPlayerShip());
+        }
+      }
+    
     lockedToShip = !lockedToShip;
     break;
 
