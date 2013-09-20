@@ -43,7 +43,8 @@ bool mouseRightClick = false;
 
 void Engine::lockToShip () // sets camera to ship.
   {
-  auto pos = TheWorld->getPlayerShip().getPosition();
+ // auto pos = TheWorld->getPlayerShip().getPosition();
+  auto pos = TheWorld->shipList.front().getPosition();
   /*coord pos;
   if (TheWorld->shipList.begin() != TheWorld->shipList.end())
     pos = TheWorld->shipList.begin()->getPosition();

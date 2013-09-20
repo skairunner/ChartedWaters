@@ -131,8 +131,8 @@ class MemoryItem : public Item // This class is for each ship/merchant's persona
         buy = Buy;
         date = Date;
         }
-      double sell;
-      double buy;
+      double sell; // The price when an item is sold to the town
+      double buy; // The price when an item is bought from the town
       long unsigned int date;
       };
     std::map<std::pair<int,int>, City> cities;

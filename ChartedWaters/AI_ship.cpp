@@ -1,11 +1,13 @@
 #include "AI_ship.h"
 #include <iostream>
 #include <boost/random/uniform_int_distribution.hpp>
+#include <tuple>
 
 Town AIShip::nullTown = Town();
 
 AIShip::AIShip()
-  : state(STATE_PLOT), timer(0), date(0)
+  : state(STATE_PLOT), timer(0), date(0),
+  ratio_mostProfit(0.5f), ratio_secondProfit(0.4f), ratio_hedge(0.1f)
   {
   captain.ducats = 10000;
   gen.seed(rand());
@@ -40,7 +42,30 @@ void AIShip::initItemDB(std::map<coord, Town>& world)
     {
     auto town = world.find(city.first);
     if (town != world.end())
-      updateDB(town->second);
+      initUpdateDB(town->second);
+    }
+  }
+
+void AIShip::initUpdateDB(Town& town)
+  {
+  bool home = false;
+  if (town.getFactionID() == captain.faction)
+    home = true;
+  auto items = town.returnListOfItems_AI(home);
+  for each (AIEconomyItemTuple item in items)
+    {
+    MemoryItem& ref = getItemFromDB(item.itemID);
+    ref.ID = item.itemID;
+    ref.category = ItemDict.findItemCategory(ref.ID);
+    ref.type = ItemDict.findItemType(ref.ID);
+    
+    ref.cities[town.myPosition] = MemoryItem::City(item.BuyPrice, item.SellPrice, date);
+    }
+
+  for each (std::string ID in masterItemList)
+    {
+    MemoryItem& ref = getItemFromDB(ID);
+    ref.cities[town.myPosition].sell = town.getSellPrice(ID);
     }
   }
 
@@ -53,6 +78,7 @@ void AIShip::updateDB(Town& town)
   for each (AIEconomyItemTuple item in items)
     {
     MemoryItem& ref = getItemFromDB(item.itemID);
+    
     ref.cities[town.myPosition] = MemoryItem::City(item.BuyPrice, item.SellPrice, date);
     }
 
@@ -82,14 +108,20 @@ void AIShip::think(Pather& pather, std::map<coord, Town>& cityList, Town& curren
   case STATE_MOVE:
     move();
     break;
+  case STATE_PURCHASE:
+    purchase(currentTown);
+    break;
+  case STATE_SELL:
+    sell(currentTown);
+    break;
   case STATE_PLOT:
-    plot(pather, cityList);
+    plotRandom(pather);
     break;
   case STATE_RESTOCK:
     restock(currentTown);
     break;
-  case STATE_PURCHASE:
-    purchase(currentTown);
+  case STATE_MERCHANTLOGIC:
+    DoMerchantLogic(currentTown, pather);
     break;
   case STATE_ERROR:
     std::cout << "AI_ship.cpp error: error state\n";
@@ -114,19 +146,105 @@ void AIShip::startingWait()
     state = STATE_PLOT;
   }
 
-void AIShip::DoMerchantLogic(Town& currentTown)
+void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
   {
   int MaxPotentialLoad = getMaxGoods() * 0.8f;
+  int MaxMoney = captain.ducats * 0.8f;
 
-  std::map<coord, std::vector<std::pair<std::string, double>>> CitiesAndPrices;
+  //std::map<coord, std::vector<std::pair<std::string, double>>> CitiesAndPrices;
+  std::vector<std::tuple<coord, std::string, double>> CitiesAndProfit;
 
   bool home = false;
-  if (town.getFactionID() == captain.faction)
+  if (currentTown.getFactionID() == captain.faction)
     home = true;
 
   auto itemsBuyable = currentTown.returnListOfItems_AI(home);
 
+  for each (AIEconomyItemTuple item in itemsBuyable)
+    {
+    for each (auto citycoord in cityList)
+      {
+      auto memorizedItem = getItemFromDB(item.itemID);
+      double profit = memorizedItem.cities[citycoord.first].sell - item.BuyPrice;
+      int numberOf = MaxPotentialLoad;
+      if (item.BuyPrice * MaxPotentialLoad > MaxMoney)
+        numberOf = MaxMoney / item.BuyPrice;
+      profit *= numberOf;
+
+      CitiesAndProfit.push_back(std::tuple<coord, std::string, double>(citycoord.first, item.itemID, profit));
+      }
+    }
+
+  // Find city with best profit.
+  double bestProfit = 0;
+  int bestProfitPosition = -1;
+  for (int counter = 0; counter < CitiesAndProfit.size(); counter++)
+    {
+    double tentativeProfit = std::get<2>(CitiesAndProfit[counter]);
+    if (tentativeProfit > bestProfit)
+      {
+      bestProfitPosition = counter;
+      bestProfit = tentativeProfit;
+      }
+    }
+
+  if (bestProfitPosition >= 0)
+    // Let's go to that city!
+    plot(pather, std::get<0>(CitiesAndProfit[bestProfitPosition]));
+  else
+    {
+    plotRandom(pather);
+    restock(currentTown);
+    return;
+    }
+
+
+  // now extract the item to buy from memory
+  coord destination = std::get<0>(CitiesAndProfit[bestProfitPosition]);
+  int numberToBuy = MaxPotentialLoad;
+  std::string profitItemID = std::get<1>(CitiesAndProfit[bestProfitPosition]);
+  AIEconomyItemTuple profitItemTuple;
   
+  for (auto it = itemsBuyable.begin(); it < itemsBuyable.end(); it++)
+    if (it->itemID == profitItemID)
+      profitItemTuple = *it;
+  
+  // redo budget
+  if (profitItemTuple.BuyPrice * MaxPotentialLoad > MaxMoney)
+        numberToBuy = MaxMoney / profitItemTuple.BuyPrice;
+  MaxMoney -= numberToBuy * profitItemTuple.BuyPrice; 
+
+  
+
+
+  /*
+  //Next, find out the second-best projected sell in this city.  <--- maybe later
+  double secondProfit = 0;
+  std::string secondProfitItemID;
+  
+  for each (AIEconomyItemTuple item in itemsBuyable)
+    {
+    auto memorizedItem = getItemFromDB(item.itemID);
+    
+    double profit = memorizedItem.cities[destination].sell - item.BuyPrice;
+    int numberOf = MaxPotentialLoad;
+    if (item.BuyPrice * MaxPotentialLoad > MaxMoney)
+      numberOf = MaxMoney / item.BuyPrice;
+    profit *= numberOf;
+
+    CitiesAndProfit.push_back(std::tuple<coord, std::string, double>(citycoord.first, item.itemID, profit));
+    }
+  */
+
+
+
+  restock(currentTown);
+  numberToBuy = getMaxGoods() - getTotalGoods();
+  if (profitItemTuple.BuyPrice * numberToBuy > captain.ducats)
+        numberToBuy = captain.ducats / profitItemTuple.BuyPrice;
+  currentTown.buyItems(*this, profitItemID, numberToBuy, home);
+
+  state = STATE_WAIT;
   };
 
 int AIShip::random(const int& min, const int& max)
@@ -135,11 +253,24 @@ int AIShip::random(const int& min, const int& max)
   return dist(gen);
   }
 
-void AIShip::plot(Pather& pather, std::map<coord, Town>& cityList) // currently it chooses a random city out of known cities.
+void AIShip::sell(Town& currentTown)
+  {
+  std::vector<std::string> itemsToSell;
+  for (auto it = itemList.begin(); it < itemList.end(); it++)
+    itemsToSell.push_back(it->ID);
+  bool isHome = false;
+  if (captain.faction == currentTown.getFactionID())
+    isHome = true;
+  for (auto it = itemsToSell.begin(); it < itemsToSell.end(); it++)
+    currentTown.sellItems(*this, *it, -1, isHome);
+  state = STATE_MERCHANTLOGIC;
+  }
+
+void AIShip::plotRandom(Pather& pather) // currently it chooses a random city out of known cities.
   {
   if (cityList.size() == 0)
     state = STATE_ERROR;
-  int number = random(0, cityList.size());
+  int number = random(0, cityList.size()-1);
   auto it = cityList.begin();
   for (int counter = 0; counter < number; counter++)
     it++;
@@ -147,10 +278,16 @@ void AIShip::plot(Pather& pather, std::map<coord, Town>& cityList) // currently 
   state = STATE_RESTOCK;
   }
 
+void AIShip::plot(Pather& pather, coord destination)
+  {
+  setPath(pather.path(position, destination, getWaveResistance()));
+  state = STATE_RESTOCK;
+  }
+
 void AIShip::restock(Town& currentTown)
   {
   if (captain.ducats < 3000)
-    captain.ducats *= 52;
+    captain.ducats *= 5;
 
   double rationsNeeded = getEstimatedRationsNeeded();;
   rationsNeeded *= 1.1f;
@@ -161,9 +298,7 @@ void AIShip::restock(Town& currentTown)
   if (actualRations > 0)
     currentTown.buyRations(*this, actualRations / 10);
   timer = random(0, 10);
-
-  
-  state = STATE_PURCHASE;
+  state = STATE_WAIT;
   }
 
 void AIShip::purchase(Town& currentTown)
@@ -180,5 +315,5 @@ void AIShip::move()
     updatePos();
   step();
   if (path.size() <= 1)
-    state = STATE_PLOT; // change to STATE_SELL later.
+    state = STATE_SELL;
   }

@@ -15,19 +15,23 @@ class AIShip : public Ship
     void initItemDB(std::map<coord, Town>& world);
 
   private:
-    enum STATES {STATE_ERROR = -1, STATE_WAIT = 0, STATE_PLOT, STATE_RESTOCK, STATE_MOVE, STATE_STARTING_WAIT, STATE_PURCHASE, STATE_INIT};
+    enum STATES {STATE_ERROR = -1, STATE_WAIT = 0, STATE_PLOT, STATE_RESTOCK, STATE_MOVE, STATE_STARTING_WAIT, STATE_PURCHASE, STATE_INIT, STATE_MERCHANTLOGIC,
+                 STATE_SELL};
     boost::random::mt19937 gen;
 
     int random(const int& min, const int& max);
     void wait();
     void startingWait();
-    void plot(Pather& pather, std::map<coord, Town>& cityList);
+    void plotRandom(Pather& pather);
+    void plot(Pather& pather, coord destination);
     void restock(Town& currentTown);
+    void sell(Town& currentTown);
     void purchase(Town& currentTown);
-    void DoMerchantLogic(Town& currentTown);
+    void DoMerchantLogic(Town& currentTown, Pather& pather);
     void move();
 
     void updateDB(Town& town);
+    void initUpdateDB(Town& town);
     
     std::map<std::string, MemoryItem> ItemDB;
     std::vector<std::string> masterItemList;
@@ -37,5 +41,7 @@ class AIShip : public Ship
     int state;
     int timer;
     long unsigned int date;
+
+    double ratio_mostProfit, ratio_secondProfit, ratio_hedge; // percentages. Must add up to 1.
     
   };

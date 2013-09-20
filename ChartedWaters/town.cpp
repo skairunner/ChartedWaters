@@ -75,8 +75,8 @@ vector<AIEconomyItemTuple> Town::returnListOfItems_AI(bool isHometown)
 
     buffer.numberofItems = it->second.howMany();
 
-    buffer.BuyPrice = getBuyPrice(it->second.ID) * (1 + tax) * 10;
-    buffer.SellPrice = getSellPrice(it->second.ID) * 10 * (1 - tax);
+    buffer.BuyPrice = getBuyPrice(it->second.ID) * (1 + tax);
+    buffer.SellPrice = getSellPrice(it->second.ID) * (1 - tax);
 
     int percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
     buffer.percentageOfBasePrice = percentage;
@@ -257,6 +257,11 @@ double Town::getSellPrice(const std::string& ID)
 
 double Town::getBuyPrice(const std::string& ID)
   {
+  // If not sold here, return -1
+  auto itemIt = itemlist.find(ID);
+  if (itemIt == itemlist.end())
+    return -1;
+
   double produceZone = 1.0f;
   double distanceMult = 1.0f;
   
