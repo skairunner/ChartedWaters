@@ -348,7 +348,8 @@ void Town::step()
       if (getNumberOf(*it) < 8192)
         addItems(*it, population * 0.1);
     }
-  // Remove items by demand & if there are less than one of it. 
+
+  // Remove items by demand & if there is less than one of that item. 
   for (auto it = itemlist.begin(); it != itemlist.end(); it++)
     {
     int toRemove = it->second.getDemand() * 0.1 + 1;

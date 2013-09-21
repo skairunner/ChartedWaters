@@ -442,7 +442,7 @@ int Ship::getETA()
 
 int Ship::getMovementCounters()
   {
-  movementcounter += getBaseSpeed();
+  movementcounter += getSpeed();
   int used = (int)movementcounter;
   movementcounter -= used;
   return used;

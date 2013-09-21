@@ -74,6 +74,10 @@ void JSONToShip::readShips(ShipDictionary& dict)
     if (buffer.maxstorage != buffer.maxcannons + buffer.maxcargo + buffer.maxsailors)
       cerr << "Storage != cargo + sailors + cannons for " << buffer.typeID << "!\n";
     dict.ships[buffer.typeID] = buffer;
+
+    dict.shipsByType[buffer.specialization].push_back(buffer);
+
+
     counter++;
     }
   };
@@ -91,6 +95,28 @@ ShipPrototype ShipDictionary::getRandomShip()
   for(; counter > 0; counter--)
     it++;
   return it->second;
+  }
+
+ShipPrototype ShipDictionary::getRandomMerchantShip()
+  {
+  int general = shipsByType["general"].size();
+  int speed = shipsByType["speed"].size();
+  int storage = shipsByType["storage"].size();
+
+  int counter = rand()%(general+speed+storage);
+  if (counter < general)
+    return shipsByType["general"].at(counter);
+  else
+    {
+    counter -= general;
+    if (counter < speed)
+      return shipsByType["speed"].at(counter);
+    else
+      {
+      counter -= speed;
+      return shipsByType["storage"].at(counter);
+      }
+    }
   }
 
 double ShipPrototype::baseSpeed_d(const int& lateens, const int& squares)

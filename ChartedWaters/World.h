@@ -36,7 +36,7 @@ class World
     EntityMap entityMap;
 
   private:
-    NameFactory nameFactory;
+    KoreanNameFactory nameFactory;
     
     void populateCities(); // With items.
     void populateShips(); // AI ships.

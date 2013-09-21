@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include <vector>
 #include "shipPrototype.h"
 //// Basically ship types that can be pasted over player/merchant ships to change their attributes.
 
@@ -34,9 +35,13 @@ class ShipDictionary
     ShipDictionary();
     ShipPrototype getShip(const std::string& ID);
     ShipPrototype getRandomShip();
+    ShipPrototype getRandomMerchantShip();
+    ShipPrototype getRandomMilitaryShip();
+
   private:
     ShipPrototype null;
     std::map<std::string, ShipPrototype> ships;
+    std::map<std::string, std::vector<ShipPrototype>> shipsByType;
   };
 
 class JSONToShip

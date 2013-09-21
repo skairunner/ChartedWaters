@@ -5,7 +5,7 @@
 World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true), entityMap(w, h)
   {
-  nameFactory = NameFactory(rand());
+  nameFactory = KoreanNameFactory(rand());
 
   regen();
   pathfinder = new Pather(WorldMap);
@@ -215,7 +215,8 @@ void World::populateShips()
     coord position;
     position = getPlayerShip().getPosition();
     AIShip ship;
-    ship.changeShip(ShipDict.getRandomShip());
+    //ship.changeShip(ShipDict.getRandomShip());
+    ship.changeShip(ShipDict.getRandomMerchantShip());
     ship.setName(nameFactory.getName());
     ship.setPosition(position);
     ship.sailors = 20;

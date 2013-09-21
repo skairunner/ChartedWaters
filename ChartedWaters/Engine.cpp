@@ -194,7 +194,7 @@ void Engine::Update()
     pressedPeriod = false;
     daysPassed++;
     }
-  if (playerMovement >= 0)
+  if (playerMovement > 0)
     {
     TheWorld->getPlayerShip().updatePos();
     playerMovement--;
@@ -334,9 +334,7 @@ void Engine::KeyDown(const int &key,const int &unicode)
       if (entityList.size()) // if there is a ship on the tile, and we're not following a ship
         lockedShip = &(TheWorld->shipList[entityList.front()]);
       else 
-        {
         lockedShip = &(TheWorld->getPlayerShip());
-        }
       }
     
     lockedToShip = !lockedToShip;
