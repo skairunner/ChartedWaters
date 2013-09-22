@@ -217,11 +217,27 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
   
 
 
-  /*
-  //Next, find out the second-best projected sell in this city.  <--- maybe later
+  
+  
+  
+
+
+  // Restock first.
+  restock(currentTown);
+  numberToBuy = (getMaxGoods() - getTotalGoods()) * 0.8f;
+  if (profitItemTuple.BuyPrice * numberToBuy > captain.ducats) // fill 80% of the left-over space with the item
+        numberToBuy = captain.ducats / profitItemTuple.BuyPrice * 0.8f;
+  currentTown.buyItems(*this, profitItemID, numberToBuy, home);
+
+  //Next, find out the second-best projected sell in this city.
+  CitiesAndProfit.clear();
   double secondProfit = 0;
+  int secondProfitNumber = 0; // how many to buy
   std::string secondProfitItemID;
   
+  MaxPotentialLoad = getMaxGoods() - getTotalGoods();
+  MaxMoney = captain.ducats;
+
   for each (AIEconomyItemTuple item in itemsBuyable)
     {
     auto memorizedItem = getItemFromDB(item.itemID);
@@ -232,17 +248,20 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
       numberOf = MaxMoney / item.BuyPrice;
     profit *= numberOf;
 
-    CitiesAndProfit.push_back(std::tuple<coord, std::string, double>(citycoord.first, item.itemID, profit));
+    if (profit > secondProfit)
+      {
+      secondProfit = profit;
+      secondProfitItemID = memorizedItem.ID;
+      secondProfitNumber = numberOf;
+      }
     }
-  */
+
+  if (secondProfit != 0)
+    {
+    currentTown.buyItems(*this, secondProfitItemID, secondProfitNumber, home);
+    }
 
 
-
-  restock(currentTown);
-  numberToBuy = getMaxGoods() - getTotalGoods();
-  if (profitItemTuple.BuyPrice * numberToBuy > captain.ducats)
-        numberToBuy = captain.ducats / profitItemTuple.BuyPrice;
-  currentTown.buyItems(*this, profitItemID, numberToBuy, home);
 
   state = STATE_WAIT;
   };
@@ -286,8 +305,17 @@ void AIShip::plot(Pather& pather, coord destination)
 
 void AIShip::restock(Town& currentTown)
   {
+  if (sailors < getMinSailors())
+    {
+    int numberToHire = (getMinSailors() + getMaxSailors() - sailors) / 2;
+    captain.ducats -= 1000 * numberToHire;
+    addSailors(numberToHire, 500);
+    }
+
   if (captain.ducats < 3000)
-    captain.ducats *= 5;
+    captain.ducats = 3000;
+
+
 
   double rationsNeeded = getEstimatedRationsNeeded();;
   rationsNeeded *= 1.1f;
