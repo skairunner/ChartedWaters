@@ -29,7 +29,7 @@ bool State_TownMenu::Init()
 
 void State_TownMenu::Render(TCODConsole* root)
   {
-  TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - 9, root->getHeight() / 2 - 4, 1.0f, 0.7f);
+  TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - console->getWidth() / 2, root->getHeight() / 2 - console->getHeight() / 2, 1.0f, 0.95f);;
   }
 
 void State_TownMenu::End()

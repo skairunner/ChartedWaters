@@ -11,7 +11,7 @@ using std::string;
 State_Tavern::State_Tavern(Ship& ship)
   :refToShip(ship)
   {
-  console = new TCODConsole(10, 6);
+  console = new TCODConsole(21, 9);
   }
 
 void State_Tavern::End()
@@ -42,6 +42,10 @@ void State_Tavern::KeyDown(const int &key,const int &unicode)
     nextState = new State_buyRations(refToShip);
     pushSomething = true;
     break;
+  case SDLK_f:
+    nextState = new State_recoverFatigue(refToShip);
+    pushSomething = true;
+    break;
   case SDLK_ESCAPE:
     popMe = true;
     break;
@@ -57,9 +61,11 @@ void State_Tavern::drawMenu()
 
   int line = 1;
   console->print(1, line++, "Tavern");
-  line++;
+  line+=2;
   console->print(1, line++, "%cS%cailors", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "%cR%cations", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+  console->print(1, line++, "Recover %cf%catigue", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
@@ -145,6 +151,8 @@ void State_buySailors::Update()
       else
         {
         string output = "Hired " + rightAlignNumber(result) + " sailors for " + rightAlignNumber(result * price) + " ducats.";
+        int fatigue = refToShip.fatigue * refToShip.sailors;
+               
         if (master)
           refToShip.addSailors(result, 800);
         else if (exp)
@@ -152,6 +160,9 @@ void State_buySailors::Update()
         else if (green)
           refToShip.addSailors(result, 200);
         refToShip.captain.ducats -= result * price;
+
+        refToShip.fatigue = fatigue / refToShip.sailors;
+        
         nextState = new State_Prompt(output.length()+4, 4, output, yesno);
         pushSomething = true;
         }
@@ -414,4 +425,122 @@ void State_buyRations::drawMenu()
 
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
+  }
+
+//////
+//////
+//////
+
+State_recoverFatigue::State_recoverFatigue(Ship& ship)
+  :refToShip(ship), yesno(0), getSomething(0), recover(0)
+  {
+  console = new TCODConsole(36, 10);
+  }
+
+void State_recoverFatigue::End()
+  {
+  delete console;
+  }
+
+bool State_recoverFatigue::Init()
+  {
+  drawMenu();
+  return true;
+  }
+
+void State_recoverFatigue::Update()
+  {
+  if (recover && !getSomething)
+    {
+    string msg("Recover ");
+
+    msg += rightAlignNumber(recover) + " fatigue for " + rightAlignNumber(getCost(recover)) + " ducats?";
+    nextState = new State_Prompt(msg.size()+2, 4, msg, yesno);
+    pushSomething = true;
+    getSomething = true;
+    return;
+    }
+  else if (recover && getSomething)
+    if (yesno)
+      {
+      if (refToShip.captain.ducats < getCost(recover))
+        {
+        string msg("You don't have enough money.");
+        pushSomething = true;
+        nextState = new State_Prompt(msg.size()+2, 4, msg, yesno);
+        }
+      else
+        {
+        if (refToShip.fatigue > 0)
+          {
+          refToShip.fatigue -= recover * 10;
+          refToShip.captain.ducats -= getCost(recover);
+          }
+        }    
+      }
+
+    recover = 0;
+    yesno = false;
+    getSomething = false;  
+  }
+
+void State_recoverFatigue::Render(TCODConsole* root)
+  {
+  TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - console->getWidth() / 2, root->getHeight() / 2 - console->getHeight() / 2, 1.0f, 0.98f);
+  }
+
+void State_recoverFatigue::KeyDown(const int &key,const int &unicode)
+  {
+  switch (key)
+    {
+  case SDLK_ESCAPE:
+    popMe = true;
+    break;
+  case SDLK_1:
+    recover = 1;
+    break;
+  case SDLK_2:
+    recover = 20;
+    break;
+  case SDLK_5:
+    recover = 50;
+    break;
+  default:
+    break;
+    }
+  }
+
+void State_recoverFatigue::drawMenu()
+  {
+  console->setDefaultForeground(TCODColor::white);
+  console->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
+
+  int line = 1;
+  console->print(console->getWidth()/2-8+1, line++, "Tavern: fatigue");
+  line+= 2;
+  console->print(2, line++, "Recover %c1%c fatigue -   200 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->print(2, line++, "Recover %c2%c0 fatigue - 3200 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+  console->print(2, line++, "Recover %c5%c0 fatigue - 6400 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+  console->setDefaultForeground(TCODColor(96,71,64));
+  console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
+  }
+
+int State_recoverFatigue::getCost(const int& rec)
+  {
+  switch (recover)
+      {
+    case 1:
+      return 200;
+      break;
+    case 20:
+      return 3200;
+      break;
+    case 50:
+      return 6400;
+      break;
+    default:
+      return 0;
+      break;
+      }
   }
