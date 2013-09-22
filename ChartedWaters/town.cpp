@@ -250,7 +250,7 @@ double Town::getSellPrice(const std::string& ID)
   double distance = getDistanceFromNearestSource(ID);
   distance = distance > 200 ? 200 : distance;
   distance = distance < 0 ? 0 : distance;
-  distanceMult = distance / 80 + 0.7f;
+  distanceMult = distance / 150 + 0.8f;
 
   return getPriceOf(ID) * distanceMult * produceZone * producedHere;
   }
