@@ -4,6 +4,7 @@
 #include "State_stringIn.h"
 #include "utility.h"
 #include <cmath>
+#include "town.h"
 #include "State_prompt.h"
 
 using std::string;
@@ -454,7 +455,7 @@ void State_recoverFatigue::Update()
     {
     string msg("Recover ");
 
-    msg += rightAlignNumber(recover) + " fatigue for " + rightAlignNumber(getCost(recover)) + " ducats?";
+    msg += rightAlignNumber(recover) + " fatigue for " + rightAlignNumber(Town::getCost(recover)) + " ducats?";
     nextState = new State_Prompt(msg.size()+2, 4, msg, yesno);
     pushSomething = true;
     getSomething = true;
@@ -463,19 +464,16 @@ void State_recoverFatigue::Update()
   else if (recover && getSomething)
     if (yesno)
       {
-      if (refToShip.captain.ducats < getCost(recover))
+      int result = Town::recoverFatigue(refToShip, recover);
+      if (result == twNOT_ENOUGH_MONEY)
         {
         string msg("You don't have enough money.");
         pushSomething = true;
         nextState = new State_Prompt(msg.size()+2, 4, msg, yesno);
         }
-      else
+      else if (result == twSUCCESS)
         {
-        if (refToShip.fatigue > 0)
-          {
-          refToShip.fatigue -= recover * 10;
-          refToShip.captain.ducats -= getCost(recover);
-          }
+        std::cout << "fatigue_recover_success\n";
         }    
       }
 
@@ -526,21 +524,3 @@ void State_recoverFatigue::drawMenu()
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
   }
 
-int State_recoverFatigue::getCost(const int& rec)
-  {
-  switch (recover)
-      {
-    case 1:
-      return 200;
-      break;
-    case 20:
-      return 3200;
-      break;
-    case 50:
-      return 6400;
-      break;
-    default:
-      return 0;
-      break;
-      }
-  }

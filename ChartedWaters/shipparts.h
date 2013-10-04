@@ -12,6 +12,20 @@ struct ShipPart
   std::string name;
   int price;
   std::string desc;
+  int durability;
+  };
+
+struct ShipCannons: public ShipPart
+  {
+  ShipCannons();
+  int getDamage();
+  int baseDamage;
+  int pairs;
+  int penetration;
+  int range;
+  int speed;
+  int explosion;
+  int reload;
   };
 
 struct ShipSails: public ShipPart
@@ -44,16 +58,21 @@ class ShipPartDictionary
     ShipSails getSail(const std::string& ID);
     ShipArmor getArmor(const std::string& ID);
     ShipStatue getFigurehead(const std::string& ID);
+    ShipCannons getCannons(const std::string& ID);
+
+    ShipCannons getRandomCannon();
   private:
     std::map<std::string, ShipSails> sailList;
     std::map<std::string, ShipArmor> armorList;
     std::map<std::string, ShipStatue> figureheadList;
+    std::map<std::string, ShipCannons> cannonList;
   };
 
 class JSONToShipPart
   {
   public:
     void readShipParts(ShipPartDictionary& dict);
+    void readCannons(ShipPartDictionary& dict);
   private:
     std::string slurp(const std::string& filename);
 

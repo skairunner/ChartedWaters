@@ -26,14 +26,18 @@ class State_ShipStatus : public GameState
 		virtual void MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
 
     TCODConsole* console;
+    TCODConsole* debug;
 
   private:
     int selector;
+    bool showDebug;
+    
     bool redraw;
     void redrawList();
     void invertLine(const int& line);
     void printStats(TCODConsole* con, int& line);
     void swapLineColors(TCODConsole* con, const int& line);
+    void drawDebug();
 
     Ship& refToShip;
     std::string newname;

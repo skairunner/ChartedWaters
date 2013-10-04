@@ -149,9 +149,6 @@
     <ClInclude Include="nameFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="A_star.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="json\json.h">
       <Filter>Header Files\jsoncpp</Filter>
     </ClInclude>
@@ -214,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="vector3.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="A_star.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

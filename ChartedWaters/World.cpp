@@ -222,6 +222,31 @@ void World::populateShips()
     ship.sailors = 20;
     ship.rations = 500;
     ship.captain.faction = random(0, 8);
+    // Let's arm 80% of the ships to the teeth!
+    if (rand()%10000 < 8000)
+      {
+      ShipCannons cannon_temp = ShipPartDict.getRandomCannon();
+      int cannons = ship.getMaxCannons();
+      int pairs = 8;
+      bool abort = false;
+      while (!abort)
+        {
+        if (cannons < pairs * 2)
+          pairs--;
+        else if (pairs == 0)
+          abort = true;
+        else if (ship.cannonList.size() > 5)
+          abort = true;
+        else
+          {
+          cannon_temp.pairs = pairs;
+          cannons -= pairs * 2;
+          ship.cannonList.push_back(cannon_temp);
+          }
+        }
+      }
+
+
     for (int counter = 0; counter < 5; counter++)
       ship.cityList[getRandomCityCoord()] = true;
     ship.initItemDB(cityList);

@@ -43,6 +43,7 @@ class Ship : protected ShipPrototype
     int getTotalStorageUsed(); // cannons + sailors + goods
     int getMaxStorage();
     int getMaxCannons();
+    int getCannons();
     int getMinSailors();
     int getMaxSailors();
     int getWaveResistance();
@@ -93,6 +94,7 @@ class Ship : protected ShipPrototype
     std::vector<std::pair<int,int>> path;
     std::map<int, ShipSails> sailList;
     std::map<int, ShipArmor> armorList;
+    std::vector<ShipCannons> cannonList;
     
     ShipStatue figurehead;
 

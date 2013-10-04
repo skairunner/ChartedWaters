@@ -4,7 +4,7 @@
 #include "Ship.h"
 #include <vector>
 
-enum TOWN_ERRORS {twSUCCESS = 1, twNO_SUCH_ITEM, twNOT_ENOUGH_MONEY, twNOT_ENOUGH_ITEMS};
+enum TOWN_ERRORS {twNOT_ENOUGH_MONEY = -1, twSUCCESS = 1, twNO_SUCH_ITEM, twNOT_ENOUGH_ITEMS};
 
 struct EconomyItemTuple
   {
@@ -53,6 +53,8 @@ class Town
     void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.
     void step();
     int buyRations(Ship& ship, const int& number); // actual rations added = 10 * number
+    static int recoverFatigue(Ship& ship, const int& number);
+    static int getCost(const int& amount);//for fatigue
 
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
     std::vector<AIEconomyItemTuple> returnListOfItems_AI(bool isHometown = false);

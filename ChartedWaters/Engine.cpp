@@ -68,6 +68,7 @@ bool Engine::EngineInit()
   shipparser.readShips(ShipDict);
   JSONToShipPart partparser;
   partparser.readShipParts(ShipPartDict);
+  partparser.readCannons(ShipPartDict);
 
   TheWorld = new World(width, height);
 

@@ -10,6 +10,17 @@ ShipPart::ShipPart()
   {
   ID = desc = string("null");
   price = 0;
+  durability = 0;
+  }
+
+ShipCannons::ShipCannons()
+  {
+  baseDamage = pairs = penetration = range = speed = explosion = reload = 0;
+  }
+
+int ShipCannons::getDamage()
+  {
+  return pairs * baseDamage;
   }
 
 ShipSails::ShipSails()
@@ -49,6 +60,27 @@ ShipArmor ShipPartDictionary::getArmor(const std::string& ID)
   auto it = armorList.find(ID);
   if (it == armorList.end())
     return ShipArmor();
+  return it->second;
+  }
+
+ShipCannons ShipPartDictionary::getCannons(const std::string& ID)
+  {
+  auto it = cannonList.find(ID);
+  if (it == cannonList.end())
+    return ShipCannons();
+  return it->second;
+  }
+
+ShipCannons ShipPartDictionary::getRandomCannon()
+  {
+  int size = cannonList.size();
+  int rnd = rand()%size;
+  auto it = cannonList.begin();
+  while (rnd > 0)
+    {
+    rnd--;
+    it++;
+    }
   return it->second;
   }
 
@@ -122,4 +154,45 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
       }
     counter++;
     }
-  };
+  }
+
+void JSONToShipPart::readCannons(ShipPartDictionary& dict)
+  {
+  string index;
+  Json::Value root;
+  Json::Reader reader;
+  index = slurp(string("resources/cannons.json"));
+  bool parsingSuccess = reader.parse(index, root);
+  if (!parsingSuccess)
+    {
+    cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
+    cin.ignore();
+    return;
+    }
+  int counter = 0;
+
+  while (!root[counter].isNull())
+    {
+    Json::Value shippart = root[counter];
+    string type = shippart["type"].asString();
+
+    ShipCannons cannon;
+    cannon.ID = shippart["ID"].asString();
+    cannon.name = shippart["name"].asString();
+    cannon.price = shippart["price"].asInt();
+    cannon.durability = shippart["durability"].asInt();
+    cannon.baseDamage = shippart["damage"].asInt();
+    cannon.penetration = shippart["penetration"].asInt();
+    cannon.range = shippart["max_range"].asInt();
+    cannon.speed = shippart["speed"].asInt();
+    cannon.explosion = shippart["explosion"].asInt();
+    cannon.reload = shippart["reload_speed"].asInt();
+
+    if(!shippart["desc"].isNull())
+      cannon.desc = shippart["desc"].asString();
+    dict.cannonList[cannon.ID] = cannon;
+
+
+    counter++;
+    }
+  }

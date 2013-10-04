@@ -288,9 +288,17 @@ int Ship::getMaxCannons()
   return maxcannons;
   }
 
+int Ship::getCannons()
+  {
+  int counter = 0;
+  for (auto it = cannonList.begin(); it < cannonList.end(); it++)
+    counter += it->pairs * 2;
+  return counter;
+  }
+
 int Ship::getTotalStorageUsed()
   {
-  return storage + ceil((float)rations/10.0f);
+  return storage + ceil((float)rations/10.0f) + getCannons();
   }
 
 int Ship::getMaxStorage()

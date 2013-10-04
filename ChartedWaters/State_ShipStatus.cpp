@@ -7,9 +7,10 @@
 using namespace std;
 
 State_ShipStatus::State_ShipStatus(Ship& ship)
-  : refToShip(ship), selector(5), redraw(false)
+  : refToShip(ship), selector(5), redraw(false), showDebug(false)
   {
   console = new TCODConsole(64, 46);
+  debug = new TCODConsole(64, 23);
   }
 
 State_ShipStatus::~State_ShipStatus()
@@ -74,7 +75,7 @@ void State_ShipStatus::printStats(TCODConsole* con, int& line)
   con->print(1, line++, "Type : %s", refToShip.getType().c_str()); swapLineColors(con, line);
   con->print(1, line++, "Size : %s", refToShip.getSize().c_str()); swapLineColors(con, line);
   con->print(1, line++, "Total storage: %d", refToShip.getMaxStorage()); swapLineColors(con, line);
-  con->print(1, line++, "Goods: %d/%d    Sailors: %d%c(%d)%c/%d    Cannons: %d%c/%d", refToShip.getTotalGoods(), refToShip.getMaxGoods(), refToShip.sailors, TCOD_COLCTRL_1, refToShip.getMinSailors(), TCOD_COLCTRL_STOP, refToShip.getMaxSailors(), 0, TCOD_COLCTRL_1, refToShip.getMaxCannons()); swapLineColors(con, line);
+  con->print(1, line++, "Goods: %d/%d    Sailors: %d%c(%d)%c/%d    Cannons: %d%c/%d", refToShip.getTotalGoods(), refToShip.getMaxGoods(), refToShip.sailors, TCOD_COLCTRL_1, refToShip.getMinSailors(), TCOD_COLCTRL_STOP, refToShip.getMaxSailors(), refToShip.getCannons(), TCOD_COLCTRL_1, refToShip.getMaxCannons()); swapLineColors(con, line);
   con->print(1, line++, "Lateen sails: %d    Square sails: %d", refToShip.getLateen(), refToShip.getSquare()); swapLineColors(con, line);
   con->print(1, line++, "Speed: %.1f%c/%d.0", refToShip.getSpeed(), TCOD_COLCTRL_1, refToShip.getBaseSpeed()); swapLineColors(con, line);
   con->print(1, line++, "Wave resistance: %d", refToShip.getWaveResistance()); swapLineColors(con, line);
@@ -134,6 +135,24 @@ void State_ShipStatus::redrawList()
   console->printFrame(0, 0, 64, 46, false);
   }
 
+void State_ShipStatus::drawDebug()
+  {
+  debug->clear();
+  debug->setDefaultForeground(TCODColor::white);
+  debug->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
+
+  int line = 1;
+  if (refToShip.cannonList.size() == 0)
+    debug->print(1, line++, "Nothing to show here!");
+  else
+  for each (ShipCannons cannon in refToShip.cannonList)
+    debug->print(1, line++, "%c%s%c    %d",TCOD_COLCTRL_1, cannon.name.c_str(), TCOD_COLCTRL_STOP, cannon.pairs * 2);
+
+
+  debug->setDefaultForeground(TCODColor(96,71,64));
+  debug->printFrame(0, 0, 64, 23, false);
+  }
+
 void State_ShipStatus::invertLine(const int& line)
   {
   
@@ -170,6 +189,7 @@ bool State_ShipStatus::Init()
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, 64, 46, false);*/
   redrawList();
+  drawDebug();
 
   return true;
   }
@@ -187,10 +207,13 @@ void State_ShipStatus::Render(TCODConsole *root)
     redraw = false;
     }
   TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 1, 1.0f, 0.7f);
+  if (showDebug)
+    TCODConsole::blit(debug, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 24, 1.0f, 0.78f);
   }
 void State_ShipStatus::End()
   {
   delete console;
+  delete debug;
   }
   //
 void State_ShipStatus::Resize(int new_w,int new_h){}
@@ -227,6 +250,10 @@ void State_ShipStatus::KeyDown(const int &key,const int &unicode)
      selector--;
      redraw = true;
      }
+
+   if (unicode == (int)'D')
+     showDebug = !showDebug;
+
   }
 
 void State_ShipStatus::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}

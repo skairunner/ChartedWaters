@@ -176,6 +176,39 @@ int Town::buyRations(Ship& ship, const int& number)
   return 0;
   }
 
+int Town::getCost(const int& amount)
+  {
+  switch (amount)
+      {
+    case 1:
+      return 200;
+      break;
+    case 20:
+      return 3200;
+      break;
+    case 50:
+      return 6400;
+      break;
+    default:
+      return amount * pow(0.95f, amount/20);
+      break;
+      }
+  }
+
+int Town::recoverFatigue(Ship& ship, const int& number)
+  {
+  if (number < 0)
+    return twNOT_ENOUGH_MONEY;
+  if (getCost(number) > ship.captain.ducats)
+    return twNOT_ENOUGH_MONEY;
+
+  ship.fatigue -= number * 10;
+  ship.captain.ducats -= getCost(number);
+  if (ship.fatigue < 0)
+    ship.fatigue = 0;
+  return twSUCCESS;
+  }
+
 double Town::getDistanceFromNearestSource(const std::string& ID)
   {
   auto list = ItemDict.getCitiesForItem(ID);
@@ -403,3 +436,4 @@ void Town::step()
       }
     }
   }
+
