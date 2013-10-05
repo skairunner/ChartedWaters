@@ -224,27 +224,8 @@ void World::populateShips()
     ship.captain.faction = random(0, 8);
     // Let's arm 80% of the ships to the teeth!
     if (rand()%10000 < 8000)
-      {
-      ShipCannons cannon_temp = ShipPartDict.getRandomCannon();
-      int cannons = ship.getMaxCannons();
-      int pairs = 8;
-      bool abort = false;
-      while (!abort)
-        {
-        if (cannons < pairs * 2)
-          pairs--;
-        else if (pairs == 0)
-          abort = true;
-        else if (ship.cannonList.size() > 5)
-          abort = true;
-        else
-          {
-          cannon_temp.pairs = pairs;
-          cannons -= pairs * 2;
-          ship.cannonList.push_back(cannon_temp);
-          }
-        }
-      }
+      pickCannons(ship);
+    pickArmor(ship);
 
 
     for (int counter = 0; counter < 5; counter++)
@@ -252,6 +233,58 @@ void World::populateShips()
     ship.initItemDB(cityList);
     shipList.push_back(ship);
     }
+  }
+
+void World::pickCannons(Ship& ship)
+  {
+  ShipCannons cannon_temp = ShipPartDict.getRandomCannon();
+  int cannons = ship.getMaxCannons();
+  int pairs = 8;
+  bool abort = false;
+  while (!abort)
+    {
+    if (cannons < pairs * 2)
+      pairs--;
+    else if (pairs == 0)
+      abort = true;
+    else if (ship.cannonList.size() > 5)
+      abort = true;
+    else
+      {
+      cannon_temp.pairs = pairs;
+      cannons -= pairs * 2;
+      ship.cannonList.push_back(cannon_temp);
+      }
+    }
+  }
+
+void World::pickArmor(Ship& ship)
+  {
+  double probability[3];
+  probability[0] = 0.9f;
+  probability[1] = 0.5f;
+  probability[2] = 0.2f;
+
+  int number = 0;
+  if (ship.getSize() == "small")
+    number = 1;
+  else if (ship.getSize() == "medium")
+    number = 2;
+  else if (ship.getSize() == "large")
+    number = 3;
+  int counter = 0;
+
+  while (number > 0)
+    {   
+    if (rand()%10000 < probability[counter]*10000)
+      {
+      auto armor = ShipPartDict.getRandomArmor();
+      ship.addArmor(counter, armor);
+      }
+    number--;
+    counter++;
+    }
+
   }
 
 /////

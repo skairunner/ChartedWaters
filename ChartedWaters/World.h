@@ -40,6 +40,8 @@ class World
     
     void populateCities(); // With items.
     void populateShips(); // AI ships.
+    void pickCannons(Ship& ship);
+    void pickArmor(Ship& ship);
     
     noise::module::Perlin ItemMaps; 
     std::mt19937 gen;

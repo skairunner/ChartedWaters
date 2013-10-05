@@ -143,11 +143,17 @@ void State_ShipStatus::drawDebug()
 
   int line = 1;
   if (refToShip.cannonList.size() == 0)
-    debug->print(1, line++, "Nothing to show here!");
+    debug->print(1, line++, "No cannons! o_O");
   else
   for each (ShipCannons cannon in refToShip.cannonList)
     debug->print(1, line++, "%c%s%c    %d",TCOD_COLCTRL_1, cannon.name.c_str(), TCOD_COLCTRL_STOP, cannon.pairs * 2);
 
+  line++;
+
+  if (refToShip.armorList.size() == 0)
+    debug->print(1, line++, "No armor! O_o");
+  else for each (auto it in refToShip.armorList)
+    debug->print(1, line++, "%c%s%c    %d armor", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.armor);
 
   debug->setDefaultForeground(TCODColor(96,71,64));
   debug->printFrame(0, 0, 64, 23, false);
@@ -233,7 +239,12 @@ void State_ShipStatus::RecoverFromPush()
 void State_ShipStatus::KeyDown(const int &key,const int &unicode)
   {
    if (key == SDLK_ESCAPE)
-     popMe = true;
+     {
+     if (showDebug)
+       showDebug = false;
+     else
+       popMe = true;
+     }
    else if (unicode == (int)'R')
      {
      newname.clear();

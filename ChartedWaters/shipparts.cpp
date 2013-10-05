@@ -63,6 +63,19 @@ ShipArmor ShipPartDictionary::getArmor(const std::string& ID)
   return it->second;
   }
 
+ShipArmor ShipPartDictionary::getRandomArmor()
+  {
+  int size = armorList.size();
+  int rnd = rand()%size;
+  auto it = armorList.begin();
+  while (rnd > 0)
+    {
+    rnd--;
+    it++;
+    }
+  return it->second;
+  }
+
 ShipCannons ShipPartDictionary::getCannons(const std::string& ID)
   {
   auto it = cannonList.find(ID);
@@ -134,6 +147,7 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
       ShipArmor armor;
       armor.ID = shippart["ID"].asString();
       armor.price = shippart["price"].asInt();
+      armor.name = shippart["name"].asString();
       armor.armor = shippart["armor"].asInt();
       armor.speed = shippart["speed"].asDouble();
       if(!shippart["desc"].isNull())

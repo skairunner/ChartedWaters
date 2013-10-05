@@ -391,7 +391,7 @@ int Ship::addSail(int pos, ShipSails& sail)
   }
 
 int Ship::addArmor(int pos, ShipArmor& armor)
-  {
+  {  
   auto it = armorList.find(pos);
   if (it == armorList.end())
     {
