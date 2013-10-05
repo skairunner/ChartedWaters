@@ -225,10 +225,12 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
   // Restock first.
   restock(currentTown);
   numberToBuy = (getMaxGoods() - getTotalGoods()) * 0.8f;
-  if (profitItemTuple.BuyPrice * numberToBuy > captain.ducats) // fill 80% of the left-over space with the item
-        numberToBuy = captain.ducats / profitItemTuple.BuyPrice * 0.8f;
-  currentTown.buyItems(*this, profitItemID, numberToBuy, home);
-
+  if (numberToBuy != 0)
+    {
+    if (profitItemTuple.BuyPrice * numberToBuy > captain.ducats) // fill 80% of the left-over space with the item
+      numberToBuy = captain.ducats / profitItemTuple.BuyPrice * 0.8f;
+    currentTown.buyItems(*this, profitItemID, numberToBuy, home);
+    }
   //Next, find out the second-best projected sell in this city.
   CitiesAndProfit.clear();
   double secondProfit = 0;
@@ -256,7 +258,7 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
       }
     }
 
-  if (secondProfit != 0)
+  if (secondProfit != 0 && secondProfitNumber != 0)
     {
     currentTown.buyItems(*this, secondProfitItemID, secondProfitNumber, home);
     }
