@@ -17,7 +17,13 @@ string NameFactory::getName()
   int length = dist(gen);
   for (int counter = 0; counter < length; counter++)
     {
-    if (counter != 0 && counter != length-1 && result.back() != ' ') // can't be at the beginning or end of a word, nor after a hypen/space
+    if (result.size() > 0 && result.back() == ' ')
+        {
+        string str = genSyllable();
+        str.front() -= 32;
+        result.append(str);
+        }
+    else if (counter != length-1) // can't be at the beginning or end of a word, nor after a hypen/space
       {
       int maxdist = spaceChance > maxLength +1 ? spaceChance : maxLength+1;
       std::uniform_int_distribution<> dist2(0, maxdist);
@@ -25,13 +31,14 @@ string NameFactory::getName()
         {
         result.append(" ");
         }
-      else result.append(genSyllable());
+      else 
+        result.append(genSyllable());
       }
-    else
-      result.append(genSyllable());
+    else result.append(genSyllable());
     }
+  
   return result;
-  };
+  }
 
 string NameFactory::genSyllable()
   {

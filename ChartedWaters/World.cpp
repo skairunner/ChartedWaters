@@ -219,7 +219,7 @@ void World::populateShips()
     ship.changeShip(ShipDict.getRandomMerchantShip());
     ship.setName(nameFactory.getName());
     ship.setPosition(position);
-    ship.sailors = 20;
+    ship.sailors = ship.getMinSailors();
     ship.rations = 500;
     ship.captain.faction = random(0, 8);
     // Let's arm 80% of the ships to the teeth!

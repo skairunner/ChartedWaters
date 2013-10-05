@@ -307,15 +307,10 @@ void AIShip::restock(Town& currentTown)
   {
   if (sailors < getMinSailors())
     {
-    int numberToHire = (getMinSailors() + getMaxSailors() - sailors) / 2;
+    int numberToHire = (getMinSailors() - sailors) / 2 + (getMaxSailors() - getMinSailors())/2;
     captain.ducats -= 1000 * numberToHire;
     addSailors(numberToHire, 500);
     }
-
-  if (captain.ducats < 3000)
-    captain.ducats = 3000;
-
-
 
   double rationsNeeded = getEstimatedRationsNeeded();;
   rationsNeeded *= 1.1f;
