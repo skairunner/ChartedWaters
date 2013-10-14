@@ -55,6 +55,17 @@
 		"desc": "Three jibs attached to the main mast to take advantage of sidewinds."
 	},
 	{
+		"ID": "sail_redracingstripes",
+		"type": "sail",
+		"name": "Red racing stripes",
+		"price": 10000,
+		"durability": 50,
+		"lateen": 5,
+		"square": 5,
+		"turning": 0,
+		"desc": "Red racing stripes make your ship go faster. Vroom vroom!"
+	},
+	{
 		"ID": "sail_mainstay",
 		"type": "sail",
 		"name": "Main stay sail",
