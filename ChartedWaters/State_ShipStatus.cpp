@@ -155,6 +155,13 @@ void State_ShipStatus::drawDebug()
   else for each (auto it in refToShip.armorList)
     debug->print(1, line++, "%c%s%c    %d armor", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.armor);
 
+  line++;
+
+  if (refToShip.sailList.size() == 0)
+    debug->print(1, line++, "No sails! o_o");
+  else for each (auto it in refToShip.sailList)
+    debug->print(1, line++, "%c%s%c    %dsq, %dla", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.square, it.second.lateen);
+
   debug->setDefaultForeground(TCODColor(96,71,64));
   debug->printFrame(0, 0, 64, 23, false);
   }
