@@ -6,7 +6,7 @@ using namespace std;
 
 Ship::Ship()
   : storage(0), character(127), waveResistance(6), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
-  , wrecked(false)
+  , wrecked(false), invisible (false)
   {
   captain.faction = 0;
   captain.ducats = 1000;
@@ -16,7 +16,7 @@ Ship::Ship()
 
 Ship::Ship(const ShipPrototype& prototype)
   : storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
-  , wrecked(false)
+  , wrecked(false), invisible(false)
   {
   captain.faction = 0;
   captain.ducats = 1000;
@@ -252,29 +252,32 @@ void Ship::updatePos()
 
 void Ship::step()
   {
-  starving = false;
-  sailorsDied = 0;
-  fatigue++;
-  training += 5;
-  training = training > 100 ? 100 : training;
-  rations -=  sailors;
-  if (rations < 0)
+  if (position != lastVisitedCityCoords)
     {
-    rations = 0;
-    starving = true;
-    }
-  if (starving)
-    fatigue+=100;
-  if (fatigue >= 1000)
-    {
-    fatigue = 1000;
-    sailors -= sailors * 0.1 + 0.5;
-    sailors = sailors < 0 ? 0 : sailors;
-    }
-  if (durability <= 0)
-    {
-    durability = 0;
-    wrecked = true;
+    starving = false;
+    sailorsDied = 0;
+    fatigue++;
+    training += 5;
+    training = training > 100 ? 100 : training;
+    rations -=  sailors;
+    if (rations < 0)
+      {
+      rations = 0;
+      starving = true;
+      }
+    if (starving)
+      fatigue+=100;
+    if (fatigue >= 1000)
+      {
+      fatigue = 1000;
+      sailors -= sailors * 0.1 + 0.5;
+      sailors = sailors < 0 ? 0 : sailors;
+      }
+    if (durability <= 0)
+      {
+      durability = 0;
+      wrecked = true;
+      }
     }
   }
 

@@ -84,6 +84,7 @@ class Ship : protected ShipPrototype
     int training; // divide by 10
     int durability;
     std::string lastVisitedCity;
+    std::pair<int, int> lastVisitedCityCoords;
 
     bool starving;
     bool unpaid;
@@ -97,6 +98,8 @@ class Ship : protected ShipPrototype
     std::vector<ShipCannons> cannonList;
     
     ShipStatue figurehead;
+
+    bool invisible;
 
   protected:
     double getArmorSlowing();

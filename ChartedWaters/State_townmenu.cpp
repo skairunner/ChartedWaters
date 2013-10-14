@@ -20,6 +20,7 @@ bool State_TownMenu::Init()
   if (refToShip.lastVisitedCity != refToTown.getName())
     {
     refToShip.lastVisitedCity = refToTown.getName();
+    refToShip.lastVisitedCityCoords = refToTown.myPosition;
     refToShip.fatigue = refToShip.fatigue > 50 ? refToShip.fatigue - 50 : 0;
     }
   
