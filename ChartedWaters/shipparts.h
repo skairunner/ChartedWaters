@@ -62,6 +62,7 @@ class ShipPartDictionary
 
     ShipCannons getRandomCannon();
     ShipArmor getRandomArmor();
+    ShipSails getRandomSail();
   private:
     std::map<std::string, ShipSails> sailList;
     std::map<std::string, ShipArmor> armorList;

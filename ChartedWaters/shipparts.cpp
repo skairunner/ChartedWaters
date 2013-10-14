@@ -47,6 +47,19 @@ ShipSails ShipPartDictionary::getSail(const std::string& ID)
   return it->second;
   }
 
+ShipSails ShipPartDictionary::getRandomSail()
+  {
+  int size = sailList.size();
+  int rnd = rand()%size;
+  auto it = sailList.begin();
+  while (rnd > 0)
+    {
+    rnd--;
+    it++;
+    }
+  return it->second;
+  }
+
 ShipStatue ShipPartDictionary::getFigurehead(const std::string& ID)
   {
   auto it = figureheadList.find(ID);
