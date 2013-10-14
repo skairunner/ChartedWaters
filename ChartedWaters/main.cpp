@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include "nameFactory.h"
 
+
+
+
 // dependancies: SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)
 // temporarily copied away.
 

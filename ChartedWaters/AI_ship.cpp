@@ -3,6 +3,9 @@
 #include <boost/random/uniform_int_distribution.hpp>
 #include <tuple>
 
+#pragma warning(disable: 4244)
+
+
 Town AIShip::nullTown = Town();
 
 AIShip::AIShip()
@@ -12,6 +15,12 @@ AIShip::AIShip()
   captain.ducats = 10000;
   gen.seed(rand());
   timer = random(0, 10);
+  }
+
+void AIShip::battle(AIShip& ship1, AIShip& ship2)
+  {
+  int distance = rand()%500 + 300;
+  bool fightOrFlight1, fightOrFlight2;
   }
 
 void AIShip::initItemDB(std::map<coord, Town>& world)

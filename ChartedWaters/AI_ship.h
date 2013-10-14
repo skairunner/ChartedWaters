@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Ship.h"
 #include <map>
 #include "town.h"
@@ -13,6 +15,7 @@ class AIShip : public Ship
     void think(Pather& pather, std::map<coord, Town>& cityList, Town& currentTown = nullTown);
     std::map<coord, bool> cityList;
     void initItemDB(std::map<coord, Town>& world);
+    static void battle(AIShip& ship1, AIShip& ship2);
 
   private:
     enum STATES {STATE_ERROR = -1, STATE_WAIT = 0, STATE_PLOT, STATE_RESTOCK, STATE_MOVE, STATE_STARTING_WAIT, STATE_PURCHASE, STATE_INIT, STATE_MERCHANTLOGIC,

@@ -208,7 +208,7 @@ void World::populateShips()
   for (int counter = 0; counter < 50; counter++)
 #endif
 #ifndef NDEBUG
-  for (int counter = 0; counter < 1; counter++)
+  for (int counter = 0; counter < 2; counter++)
 #endif
     {
    // auto position = getRandomCityCoord();
@@ -223,9 +223,12 @@ void World::populateShips()
     ship.rations = 500;
     ship.captain.faction = random(0, 8);
     // Let's arm 80% of the ships to the teeth!
+//#ifdef NDEBUG
     if (rand()%10000 < 8000)
+//#endif      
       pickCannons(ship);
     pickArmor(ship);
+    pickSails(ship);
 
 
     for (int counter = 0; counter < 5; counter++)
@@ -262,8 +265,8 @@ void World::pickArmor(Ship& ship)
   {
   double probability[3];
   probability[0] = 0.9f;
-  probability[1] = 0.5f;
-  probability[2] = 0.2f;
+  probability[1] = 0.8f;
+  probability[2] = 0.5f;
 
   int number = 0;
   if (ship.getSize() == "small")
@@ -285,6 +288,34 @@ void World::pickArmor(Ship& ship)
     counter++;
     }
 
+  }
+
+void World::pickSails(Ship& ship)
+  {
+  double probability[3];
+  probability[0] = 0.9f;
+  probability[1] = 0.8f;
+  probability[2] = 0.7f;
+
+  int number = 0;
+  if (ship.getSize() == "small")
+    number = 1;
+  else if (ship.getSize() == "medium")
+    number = 2;
+  else if (ship.getSize() == "large")
+    number = 3;
+  int counter = 0;
+
+  while (number > 0)
+    {   
+    if (rand()%10000 < probability[counter]*10000)
+      {
+      auto sail = ShipPartDict.getRandomSail();
+      ship.addSail(counter, sail);
+      }
+    number--;
+    counter++;
+    }
   }
 
 /////

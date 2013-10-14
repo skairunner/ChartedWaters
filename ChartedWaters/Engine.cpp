@@ -8,6 +8,7 @@
 #include "shipPrototype.h"
 #include "State_Combat.h"
 #include "State_townmenu.h"
+#include "npcCombat.h"
 
 Engine CursesEngine;
 
@@ -115,11 +116,16 @@ bool Engine::EngineInit()
   lockedShip = &(TheWorld->getPlayerShip());
   lockToShip();
 
+
   return true;
   } 
 
+
 void Engine::Update()
   {
+  // combat testing
+ 
+
   if (!newState)
     delete newState;
 
@@ -151,6 +157,25 @@ void Engine::Update()
           ZOCscreen->putCharEx(xcounter, ycounter, 219, color, color);
           }
     }
+
+
+
+  /////////////////////////////// test code
+  std::string filenameBase("outputs/output");
+  
+  for (int matchCounter = 0; matchCounter * 2 < TheWorld->shipList.size(); matchCounter++)
+    {
+    Battle bt(TheWorld->shipList[2*matchCounter], TheWorld->shipList[2 * matchCounter +1]);
+    //for(int counter = 0; counter < 50; counter++)
+    while (!bt.done)
+      bt.step();
+    bt.print(filenameBase + rightAlignNumber(matchCounter) + ".txt");
+    }
+
+  QuitEngine();
+  return;
+  /////////////////////////////// test code
+
 
   Renderer::getTooltip(tooltip, *TheWorld, mouseX, mouseY);
 

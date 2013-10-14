@@ -117,6 +117,9 @@
     <ClCompile Include="State_Combat.cpp">
       <Filter>Source Files\Combat</Filter>
     </ClCompile>
+    <ClCompile Include="npcCombat.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="A_star.h">
       <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="npcCombat.h">
+      <Filter>Header Files\Combat</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
