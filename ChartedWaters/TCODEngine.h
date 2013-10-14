@@ -35,6 +35,7 @@ public:
 	bool Init(char *name,char *ascii,int winwidth,int winheight);
 	void Start();
 	void End();
+  void QuitEngine(){quit = true;}
 	//Virtual Functions
 	virtual bool EngineInit(){return true;}
 	virtual void Update(){}
