@@ -175,14 +175,14 @@ void Battle::shootEachOther()// implied "if possible"
     {
     s2.refToShip.durability -= getDamage(s1, s2);
     if (s1.refToShip.cannonList.size() > 0)
-      s1.cannonTimer = s1.refToShip.cannonList.front().reload;
+      s1.cannonTimer = ceil(1/((double)s1.refToShip.cannonList.front().reload+2) * 20.0f);
     }
 
   if (abs(s2.distance) < s2.range && !s2.cannonTimer)
     {
     s1.refToShip.durability -= getDamage(s2, s1);
     if (s2.refToShip.cannonList.size() > 0)
-      s2.cannonTimer = s2.refToShip.cannonList.front().reload;
+       s2.cannonTimer = ceil(1/((double)s2.refToShip.cannonList.front().reload+2) * 20.0f);
     }
   }
 

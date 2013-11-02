@@ -1,16 +1,46 @@
 [
 	{
-		"ID": "cannon_howitzer",
+		"ID": "cannon_beliere",
 		"type": "normal",
-		"name": "Howitzers",
-		"price": 9100,
+		"name": "Beliere cannons",
+		"price": 3900,
 		"durability": 90,
-		"damage": 44,
-		"penetration": 17,
-		"max_range": 400,
-		"min_range": 200,
-		"speed": 4,
-		"explosion": 4,
+		"damage": 54,
+		"penetration": 22,
+		"max_range": 520,
+		"min_range": 260,
+		"speed": 7,
+		"explosion": 2,
+		"reload_speed": 3
+
+	},
+	{
+		"ID": "cannon_carronade",
+		"type": "normal",
+		"name": "Carronades",
+		"price": 7250,
+		"durability": 90,
+		"damage": 64,
+		"penetration": 27,
+		"max_range": 340,
+		"min_range": 170,
+		"speed": 9,
+		"explosion": 3,
+		"reload_speed": 4
+
+	},
+	{
+		"ID": "cannon_culverin",
+		"type": "normal",
+		"name": "Culverins",
+		"price": 27260,
+		"durability": 90,
+		"damage": 34,
+		"penetration": 12,
+		"max_range": 600,
+		"min_range": 300,
+		"speed": 6,
+		"explosion": 2,
 		"reload_speed": 3
 
 	},
@@ -45,6 +75,111 @@
 
 	},
 	{
+		"ID": "cannon_falcon",
+		"type": "normal",
+		"name": "Falcon cannons",
+		"price": 1000,
+		"durability": 90,
+		"damage": 30,
+		"penetration": 10,
+		"max_range": 360,
+		"min_range": 180,
+		"speed": 8,
+		"explosion": 1,
+		"reload_speed": 6
+
+	},
+	{
+		"ID": "cannon_howitzer",
+		"type": "normal",
+		"name": "Howitzers",
+		"price": 9100,
+		"durability": 90,
+		"damage": 44,
+		"penetration": 17,
+		"max_range": 400,
+		"min_range": 200,
+		"speed": 4,
+		"explosion": 4,
+		"reload_speed": 3
+
+	},
+	{
+		"ID": "cannon_huge",
+		"type": "normal",
+		"name": "old Titans",
+		"price": 9650,
+		"durability": 80,
+		"damage": 86,
+		"penetration": 38,
+		"max_range": 280,
+		"min_range": 140,
+		"speed": 8,
+		"explosion": 2,
+		"reload_speed": 1
+
+	},
+	{
+		"ID": "cannon_titans_speed",
+		"type": "normal ",
+		"name": "Titans_reload",
+		"price": 9650,
+		"durability": 80,
+		"damage": 86,
+		"penetration": 38,
+		"max_range": 280,
+		"min_range": 140,
+		"speed": 8,
+		"explosion": 2,
+		"reload_speed": 3
+
+	},
+	{
+		"ID": "cannon_titans_DMG",
+		"type": "normal ",
+		"name": "Titans_DMG",
+		"price": 9650,
+		"durability": 80,
+		"damage": 120,
+		"penetration": 38,
+		"max_range": 280,
+		"min_range": 140,
+		"speed": 8,
+		"explosion": 2,
+		"reload_speed": 1
+
+	},
+	{
+		"ID": "cannon_titans_both",
+		"type": "normal",
+		"name": "Titans_both",
+		"price": 9650,
+		"durability": 80,
+		"damage": 120,
+		"penetration": 38,
+		"max_range": 280,
+		"min_range": 140,
+		"speed": 8,
+		"explosion": 2,
+		"reload_speed": 3
+
+	},
+	{
+		"ID": "cannon_hyperion",
+		"type": "normal",
+		"name": "Hyperion cannons",
+		"price": 4600,
+		"durability": 90,
+		"damage": 57,
+		"penetration": 24,
+		"max_range": 520,
+		"min_range": 260,
+		"speed": 8,
+		"explosion": 1,
+		"reload_speed": 3
+
+	},
+	{
 		"ID": "cannon_minion",
 		"type": "normal",
 		"name": "Minions",
@@ -57,51 +192,6 @@
 		"speed": 7,
 		"explosion": 1,
 		"reload_speed": 5
-
-	},
-	{
-		"ID": "cannon_rapidfire",
-		"type": "normal",
-		"name": "Rapidfire cannons",
-		"price": 4900,
-		"durability": 90,
-		"damage": 50,
-		"penetration": 20,
-		"max_range": 280,
-		"min_range": 140,
-		"speed": 7,
-		"explosion": 2,
-		"reload_speed": 8
-
-	},
-	{
-		"ID": "cannon_beliere",
-		"type": "normal",
-		"name": "Beliere cannons",
-		"price": 3900,
-		"durability": 90,
-		"damage": 54,
-		"penetration": 22,
-		"max_range": 520,
-		"min_range": 260,
-		"speed": 7,
-		"explosion": 2,
-		"reload_speed": 3
-
-	},
-	{
-		"ID": "cannon_carronade",
-		"type": "normal",
-		"name": "Carronades",
-		"price": 7250,
-		"durability": 90,
-		"damage": 64,
-		"penetration": 27,
-		"max_range": 340,
-		"min_range": 170,
-		"speed": 9,
-		"explosion": 3,
-		"reload_speed": 4
 
 	},
 	{
@@ -120,78 +210,33 @@
 
 	},
 	{
-		"ID": "cannon_huge",
+		"ID": "cannon_rapidfire",
 		"type": "normal",
-		"name": "Titans",
-		"price": 9650,
-		"durability": 80,
-		"damage": 86,
-		"penetration": 38,
+		"name": "Rapidfire cannons",
+		"price": 4900,
+		"durability": 90,
+		"damage": 50,
+		"penetration": 20,
 		"max_range": 280,
 		"min_range": 140,
-		"speed": 8,
+		"speed": 7,
 		"explosion": 2,
-		"reload_speed": 1
+		"reload_speed": 8
 
 	},
 	{
-		"ID": "cannon_culverin",
+		"ID": "cannon_rapidfire",
 		"type": "normal",
-		"name": "Culverins",
-		"price": 27260,
+		"name": "Rapidfire cannons",
+		"price": 4900,
 		"durability": 90,
-		"damage": 34,
-		"penetration": 12,
-		"max_range": 600,
-		"min_range": 300,
-		"speed": 6,
+		"damage": 50,
+		"penetration": 20,
+		"max_range": 280,
+		"min_range": 140,
+		"speed": 7,
 		"explosion": 2,
-		"reload_speed": 3
-
-	},
-	{
-		"ID": "cannon_falcon",
-		"type": "normal",
-		"name": "Falcon cannons",
-		"price": 1000,
-		"durability": 90,
-		"damage": 30,
-		"penetration": 10,
-		"max_range": 360,
-		"min_range": 180,
-		"speed": 8,
-		"explosion": 1,
-		"reload_speed": 6
-
-	},
-	{
-		"ID": "cannon_hyperion",
-		"type": "normal",
-		"name": "Hyperion cannons",
-		"price": 4600,
-		"durability": 90,
-		"damage": 57,
-		"penetration": 24,
-		"max_range": 520,
-		"min_range": 260,
-		"speed": 8,
-		"explosion": 1,
-		"reload_speed": 3
-
-	},
-	{
-		"ID": "cannon_hyperion",
-		"type": "normal",
-		"name": "Hyperion cannons",
-		"price": 4600,
-		"durability": 90,
-		"damage": 57,
-		"penetration": 24,
-		"max_range": 520,
-		"min_range": 260,
-		"speed": 8,
-		"explosion": 1,
-		"reload_speed": 3
+		"reload_speed": 8
 
 	}
 ]
