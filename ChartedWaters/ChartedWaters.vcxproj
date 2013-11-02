@@ -87,12 +87,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="cannon_win_rates.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="entitymap.cpp" />
     <ClCompile Include="goods.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="npcCombat.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="shipparts.cpp" />
     <ClCompile Include="shipPrototype.cpp" />
     <ClCompile Include="State_Combat.cpp" />
@@ -101,6 +103,8 @@
     <ClCompile Include="nameFactory.cpp" />
     <ClCompile Include="Ship.cpp" />
     <ClCompile Include="State_prompt.cpp" />
+    <ClCompile Include="State_shipPartInventory.cpp" />
+    <ClCompile Include="State_shipPartShop.cpp" />
     <ClCompile Include="State_ShipStatus.cpp" />
     <ClCompile Include="State_shop.cpp" />
     <ClCompile Include="State_stringIn.cpp" />
@@ -122,6 +126,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="cannon_win_rates.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="entitymap.h" />
     <ClInclude Include="GameState.h" />
@@ -138,7 +143,9 @@
     <ClInclude Include="State_MainGame.h" />
     <ClInclude Include="nameFactory.h" />
     <ClInclude Include="Ship.h" />
+    <ClInclude Include="State_shipPartInventory.h" />
     <ClInclude Include="State_prompt.h" />
+    <ClInclude Include="State_shipPartShop.h" />
     <ClInclude Include="State_ShipStatus.h" />
     <ClInclude Include="State_shop.h" />
     <ClInclude Include="State_stringIn.h" />

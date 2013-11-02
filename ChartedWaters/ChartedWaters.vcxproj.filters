@@ -120,6 +120,18 @@
     <ClCompile Include="npcCombat.cpp">
       <Filter>Source Files\Combat</Filter>
     </ClCompile>
+    <ClCompile Include="cannon_win_rates.cpp">
+      <Filter>Source Files\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="State_shipPartShop.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State_shipPartInventory.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCODEngine.h">
@@ -220,6 +232,15 @@
     </ClInclude>
     <ClInclude Include="npcCombat.h">
       <Filter>Header Files\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="cannon_win_rates.h">
+      <Filter>Header Files\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="State_shipPartShop.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="State_shipPartInventory.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

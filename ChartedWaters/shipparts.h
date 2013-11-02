@@ -8,6 +8,10 @@ class JSONToShipPart;
 struct ShipPart
   {
   ShipPart();
+  virtual std::string type();
+  virtual std::string shopName();
+  virtual int shopPrice();
+
   std::string ID;
   std::string name;
   int price;
@@ -18,6 +22,12 @@ struct ShipPart
 struct ShipCannons: public ShipPart
   {
   ShipCannons();
+  ShipCannons(ShipCannons& sc, int numPairs);
+
+  std::string type();
+  std::string shopName();
+  int shopPrice();
+
   int getDamage();
   int baseDamage;
   int pairs;
@@ -31,6 +41,9 @@ struct ShipCannons: public ShipPart
 struct ShipSails: public ShipPart
   {
   ShipSails();
+
+  std::string type();
+
   int lateen;
   int square;
   int turning;
@@ -39,6 +52,9 @@ struct ShipSails: public ShipPart
 struct ShipArmor: public ShipPart
   {
   ShipArmor();
+
+  std::string type();
+
   int armor;
   double speed;
   };
@@ -46,6 +62,9 @@ struct ShipArmor: public ShipPart
 struct ShipStatue: public ShipPart
   {
   ShipStatue();
+
+  std::string type();
+
   int protection; // from events
   int healing; // fatigue
   int dodging; //cannons
@@ -59,6 +78,7 @@ class ShipPartDictionary
     ShipArmor getArmor(const std::string& ID);
     ShipStatue getFigurehead(const std::string& ID);
     ShipCannons getCannons(const std::string& ID);
+    std::vector<std::string> getCannonList();
 
     ShipCannons getRandomCannon();
     ShipArmor getRandomArmor();

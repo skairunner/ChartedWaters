@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <cmath>
 
+#pragma warning(disable : 4996)
+#pragma warning(disable : 4244)
+
 using namespace std;
 
 Ship::Ship()

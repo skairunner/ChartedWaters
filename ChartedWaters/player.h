@@ -9,7 +9,13 @@ class Player
     std::string name;
     int ducats;
     int faction;
-    std::map<int, ShipSails> sailInventory;
-    std::map<int, ShipArmor> armorInventory;
-    std::map<int, ShipStatue> figureheadInventory;
+    void addPart(ShipSails part);
+    void addPart(ShipArmor part);
+    void addPart(ShipStatue part);
+    void addPart(ShipCannons part);
+
+    std::vector<ShipSails> sailInventory;
+    std::vector<ShipArmor> armorInventory;
+    std::vector<ShipStatue> figureheadInventory;
+    std::vector<ShipCannons> cannonInventory;
   };

@@ -44,6 +44,7 @@ class Town
 
   public:
     Town();
+    ~Town();
     Town(const std::string& newName, const double& tax, const int& ffaction = 0);
     std::string getName();
     int buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false); // if numberOf = -1, buy all items possible with the money.
@@ -76,4 +77,5 @@ class Town
     std::pair<int, int> myPosition;
     std::vector<std::string> spawnList;
     std::vector<ShipPrototype> shipList;
+    std::vector<ShipPart*> partList;
   };

@@ -27,13 +27,14 @@ class GameState
 		virtual void MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
 	};
 
-/* Prototype
+/* template
+
 virtual bool Init(){return true;}
 
 		virtual void Update(){}
 		virtual void Render(TCODConsole *root){}
 		virtual void End(){}
-    virtual void RecoverFromPush() {if (!nextState) delete nextState; pushSomething = false;}
+    
 		//
 		virtual void Resize(int new_w,int new_h){}
 		virtual void WindowActive(){}

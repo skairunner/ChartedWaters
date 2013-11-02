@@ -13,14 +13,69 @@ ShipPart::ShipPart()
   durability = 0;
   }
 
+std::string ShipPart::shopName()
+  {
+  return name;
+  }
+
+int ShipPart::shopPrice()
+  {
+  return price;
+  }
+
 ShipCannons::ShipCannons()
   {
   baseDamage = pairs = penetration = range = speed = explosion = reload = 0;
   }
 
+ShipCannons::ShipCannons(ShipCannons& sc, int numPairs)
+  {
+  *this = ShipCannons(sc);
+  pairs = numPairs;
+  }
+
+std::string ShipCannons::shopName()
+  {
+  if (pairs == 0)
+    return name;
+  return rightAlignNumber(pairs*2) + " " + name;
+  }
+
+int ShipCannons::shopPrice()
+  {
+  if (pairs == 0)
+    return price;
+  return price * pairs;
+  }
+
 int ShipCannons::getDamage()
   {
   return pairs * baseDamage;
+  }
+
+std::string ShipPart::type()
+  {
+  return string("base");
+  }
+
+std::string ShipCannons::type()
+  {
+  return string("cannon");
+  }
+
+std::string ShipArmor::type()
+  {
+  return string("armor");
+  }
+
+std::string ShipSails::type()
+  {
+  return string("sails");
+  }
+
+std::string ShipStatue::type()
+  {
+  return string("statue");
   }
 
 ShipSails::ShipSails()
@@ -97,6 +152,16 @@ ShipCannons ShipPartDictionary::getCannons(const std::string& ID)
   return it->second;
   }
 
+std::vector<std::string> ShipPartDictionary::getCannonList()
+  {
+  std::vector<std::string> list;
+
+  for(auto it = cannonList.begin(); it != cannonList.end(); it++)
+    list.push_back(it->second.ID);
+
+  return list;
+  }
+
 ShipCannons ShipPartDictionary::getRandomCannon()
   {
   int size = cannonList.size();
@@ -142,6 +207,7 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
     {
     Json::Value shippart = root[counter];
     string type = shippart["type"].asString();
+
     if (type == string("sail"))
       {
       ShipSails sails;
@@ -161,6 +227,7 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
       armor.ID = shippart["ID"].asString();
       armor.price = shippart["price"].asInt();
       armor.name = shippart["name"].asString();
+      armor.durability = shippart["durability"].asInt();
       armor.armor = shippart["armor"].asInt();
       armor.speed = shippart["speed"].asDouble();
       if(!shippart["desc"].isNull())
@@ -171,6 +238,8 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
       {
       ShipStatue statue;
       statue.ID = shippart["ID"].asString();
+      statue.name = shippart["name"].asString();
+      statue.durability = shippart["durability"].asInt();
       statue.price = shippart["price"].asInt();
       statue.protection = shippart["protection"].asInt();
       statue.healing = shippart["healing"].asInt();

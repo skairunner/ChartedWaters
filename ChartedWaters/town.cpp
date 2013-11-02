@@ -21,6 +21,15 @@ Town::Town(const std::string& newName, const double& tax, const int& ffaction)
   spawncounter = rand()%30 + 1;
   }
 
+Town::~Town()
+  {
+  for each (ShipPart* part in partList)    
+    if (!part)
+      delete part;
+    
+  partList.clear();
+  }
+
 string Town::getName()
   {
   return TownName;

@@ -139,6 +139,15 @@ void World::populateCities()
       it->second.shipList.push_back(ShipDict.getRandomShip());
       }
 
+    // Add parts. Testing: one of each type
+    it->second.partList.push_back(new ShipArmor(ShipPartDict.getArmor("plate_reinforcedrosewood")));
+    it->second.partList.push_back(new ShipSails(ShipPartDict.getSail("sail_redracingstripes")));
+    it->second.partList.push_back(new ShipStatue(ShipPartDict.getFigurehead("statue_remalle")));
+    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 8));
+    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 2));
+    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 16));
+    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 64));
+
     // First, Food.
     double food = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 1.5);
     double indust = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 3.5);
@@ -208,7 +217,7 @@ void World::populateShips()
   for (int counter = 0; counter < 50; counter++)
 #endif
 #ifndef NDEBUG
-  for (int counter = 0; counter < 2; counter++)
+  for (int counter = 0; counter < 1; counter++)
 #endif
     {
    // auto position = getRandomCityCoord();

@@ -9,6 +9,7 @@
 #include "State_Combat.h"
 #include "State_townmenu.h"
 #include "npcCombat.h"
+#include "State_shipPartInventory.h"
 
 Engine CursesEngine;
 
@@ -157,25 +158,6 @@ void Engine::Update()
           ZOCscreen->putCharEx(xcounter, ycounter, 219, color, color);
           }
     }
-
-
-
-  /////////////////////////////// test code
-  std::string filenameBase("outputs/output");
-  
-  for (int matchCounter = 0; matchCounter * 2 < TheWorld->shipList.size(); matchCounter++)
-    {
-    Battle bt(TheWorld->shipList[2*matchCounter], TheWorld->shipList[2 * matchCounter +1]);
-    //for(int counter = 0; counter < 50; counter++)
-    while (!bt.done)
-      bt.step();
-    bt.print(filenameBase + rightAlignNumber(matchCounter) + ".txt");
-    }
-
-  QuitEngine();
-  return;
-  /////////////////////////////// test code
-
 
   Renderer::getTooltip(tooltip, *TheWorld, mouseX, mouseY);
 
@@ -328,20 +310,25 @@ void Engine::KeyDown(const int &key,const int &unicode)
     {
   case '>':
     pressedArrow = true;
-    break;
-
-  case 'S':
-    newState = new State_ShipStatus(TheWorld->getPlayerShip());
-    PushState(newState);
-    break;
+    break; 
 
   case '.':
     pressedPeriod = true;
     break;
 
-  case 'T': 
-    testsail = ShipPartDict.getSail(string("sail_maintoproyal"));
-    TheWorld->getPlayerShip().addSail(0, testsail);
+  case 'i':
+    newState = new State_shipPartInventory(TheWorld->getPlayerShip());
+    PushState(newState);
+    break;
+
+  case 'R': //Test button to spawn items in shops.
+    for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)
+      it->second.spawnItems();
+    break;
+
+  case 'S':
+    newState = new State_ShipStatus(TheWorld->getPlayerShip());
+    PushState(newState);
     break;
 
   case 's': // Check for shop.
@@ -351,6 +338,11 @@ void Engine::KeyDown(const int &key,const int &unicode)
       newState = new State_TownMenu(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
       PushState(newState);
       }
+    break;  
+
+  case 'T': 
+    testsail = ShipPartDict.getSail(string("sail_maintoproyal"));
+    TheWorld->getPlayerShip().addSail(0, testsail);
     break;
 
   case 'Y':
@@ -364,11 +356,6 @@ void Engine::KeyDown(const int &key,const int &unicode)
       }
     
     lockedToShip = !lockedToShip;
-    break;
-
-  case 'R': //Test button to spawn items in shops.
-    for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)
-      it->second.spawnItems();
     break;
 
   default: break;

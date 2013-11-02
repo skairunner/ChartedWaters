@@ -2,9 +2,9 @@
 #include "Engine.h"
 #include <time.h>
 #include <cstdlib>
-#include "nameFactory.h"
 
-
+//#include "cannon_win_rates.h"
+#include <fstream>
 
 
 // dependancies: SDL.lib;SDLmain.lib;libtcod-VS.lib;libtcod-gui-VS.lib;%(AdditionalDependencies)
@@ -23,13 +23,16 @@ int main(int argc,char *argv[])
   {  
   srand(time(0));
 
- /* KoreanNameFactory nf(rand());
-  for (int counter = 0; counter < 30; counter++)
-    {
-    cout << nf.getName() << "\n";
-    }
+ /* WinRateSimulation wrs;
 
-  cin.ignore(1);
+  string result = wrs.print
+  cout << result;
+  fstream file;
+  file.open("outputs/winrates.txt", ios::trunc | ios::out);
+  file << result;
+  file.close();
+
+  cin.ignore();
   return 0;*/
 
   CursesEngine.Init("Chartered Waters","resources/asciisquare.bmp",100,50);
