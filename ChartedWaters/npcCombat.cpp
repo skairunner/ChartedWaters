@@ -57,7 +57,7 @@ void ShipCounter::seek()
   int stopping = 0;
 
   if (acceleration != 0)
-    stopping = abs(0.5 * velocity * velocity / acceleration);
+    stopping = (int)abs(0.5 * velocity * velocity / acceleration);
   else if (velocity == 0)
     stopping = 0;
 
@@ -166,7 +166,7 @@ int Battle::getDamage(ShipCounter& sc1, ShipCounter& sc2)
 
   double damage = 50.0f / (armor+50) * rawDamage;
 
-  return damage;
+  return (int)damage;
   }
 
 void Battle::shootEachOther()// implied "if possible"
@@ -207,7 +207,7 @@ void Battle::print(std::string filename)
     file << " \"" << s2.refToShip.cannonList.front().name << "\"";
   file << " cannon damage:" << s2.damage << "(" << s2.range << ")\n";
 
-  for (int i = 0; i < s1.history.size(); i++)
+  for (size_t i = 0; i < s1.history.size(); i++)
     {
     file << s1.history[i] << "\t" << s2.history[i] << "\t" << s1.HPHistory[i] << "\t" << s2.HPHistory[i] << "\n";
     }

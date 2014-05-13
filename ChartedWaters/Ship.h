@@ -100,7 +100,6 @@ class Ship : protected ShipPrototype
     ShipStatue figurehead;
 
     bool invisible;
-
   protected:
     double getArmorSlowing();
     bool removeFromList(const std::string& itemID);

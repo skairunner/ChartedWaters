@@ -277,7 +277,7 @@ vector<coord> Pather::path(const coord& starting, const coord& destination, cons
     neighbors = map.findNeighborList(current.position);
     for (auto it = neighbors.begin(); it < neighbors.end(); it++)
       {
-      double tentative_g = current.g_score + costTo(it->xy, waveResistance);
+      double tentative_g = current.g_score + costTo(it->xy, (int)waveResistance);
       // if it's in the closedset, AND (since it exists there should be a value) the existing value is cheaper.
       node neighborInClosedSet;
       bool existsInClosedSet = heapmap.isInClosedset(it->xy);

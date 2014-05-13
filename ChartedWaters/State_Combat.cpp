@@ -383,7 +383,7 @@ void State_Combat::Update()
       }
 
     shipconsole->putCharEx(player.localPosition.first, player.localPosition.second, player.refToShip.character, Renderer::findFactionColor(player.refToShip.captain.faction), TCODColor::black);
-    TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)player.localPosition.first - player.testrange.maxrange, (int)player.localPosition.second - player.testrange.maxrange, 1.0f, 1.0f);
+    TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
 
     for (auto it = shipList.begin(); it < shipList.end(); it++)
       {

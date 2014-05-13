@@ -1,0 +1,9 @@
+*.psess
+ascii-paint-bpio/*
+cloc.exe
+ipch/*
+pathfinding, main screen.txt
+ChartedWaters/Release/*
+dirent.h
+*.suo
+*.sdf

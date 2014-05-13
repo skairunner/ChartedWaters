@@ -21,7 +21,7 @@ ostream& operator<<(ostream& o, vector<string> right)
 
 int main(int argc,char *argv[])
   {  
-  srand(time(0));
+  srand((unsigned int)time(0));
 
  /* WinRateSimulation wrs;
 

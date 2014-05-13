@@ -24,7 +24,7 @@ void ASCIIImage::setAngle(const double& val)
 PieSlice::PieSlice(const double& r)
   : arcAngle(pi/2), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
   {
-  image = new TCODConsole(2 * r + 1, 2 * r + 1);
+  image = new TCODConsole((int)(2 * r) + 1, (int)(2 * r) + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
   color = TCODColor::lighterBlue;
@@ -34,7 +34,7 @@ PieSlice::PieSlice(const double& r)
 PieSlice::PieSlice(const double& r, const double& angle)
   : arcAngle(angle), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
   {
-  image = new TCODConsole(2 * r + 1 , 2 * r + 1);
+  image = new TCODConsole((int)(2 * r) + 1, (int)(2 * r) + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
   color = TCODColor::lighterBlue;
@@ -44,7 +44,7 @@ PieSlice::PieSlice(const double& r, const double& angle)
 PieSlice::PieSlice(const double& minR, const double& maxR, const double& angle)
   : arcAngle(angle), maxrange(maxR), minrange(minR), direction(maxR, maxR, 0, maxR, 0, 0)
   {
-  image = new TCODConsole(2 * maxR + 1 , 2 * maxR + 1);
+  image = new TCODConsole((int)(2 * maxR) + 1 , (int)(2 * maxR) + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
   color = TCODColor::lighterBlue;

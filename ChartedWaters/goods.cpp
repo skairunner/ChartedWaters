@@ -379,9 +379,9 @@ EconomyItem::EconomyItem()
 void EconomyItem::decayDemand()
   {
   if (demand > supply)
-    demand *= 1 - decayRatePositive;
+    demand = (int)(demand * (1 - decayRatePositive));
   else if (demand < supply)
-    demand *= 1 + decayRateNegative;
+      demand = (int)(demand * (1 + decayRatePositive));
   }
 
 int EconomyItem::getPrice()
@@ -392,7 +392,7 @@ int EconomyItem::getPrice()
   const double PRICE_RANGE = 1.0f;
   double adjustedDemand = (1500 + 500 * 0.5 * log(getSupply() / (double)demand)) / 3.0f;
   double multiplier = VERTICAL_SHIFT + PRICE_RANGE / (1 + exp(HORIZONTAL_SCALE * (adjustedDemand - HORIZONTAL_SHIFT)));
-  return multiplier * basePrice;
+  return (int)(multiplier * basePrice);
   }
 
 int EconomyItem::howMany()

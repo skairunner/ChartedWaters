@@ -93,6 +93,7 @@
     <ClCompile Include="cannon_win_rates.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="entitymap.cpp" />
+    <ClCompile Include="Fleet.cpp" />
     <ClCompile Include="goods.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="main.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="dirent.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="entitymap.h" />
+    <ClInclude Include="Fleet.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="goods.h" />
     <ClInclude Include="json\json-forwards.h" />
