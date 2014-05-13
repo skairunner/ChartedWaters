@@ -38,7 +38,7 @@ string State_ShipStatus::assembleOutput(const LedgerItemTuple& tuple)
 
   returnval += tuple.ItemName.substr(0, 30);
   if(tuple.ItemName.size() < 30)
-    for (int counter = 0; counter < 30 - tuple.ItemName.size(); counter++)
+    for (size_t counter = 0; counter < 30 - tuple.ItemName.size(); counter++)
       returnval += blank;
 
   returnval += blank;
@@ -48,7 +48,7 @@ string State_ShipStatus::assembleOutput(const LedgerItemTuple& tuple)
   else returnval += tuple.averagePurchasePrice.substr(0, 5);
 
   if (tuple.averagePurchasePrice.size() < 5)
-    for (int counter = 0; counter < 5 - tuple.averagePurchasePrice.size(); counter++)
+    for (size_t counter = 0; counter < 5 - tuple.averagePurchasePrice.size(); counter++)
       returnval += blank;
   
   returnval += string(" x");
@@ -185,7 +185,8 @@ bool State_ShipStatus::Init()
   console->print(1, line++, (string("The ") + refToShip.getName()).c_str());
   console->print(1, line++, (to_string((long double)refToShip.getMoney()) + string(" ducats")).c_str());
   console->print(1, line++, (string("Storage: ") + to_string((long double)refToShip.getTotalStorageUsed()) + string("/") +
-                             to_string((long double)refToShip.getMaxStorage())).c_str());
+                             to_string(
+refToShip.getMaxStorage())).c_str());
   line++; // skip a line
   auto list = refToShip.returnListOfItems();
   /// 

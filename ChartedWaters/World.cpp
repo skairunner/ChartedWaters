@@ -157,7 +157,7 @@ void World::populateCities()
 
     population += 2;
     population = (int)(100 * abs(population));
-    it->second.population = population;
+    it->second.population = (int)population;
 
     food += 2; // bump into positive.
     other += 2;

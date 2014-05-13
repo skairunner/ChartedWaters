@@ -3,7 +3,7 @@
 #include "Ship.h"
 #include <map>
 #include "town.h"
-#include <boost/random/mersenne_twister.hpp>
+#include <random>
 #include "A_star.h"
 
 typedef std::pair<int, int> coord;
@@ -20,7 +20,7 @@ class AIShip : public Ship
   private:
     enum STATES {STATE_ERROR = -1, STATE_WAIT = 0, STATE_PLOT, STATE_RESTOCK, STATE_MOVE, STATE_STARTING_WAIT, STATE_PURCHASE, STATE_INIT, STATE_MERCHANTLOGIC,
                  STATE_SELL};
-    boost::random::mt19937 gen;
+    std::mt19937 gen;
 
     int random(const int& min, const int& max);
     void wait();
@@ -35,7 +35,7 @@ class AIShip : public Ship
 
     void updateDB(Town& town);
     void initUpdateDB(Town& town);
-    
+
     std::map<std::string, MemoryItem> ItemDB;
     std::vector<std::string> masterItemList;
     MemoryItem& getItemFromDB(std::string& ID);

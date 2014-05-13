@@ -70,7 +70,7 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
 
   returnval += string("   ");
 
-  string sellprice = to_string((long double)refToTown.getSellPrice(tuple.itemID) * (1.0f - refToTown.getTaxRate(isHometown)));
+  string sellprice = to_string(refToTown.getSellPrice(tuple.itemID) * (1.0f - refToTown.getTaxRate(isHometown)));
 
   //returnval += string("~") + sellprice;
   
@@ -172,8 +172,8 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
 
   consoleLeft->print(1, line++, (string("The ") + refToShip.getName()).c_str());
   consoleLeft->print(1, line++, (rightAlignNumber(refToShip.getMoney()) + string(" ducats")).c_str());
-  consoleLeft->print(1, line++, ("Storage " + to_string((long double)refToShip.getTotalGoods()) + "/" +
-                             to_string((long double)refToShip.getMaxGoods())).c_str());
+  consoleLeft->print(1, line++, ("Storage " + to_string(refToShip.getTotalGoods()) + "/" +
+                             to_string(refToShip.getMaxGoods())).c_str());
   line++; // skip a line
   inventory = refToShip.returnListOfItems();
   /// 
@@ -283,7 +283,7 @@ void State_Shop::Update()
 
         int total = numberToTrade * refToTown.getBuyPrice(itemIDToTrade) * (double)(1 + refToTown.getTaxRate());
         
-        string print = string("Really buy ") + to_string((long double)numberToTrade) + " " + itemName + " for " + to_string((long double)total) + " ducats?";
+        string print = string("Really buy ") + to_string(numberToTrade) + " " + itemName + " for " + to_string(total) + " ducats?";
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
         pushSomething = true;
 
@@ -320,7 +320,7 @@ void State_Shop::Update()
       switch (errors)
         {
       case twSUCCESS:
-        print = string("Successfully bought ") + to_string((long double)numberToTrade) + " " + ItemDict.findItemName(refToTown.lastTransactionItemID) + " for " + to_string((long double)refToTown.lastTransaction) + " ducats.";
+        print = string("Successfully bought ") + to_string(numberToTrade) + " " + ItemDict.findItemName(refToTown.lastTransactionItemID) + " for " + to_string(refToTown.lastTransaction) + " ducats.";
         nextState = new State_Prompt(print.size()+4, 4, print, throwawayBool);
         pushSomething = true;
         redrawLeft();
@@ -367,7 +367,7 @@ void State_Shop::Update()
 
         int total = numberToTrade * refToTown.getSellPrice(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
         
-        string print = string("Really sell ") + to_string((long double)numberToTrade) + string(" ") + itemName + string(" for ") + to_string((long double)total) + string(" ducats?");
+        string print = string("Really sell ") + to_string(numberToTrade) + string(" ") + itemName + string(" for ") + to_string(total) + string(" ducats?");
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
         pushSomething = true;
 
@@ -418,9 +418,9 @@ void State_Shop::Update()
       switch (errors)
         {
       case twSUCCESS:
-        print = string("Successfully sold ") + to_string((long double)numberToTrade) + string(" ") + ItemDict.findItemName(refToTown.lastTransactionItemID) + string(" for ") + to_string((long double)refToTown.lastTransaction) + string(" ducats.");
+        print = string("Successfully sold ") + to_string(numberToTrade) + string(" ") + ItemDict.findItemName(refToTown.lastTransactionItemID) + string(" for ") + to_string(refToTown.lastTransaction) + string(" ducats.");
         length = print.size();
-        print += string("\nNet profit: ") + to_string((long double)(refToTown.lastTransaction - refToTown.unitPurchasePriceOfSell * refToTown.numberOfLastTransaction)) + string(" ducats.");
+        print += string("\nNet profit: ") + to_string((refToTown.lastTransaction - refToTown.unitPurchasePriceOfSell * refToTown.numberOfLastTransaction)) + string(" ducats.");
         nextState = new State_Prompt(length+4, 5, print, throwawayBool);
         pushSomething = true;
         redrawLeft();

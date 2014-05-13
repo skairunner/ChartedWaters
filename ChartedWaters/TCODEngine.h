@@ -5,7 +5,7 @@
 #include <SDL_rwops.h>
 #include <stdio.h>
 #include <vector>
-#include <dirent.h>
+#include "dirent.h"
 #include <libtcod.hpp>
 #include <fstream>
 

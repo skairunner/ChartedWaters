@@ -7,8 +7,6 @@
 #include <string>
 #include <iostream>
 
-#pragma warning(disable: 4244)
-
 using namespace std;
 
 CombatMap::CombatMap(const long& altSeed, const long& moistSeed, const int& xc, const int& yc)

@@ -124,8 +124,8 @@ vector<LedgerItemTuple> Ship::returnListOfItems()
     {
     buffer.itemID = it->ID;
     buffer.ItemName = it->name;
-    buffer.averagePurchasePrice = to_string((long double)it->getAveragePrice());
-    buffer.numberOfItems = to_string((long double)it->howMany());
+    buffer.averagePurchasePrice = to_string(it->getAveragePrice());
+    buffer.numberOfItems = to_string(it->howMany());
     returnVal.push_back(buffer);
     }
  /* if(returnVal.size() == 0)

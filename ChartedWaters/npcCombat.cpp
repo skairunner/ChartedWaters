@@ -6,7 +6,7 @@
 ShipCounter::ShipCounter(AIShip& ref)
   : refToShip(ref), fightOrFlee(0), velocity(0), acceleration(0)
   {
-  maxSpeed = refToShip.getSpeed() * 10;
+  maxSpeed = int(refToShip.getSpeed() * 10);
   cannonTimer = 0;
   distance = 0;
   

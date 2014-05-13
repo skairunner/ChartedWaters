@@ -1,6 +1,6 @@
 #include "AI_ship.h"
 #include <iostream>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <tuple>
 
 #pragma warning(disable: 4244)
@@ -187,7 +187,7 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
   // Find city with best profit.
   double bestProfit = 0;
   int bestProfitPosition = -1;
-  for (int counter = 0; counter < CitiesAndProfit.size(); counter++)
+  for (size_t counter = 0; counter < CitiesAndProfit.size(); counter++)
     {
     double tentativeProfit = std::get<2>(CitiesAndProfit[counter]);
     if (tentativeProfit > bestProfit)
@@ -222,13 +222,6 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
   if (profitItemTuple.BuyPrice * MaxPotentialLoad > MaxMoney)
         numberToBuy = MaxMoney / profitItemTuple.BuyPrice;
   MaxMoney -= numberToBuy * profitItemTuple.BuyPrice; 
-
-  
-
-
-  
-  
-  
 
 
   // Restock first.
@@ -279,7 +272,7 @@ void AIShip::DoMerchantLogic(Town& currentTown, Pather& pather)
 
 int AIShip::random(const int& min, const int& max)
   {
-  boost::random::uniform_int_distribution<> dist(min, max);
+  std::uniform_int_distribution<> dist(min, max);
   return dist(gen);
   }
 

@@ -242,5 +242,8 @@
     <ClInclude Include="State_shipPartInventory.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="dirent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
