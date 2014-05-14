@@ -124,7 +124,7 @@ void State_Drydocks::Update()
       else
         {
         refToShip.changeShip(refToTown.shipList.at(selector-3));
-        refToShip.addMoney(price);
+        refToShip.addMoney(-price);
         string output = "You have purchased a " + refToShip.getType() + ".";
         nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
         pushSomething = true;

@@ -60,7 +60,7 @@ class Town
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);
     std::vector<AIEconomyItemTuple> returnListOfItems_AI(bool isHometown = false);
     int getPriceOf(const std::string& ID);
-    double  getSellPrice(const std::string& ID);
+    double  getSellPrice(const std::string& ID, const double& bonus = 1);
     double getBuyPrice(const std::string& ID);
     double getTaxRate(bool hometown = false);
     int getNumberOf(const std::string& ID);

@@ -43,8 +43,10 @@ class ItemDictionary
     void addCityToItem(const std::string& itemID, const std::pair<int,int>& city);
     std::vector<std::pair<int,int>> getCitiesForItem(const std::string& itemID);
     void clearCitiesList();
+    std::vector<std::string> getCategories();
 
     std::map<std::string, std::vector<std::string>> itemsPerCategory;
+
   private:
     std::map<std::string, Item> ItemList;
     std::map<std::string, std::string> InitialList;

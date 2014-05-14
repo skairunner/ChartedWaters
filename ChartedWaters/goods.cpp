@@ -314,6 +314,14 @@ void ItemDictionary::clearCitiesList()
   citiesPerItem.clear();
   }
 
+std::vector<std::string> ItemDictionary::getCategories()
+{
+    vector<string> keys;
+    for (auto it = categories.begin(); it != categories.end(); it++)
+        keys.push_back(it->first);
+    return keys;
+}
+
 
 
 ///////////////////////

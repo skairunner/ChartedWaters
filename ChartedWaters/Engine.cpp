@@ -10,6 +10,7 @@
 #include "State_townmenu.h"
 #include "npcCombat.h"
 #include "State_shipPartInventory.h"
+#include "State_showskills.h"
 
 Engine CursesEngine;
 
@@ -320,6 +321,11 @@ void Engine::KeyDown(const int &key,const int &unicode)
     newState = new State_shipPartInventory(TheWorld->getPlayerShip());
     PushState(newState);
     break;
+
+  case 'k':
+      newState = new State_ShowSkills(TheWorld->getPlayerShip().captain);
+      PushState(newState);
+      break;
 
   case 'R': //Test button to spawn items in shops.
     for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)

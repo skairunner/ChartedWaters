@@ -1,6 +1,7 @@
 #include "AI_ship.h"
 #include <iostream>
 #include <random>
+#include "utility.h"
 #include <tuple>
 
 #pragma warning(disable: 4244)
@@ -280,12 +281,26 @@ void AIShip::sell(Town& currentTown)
   {
   std::vector<std::string> itemsToSell;
   for (auto it = itemList.begin(); it < itemList.end(); it++)
-    itemsToSell.push_back(it->ID);
+  {
+      if (it->howMany() != 0)
+        itemsToSell.push_back(it->ID);
+  }
+    
   bool isHome = false;
   if (captain.faction == currentTown.getFactionID())
     isHome = true;
   for (auto it = itemsToSell.begin(); it < itemsToSell.end(); it++)
     currentTown.sellItems(*this, *it, -1, isHome);
+
+  for (int i = 0; i < itemList.size(); i++)
+  {
+      if (itemList[i].howMany() == 0)
+      {
+          removeInPlace(i, itemList);
+          i = 0;
+      }          
+  }
+  
   state = STATE_MERCHANTLOGIC;
   }
 

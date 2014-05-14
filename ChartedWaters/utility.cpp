@@ -4,6 +4,9 @@
 
 using namespace std;
 
+TCODColor MabinogiBrown = TCODColor(95, 71, 61);
+TCODColor DarkMabinogiBrown = TCODColor(71, 53, 46);
+
 string rightAlignNumber(const int& input, const int& size)
   {
   char price_cstr[50];
@@ -74,12 +77,3 @@ int stringToDecimal(const std::string& input)
   return result;
   }
 
-template<typename T> 
-void removeInPlace(const int& i, std::vector<T>& v)
-{
-	for (int it = i; it < v.size()-1; it++)
-	{
-		v[it] = v[it + 1];
-	}
-	v.pop_back();
-}
