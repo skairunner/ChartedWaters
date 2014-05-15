@@ -152,8 +152,6 @@ void State_buySailors::Update()
       else
         {
         string output = "Hired " + rightAlignNumber(result) + " sailors for " + rightAlignNumber(result * price) + " ducats.";
-        int fatigue = refToShip.fatigue * refToShip.sailors;
-               
         if (master)
           refToShip.addSailors(result, 800);
         else if (exp)
@@ -161,8 +159,6 @@ void State_buySailors::Update()
         else if (green)
           refToShip.addSailors(result, 200);
         refToShip.captain.ducats -= result * price;
-
-        refToShip.fatigue = fatigue / refToShip.sailors;
         
         nextState = new State_Prompt(output.length()+4, 4, output, yesno);
         pushSomething = true;

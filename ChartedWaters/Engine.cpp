@@ -11,6 +11,7 @@
 #include "npcCombat.h"
 #include "State_shipPartInventory.h"
 #include "State_showskills.h"
+#include "Fleet.h"
 
 Engine CursesEngine;
 
@@ -44,16 +45,13 @@ bool lockedToShip = false;
 bool pressedArrow = false; // ">"
 bool mouseRightClick = false;
 
+Fleet* lockedFleet;
 Ship* lockedShip;
 
 void Engine::lockToShip () // sets camera to ship.
   {
-  auto pos = lockedShip->getPosition();
+  auto pos = lockedFleet->getPosition();
 
-  /*coord pos;
-  if (TheWorld->shipList.begin() != TheWorld->shipList.end())
-    pos = TheWorld->shipList.begin()->getPosition();
-  else pos = TheWorld->getPlayerShip().getPosition();*/
   focusX = pos.first < screenwidth / 2 ? screenwidth/2 : pos.first; // Make sure it's within bounds.
   focusY = pos.second < screenheight /2 ? screenheight /2 : pos.second;
   focusX = focusX > width - screenwidth / 2 ? width - screenwidth /2 : focusX;
@@ -108,14 +106,15 @@ bool Engine::EngineInit()
   ZOCscreen = new TCODConsole(width, height);
   tooltip = new TCODConsole(30, 6);
 
-  Ship& ship = TheWorld->getPlayerShip();
-  ship.captain.faction = 1;
-  ship.addMoney(424242);
-  ship.changeShip(ShipDict.getShip(string("sloop")));
-  ship.sailors = 15;
-  ship.rations = 500;
+  Fleet& fleet = TheWorld->getPlayerFleet();
+  fleet.captain.faction = 1;
+  fleet.addMoney(424242);
+  fleet.changeShip(ShipDict.getShip(string("sloop")), 0);
+  fleet.refSailors(0) = 15;
+  fleet.addRations(500);
+
   pressedPeriod = true;
-  lockedShip = &(TheWorld->getPlayerShip());
+  lockedFleet = &(TheWorld->getPlayerFleet());
   lockToShip();
 
 
@@ -165,12 +164,12 @@ void Engine::Update()
   if (mouseClick)
     {
     mouseClick = false;
-    Ship& refToShip = TheWorld->getPlayerShip();
-    auto it = TheWorld->pathfinder->path(refToShip.getPosition(), coord(mouseX, mouseY), refToShip.getWaveResistance());
-    TheWorld->getPlayerShip().setPath(it);
+    Fleet& refToFleet = TheWorld->getPlayerFleet();
+    auto path = TheWorld->pathfinder->path(refToFleet.getPosition(), coord(mouseX, mouseY), refToFleet.getWaveResistance());
+    TheWorld->getPlayerFleet().setPath(path);
 
     PathScreen->clear();
-    for (auto iterator = it.begin()+1; iterator < it.end(); iterator++)
+    for (auto iterator = path.begin()+1; iterator < path.end(); iterator++)
       PathScreen->putCharEx(iterator->first, iterator->second, 251, TCODColor::yellow, TCODColor::black);
     }
 
@@ -188,7 +187,7 @@ void Engine::Update()
 
   if (pressedArrow)
     {
-    if (TheWorld->getPlayerShip().path.size() <= 1 || TheWorld->getPlayerShip().getSpeed() < 1)
+      if (TheWorld->getPlayerFleet().path.size() <= 1 || TheWorld->getPlayerFleet().getSpeed() < 1)
       {
       pressedArrow = false;
       }
@@ -196,20 +195,20 @@ void Engine::Update()
       pressedPeriod = true;
     }
   if (pressedPeriod)
-    {
-    playerMovement = (int)TheWorld->getPlayerShip().getMovementCounters();
-    TheWorld->getPlayerShip().step();
-    TheWorld->step();
-    pressedPeriod = false;
-    daysPassed++;
-    }
-  if (playerMovement > 0)
-    {
-    TheWorld->getPlayerShip().updatePos();
-    playerMovement--;
-    Renderer::getShipBitmap(ShipScreen, *TheWorld);
-    }
+  {
+      playerMovement = (int)TheWorld->getPlayerFleet().getMovementCounters();
+      TheWorld->getPlayerFleet().step();
+      TheWorld->step();
+      pressedPeriod = false;
+      daysPassed++;
   }
+  if (playerMovement > 0)
+  {
+      TheWorld->getPlayerFleet().updatePos();
+      playerMovement--;
+      Renderer::getShipBitmap(ShipScreen, *TheWorld);
+  }
+}
 
 void Engine::Render(TCODConsole *root)
   {
@@ -221,7 +220,7 @@ void Engine::Render(TCODConsole *root)
   TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
   TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 
-  Ship& refToShip = TheWorld->getPlayerShip();
+  Fleet& refToFleet = TheWorld->getPlayerFleet();
   root->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
   root->setColorControl(TCOD_COLCTRL_2, TCODColor::red, TCODColor::black);
   root->setColorControl(TCOD_COLCTRL_3, TCODColor::lighterYellow, TCODColor::black);
@@ -233,27 +232,32 @@ void Engine::Render(TCODConsole *root)
   TCOD_colctrl_t durabilitycol = (TCOD_colctrl_t)8;
   TCOD_colctrl_t sailorcol = (TCOD_colctrl_t)8;
 
-  if (refToShip.fatigue > 900)
+  int fatigue = refToFleet.getFatigue();
+  if (fatigue > 900)
     fatiguecol = (TCOD_colctrl_t)2;
-  else if (refToShip.fatigue > 500)
+  else if (fatigue > 500)
     fatiguecol = (TCOD_colctrl_t)3;
-  if (refToShip.rations < 50)
+  if (refToFleet.getRations() < 50 * refToFleet.numShips())
     rationcol = (TCOD_colctrl_t)2;
-  if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.1)
+
+  int durability = refToFleet.getDurability();
+  int maxDurability = refToFleet.getMaxDurability();
+
+  if (durability / (double)maxDurability < 0.1)
     durabilitycol = (TCOD_colctrl_t)2;
-  else if (refToShip.durability / (double)refToShip.getMaxDurability() < 0.5)
+  else if (durability / (double)maxDurability < 0.5)
     durabilitycol = (TCOD_colctrl_t)3;
-  if (refToShip.sailors < refToShip.getMinSailors())
+  if (refToFleet.hasEnoughSailors())
     sailorcol = TCOD_COLCTRL_2;
 
   root->setDefaultForeground(TCODColor::lightestGrey);
-  root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c    Estimated rations for path: %c%.1f%c", durabilitycol, refToShip.durability, TCOD_COLCTRL_STOP, refToShip.getMaxDurability(), 
-    fatiguecol, refToShip.fatigue/10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToShip.rations/10.0f, TCOD_COLCTRL_STOP,
-    TCOD_COLCTRL_4, refToShip.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
+  root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c    Estimated rations for path: %c%.1f%c", durabilitycol, durability, TCOD_COLCTRL_STOP, maxDurability,
+      fatiguecol, fatigue / 10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToFleet.getRations() / 10.0f, TCOD_COLCTRL_STOP,
+    TCOD_COLCTRL_4, refToFleet.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
 
-  root->print(0, 49, "Day %d    ETA: %c%d%c days    Sailors: %c%d%c(%d)%c/%d    Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToShip.getETA(), TCOD_COLCTRL_STOP, 
-    sailorcol, refToShip.sailors, TCOD_COLCTRL_1, refToShip.getMinSailors(), TCOD_COLCTRL_STOP, refToShip.getMaxSailors(),
-    TCOD_COLCTRL_5, refToShip.captain.ducats, TCOD_COLCTRL_STOP);
+  root->print(0, 49, "Day %d    ETA: %c%d%c days    Sailors: %c%d%c(%d)%c/%d    Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToFleet.getETA(), TCOD_COLCTRL_STOP, 
+    sailorcol, refToFleet.getNumSailors(), TCOD_COLCTRL_1, refToFleet.getMinSailors(), TCOD_COLCTRL_STOP, refToFleet.getMaxSailors(),
+    TCOD_COLCTRL_5, refToFleet.captain.ducats, TCOD_COLCTRL_STOP);
   }
 
 void Engine::EngineEnd()
@@ -358,7 +362,7 @@ void Engine::KeyDown(const int &key,const int &unicode)
       if (entityList.size()) // if there is a ship on the tile, and we're not following a ship
         lockedShip = &(TheWorld->shipList[entityList.front()]);
       else 
-        lockedShip = &(TheWorld->getPlayerShip());
+        lockedFleet = &(TheWorld->getPlayerFleet());
       }
     
     lockedToShip = !lockedToShip;

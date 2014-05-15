@@ -18,7 +18,7 @@ bool State_ShowSkills::Init()
 
 void State_ShowSkills::redraw()
 {
-    window->setDefaultBackground(MabinogiBrown);
+    window->setDefaultBackground(TCODColor::black);
     window->setDefaultForeground(DarkMabinogiBrown);
     window->printFrame(0, 0, w, h, true, TCOD_BKGND_SET);
     
@@ -33,6 +33,8 @@ void State_ShowSkills::redraw()
 
     for (auto it = skills.begin(); it != skills.end(); it++)
     {
+        if (it->first == "")
+            continue;
         std::string name = it->first;
         int level = it->second.getLevel();
         int points = it->second.netPointsNeeded();

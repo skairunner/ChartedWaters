@@ -21,7 +21,7 @@ AIShip::AIShip()
 void AIShip::battle(AIShip& ship1, AIShip& ship2)
   {
   int distance = rand()%500 + 300;
-  bool fightOrFlight1, fightOrFlight2;
+//  bool fightOrFlight1, fightOrFlight2;
   }
 
 void AIShip::initItemDB(std::map<coord, Town>& world)
@@ -292,7 +292,7 @@ void AIShip::sell(Town& currentTown)
   for (auto it = itemsToSell.begin(); it < itemsToSell.end(); it++)
     currentTown.sellItems(*this, *it, -1, isHome);
 
-  for (int i = 0; i < itemList.size(); i++)
+  for (size_t i = 0; i < itemList.size(); i++)
   {
       if (itemList[i].howMany() == 0)
       {

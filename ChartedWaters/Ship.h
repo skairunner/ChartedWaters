@@ -51,7 +51,7 @@ class Ship : protected ShipPrototype
     int getArmor();
     int getLateen();
     int getSquare();
-    double getSpeed(); 
+    double getSpeed(); // Finds the lowest speed of the entire fleet.
     int getBaseSpeed();
     int getMovementCounters(); // This one keeps the decimals. Used for movement, not stat display. Alters the class.
     std::string getDescription();

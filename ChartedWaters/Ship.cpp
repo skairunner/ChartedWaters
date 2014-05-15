@@ -2,9 +2,6 @@
 #include <algorithm>
 #include <cmath>
 
-#pragma warning(disable : 4996)
-#pragma warning(disable : 4244)
-
 using namespace std;
 
 Ship::Ship()
@@ -163,13 +160,13 @@ int Ship::getPurchasePriceOf(const std::string& ID)
 
 bool Ship::removeFromList(const std::string& itemID)
   {
-  int counter = 0;
+  size_t counter = 0;
   for (; counter < itemList.size(); counter++)
     if (itemID == itemList[counter].ID)
       break;
   if (counter == itemList.size())
     return false;
-  for (int it = counter + 1; it < itemList.size(); it++)
+  for (size_t it = counter + 1; it < itemList.size(); it++)
     itemList[it-1] = itemList[it];
   itemList.pop_back();
   return true;
@@ -177,7 +174,7 @@ bool Ship::removeFromList(const std::string& itemID)
 
 int Ship::getTotalGoods()
   {
-  return storage + ceil((float)rations/10.0f);
+  return (int)(storage + ceil((float)rations/10.0f));
   }
 
 int Ship::getMaxGoods()
@@ -273,7 +270,7 @@ void Ship::step()
     if (fatigue >= 1000)
       {
       fatigue = 1000;
-      sailors -= sailors * 0.1 + 0.5;
+      sailors -= int(sailors * 0.1 + 0.5);
       sailors = sailors < 0 ? 0 : sailors;
       }
     if (durability <= 0)
@@ -304,7 +301,7 @@ int Ship::getCannons()
 
 int Ship::getTotalStorageUsed()
   {
-  return storage + ceil((float)rations/10.0f) + getCannons();
+  return storage + (int)ceil((float)rations/10.0f) + getCannons();
   }
 
 int Ship::getMaxStorage()
@@ -427,10 +424,12 @@ void Ship::addSailors(const int& num, const int& addedtraining)
   {
   if (num > 0)
     {
+    int totalFatigue = fatigue * sailors;
     int totalTraining = sailors * training;
     sailors += num;
     totalTraining += addedtraining * num;
     training = totalTraining / sailors;
+    fatigue = totalFatigue / sailors;
     }
   }
 
@@ -443,7 +442,7 @@ int Ship::getEstimatedRationsNeeded()
   {
   if (getSpeed() < 1)
     return 99999999;
-  int daysNeeded = ceil(path.size() / floor((double)getSpeed()));
+  int daysNeeded = (int)(ceil(path.size() / floor((double)getSpeed())));
   return daysNeeded * sailors;
   }
 
@@ -451,7 +450,7 @@ int Ship::getETA()
   {
   if (getSpeed() < 1)
     return 99999999;
-  return ceil(path.size() / floor((double)getSpeed()));;
+  return (int)(ceil(path.size() / floor((double)getSpeed())));;
   }
 
 int Ship::getMovementCounters()

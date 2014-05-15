@@ -42,10 +42,10 @@ void CombatMap::gen()
           temp *= 20;
         else
           temp *= 10;
-        buffer[xcounter+ycounter*w] = temp;
+        buffer[xcounter+ycounter*w] = (float)temp;
         }
       else
-        buffer[xcounter + ycounter * w] = temp * 20;// > 0 ? temp * 20 : 0; // we don't need buffer right now
+        buffer[xcounter + ycounter * w] = (float)(temp * 20);// > 0 ? temp * 20 : 0; // we don't need buffer right now
       ref(xcounter, ycounter).altitude = buffer[xcounter + ycounter * w];
       ref(xcounter, ycounter).isCoastal = false;
       ref(xcounter, ycounter).isCity = false;
@@ -286,7 +286,7 @@ bool State_Combat::Init()
   rangeconsole->setDefaultBackground(TCODColor(255,0,255));
   rangeconsole->setKeyColor(TCODColor(255,0,255));
   rangeconsole->clear();
-  TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)player.localPosition.first - player.testrange.maxrange, (int)player.localPosition.second - player.testrange.maxrange, 1.0f, 1.0f);
+  TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
   if (map.ref(player.localPosition).altitude > 0)
     {
     player.localPosition = displace(player.localPosition);
@@ -343,7 +343,7 @@ void State_Combat::Update()
       popMe = true;
       return;
       }
-    player.refToShip.durability -= player.speed * player.speed + 1;
+    player.refToShip.durability -= int(player.speed * player.speed + 1);
     player.speed = 0;
     player.trail.clear();
     }
@@ -358,7 +358,7 @@ void State_Combat::Update()
         popMe = true;
         return;
         }
-      it->refToShip.durability -= player.speed * player.speed + 1;
+      it->refToShip.durability -= int(player.speed * player.speed + 1);
       it->speed = 0;
       it->trail.clear();
       }
@@ -378,16 +378,16 @@ void State_Combat::Update()
     double intensity = 1;
     for (auto it = player.trail.rbegin(); it < player.trail.rend(); it++)
       {
-      shipconsole->putCharEx((int)it->first, (int)it->second, 177, TCODColor::lerp(TCODColor::darkBlue, TCODColor::white, intensity), TCODColor::black);
+      shipconsole->putCharEx((int)it->first, (int)it->second, 177, TCODColor::lerp(TCODColor::darkBlue, TCODColor::white, (float)intensity), TCODColor::black);
       intensity -= 0.05;
       }
 
-    shipconsole->putCharEx(player.localPosition.first, player.localPosition.second, player.refToShip.character, Renderer::findFactionColor(player.refToShip.captain.faction), TCODColor::black);
+    shipconsole->putCharEx((int)player.localPosition.first, (int)player.localPosition.second, player.refToShip.character, Renderer::findFactionColor(player.refToShip.captain.faction), TCODColor::black);
     TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
 
     for (auto it = shipList.begin(); it < shipList.end(); it++)
       {
-      shipconsole->putCharEx(it->localPosition.first, it->localPosition.second, it->refToShip.character, Renderer::findFactionColor(it->refToShip.captain.faction), TCODColor::black);
+        shipconsole->putCharEx((int)it->localPosition.first, (int)it->localPosition.second, it->refToShip.character, Renderer::findFactionColor(it->refToShip.captain.faction), TCODColor::black);
      // TCODConsole::blit(it->testrange.image, 0, 0, 0, 0, rangeconsole, (int)it->localPosition.first - it->testrange.maxrange, (int)it->localPosition.second - it->testrange.maxrange, 1.0f, 1.0f);
       }
     }
@@ -408,7 +408,7 @@ void State_Combat::Render(TCODConsole *root)
 
   TCODConsole::blit(console, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
   //testPair.setDirection(-player.angle);
-  TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)player.localPosition.first - player.testrange.maxrange, (int)player.localPosition.second - player.testrange.maxrange, 1.0f, 1.0f);
+  TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
   TCODConsole::blit(shipconsole, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
   TCODConsole::blit(rangeconsole, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
 
@@ -505,8 +505,8 @@ void State_Combat::lockToShip() // sets camera to ship.
   if (TheWorld->shipList.begin() != TheWorld->shipList.end())
     pos = TheWorld->shipList.begin()->getPosition();
   else pos = TheWorld->getPlayerShip().getPosition();*/
-  focusX = pos.first < screenwidth / 2 ? screenwidth/2 : pos.first; // Make sure it's within bounds.
-  focusY = pos.second < screenheight /2 ? screenheight /2 : pos.second;
+  focusX = pos.first < screenwidth / 2 ? screenwidth/2 : (int)pos.first; // Make sure it's within bounds.
+  focusY = pos.second < screenheight / 2 ? screenheight / 2 : (int)pos.second;
   focusX = focusX > 200 - screenwidth / 2 ? 200 - screenwidth /2 : focusX;
   focusY = focusY > 200 - screenheight / 2 ? 200 - screenheight /2 : focusY;
   }

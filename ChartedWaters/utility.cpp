@@ -10,44 +10,46 @@ TCODColor DarkMabinogiBrown = TCODColor(71, 53, 46);
 string rightAlignNumber(const int& input, const int& size)
   {
   char price_cstr[50];
-  _snprintf(price_cstr, sizeof(price_cstr), "%d", input);
+  _snprintf_s(price_cstr, sizeof(price_cstr), "%d", input);
   string buffer(price_cstr);
   if (size == -1) // default
     return buffer;
 
+  size_t sizet = (size_t)size;
+
   string returnval;
-  if (buffer.size() < size)
-    for (int counter = 0; counter < size - buffer.size(); counter++)
+  if (buffer.size() < sizet)
+    for (size_t counter = 0; counter < sizet - buffer.size(); counter++)
       returnval += " ";
-  if (buffer.size() > size)
-    for (int counter = 0; counter < size; counter++)
+  if (buffer.size() > sizet)
+    for (size_t counter = 0; counter < sizet; counter++)
       returnval += "x";
-  else returnval += buffer.substr(0, size);
+  else returnval += buffer.substr(0, sizet);
   return returnval;
   }
 
-std::string rightAlign(const string& input, const int& size)
+std::string rightAlign(const string& input, const size_t& size)
   {
   string returnval;
   if(input.size() > size)
     {
-    for (int counter = 0; counter < size; counter++)
+    for (size_t counter = 0; counter < size; counter++)
       returnval += "x";
     return returnval;
     }
   if(input.size() < size)
-    for (int counter = 0; counter < size - input.size(); counter++)
+    for (size_t counter = 0; counter < size - input.size(); counter++)
       returnval += " ";
   returnval += input.substr(0, size);
   return returnval;
   }
 
-std::string leftAlign(const std::string& input, const int& size)
+std::string leftAlign(const std::string& input, const size_t& size)
   {
   string returnval;
   returnval += input.substr(0, size);
   if(input.size() < size)
-    for (int counter = 0; counter < size - input.size(); counter++)
+    for (size_t counter = 0; counter < size - input.size(); counter++)
       returnval += " ";
   return returnval;
   }

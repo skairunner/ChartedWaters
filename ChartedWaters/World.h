@@ -10,6 +10,7 @@
 #include <random>
 #include "AI_ship.h"
 #include "entitymap.h"
+#include "Fleet.h"
 
 class Renderer;
 
@@ -24,6 +25,7 @@ class World
     void regen();
     void step();
     Ship& getPlayerShip();
+    Fleet& getPlayerFleet();
     Pather *pathfinder;
     bool queryShop(Ship& ship);
     Town& getTown(Ship& ship);
@@ -50,6 +52,7 @@ class World
     bool first;
 
     Ship PlayerShip;
+    Fleet PlayerFleet;
     int width, height;
   };
 

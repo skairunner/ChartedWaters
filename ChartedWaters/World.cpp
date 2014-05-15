@@ -10,15 +10,15 @@ World::World(const int& w, const int& h)
   regen();
   pathfinder = new Pather(WorldMap);
 
-  PlayerShip = Ship();
-  PlayerShip.setName(nameFactory.getName());
+  PlayerFleet = Fleet();
+  PlayerFleet.setName("First");
   int size = cityList.size();
   int city = rand()%size;
   auto it = cityList.begin();
   for (; city > 1; city--)
     it++;
   auto pos = it->first;
-  PlayerShip.setPosition(pos);
+  PlayerFleet.setPosition(pos);
   }
 
 World::~World()
@@ -51,7 +51,7 @@ void World::regen()
   for (; city > 1; city--)
     it++;
   auto pos = it->first;
-  PlayerShip.setPosition(pos);
+  PlayerFleet.setPosition(pos);
   populateShips();
 
   if (!pathfinder)
@@ -63,6 +63,11 @@ Ship& World::getPlayerShip()
   {
   return PlayerShip;
   }
+
+Fleet& World::getPlayerFleet()
+{
+    return PlayerFleet;
+}
 
 bool World::queryShop(Ship& ship)
   {
@@ -222,9 +227,8 @@ void World::populateShips()
     {
    // auto position = getRandomCityCoord();
     coord position;
-    position = getPlayerShip().getPosition();
+    position = getPlayerShip().getPosition();  /// TEST: REMEMBER TO RESTORE THIS FOR RELEASE.
     AIShip ship;
-    //ship.changeShip(ShipDict.getRandomShip());
     ship.changeShip(ShipDict.getRandomMerchantShip());
     ship.setName(nameFactory.getName());
     ship.setPosition(position);
@@ -232,9 +236,7 @@ void World::populateShips()
     ship.rations = 500;
     ship.captain.faction = random(0, 8);
     // Let's arm 80% of the ships to the teeth!
-//#ifdef NDEBUG
-    if (rand()%10000 < 8000)
-//#endif      
+    if (rand()%10000 < 8000)   
       pickCannons(ship);
     pickArmor(ship);
     pickSails(ship);
@@ -449,9 +451,9 @@ void Renderer::getShipBitmap(TCODConsole* shipmap, World& world)
 
     shipmap->putCharEx(pos.first, pos.second, it->character, findFactionColor(it->captain.faction), TCODColor::black);
     }
-  Ship& ship = world.getPlayerShip();
-  auto pos = ship.getPosition();
-  shipmap->putCharEx(pos.first, pos.second, ship.character, findFactionColor(ship.captain.faction), TCODColor::black);
+  Fleet& fleet = world.getPlayerFleet();
+  auto pos = fleet.getPosition();
+  shipmap->putCharEx(pos.first, pos.second, fleet.character, findFactionColor(fleet.captain.faction), TCODColor::black);
   }
 
 void Renderer::getTooltip(TCODConsole* tooltip, World& world, const int& mouseX, const int& mouseY)
@@ -470,9 +472,9 @@ void Renderer::getTooltip(TCODConsole* tooltip, World& world, const int& mouseX,
   for (auto it = shiplist.begin(); it < shiplist.end(); it++)
     tooltip->print(0, line++, "The %s", world.shipList[*it].getName().c_str());
 
-  auto pos = world.getPlayerShip().getPosition();
+  auto pos = world.getPlayerFleet().getPosition();
   if (pos.first == mouseX && pos.second == mouseY)
-    tooltip->print(0, line++, "The %s", world.getPlayerShip().getName().c_str());
+    tooltip->print(0, line++, "The %s Fleet", world.getPlayerFleet().getName().c_str());
   }
 
 TCODColor Renderer::findFactionColor(const int& faction)
