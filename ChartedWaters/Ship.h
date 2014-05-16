@@ -16,7 +16,7 @@ struct LedgerItemTuple
 // success: delete original. swapped: don't delete original.
 enum ShipErrors {shipSUCCESS = 1, shipSWAPPED = 2, shipNOTENOUGHSPACE};
 
-
+class Fleet; // forward declare class, then include it in the cpp file.
 class Ship : protected ShipPrototype
   {
   public:
@@ -65,6 +65,7 @@ class Ship : protected ShipPrototype
     void setPath(const std::vector<std::pair<int, int>>& ppath);
     void updatePos(); // move 1 step along the path
     virtual void step(); // run the simulations for 1 day
+    virtual void fleetStep(Fleet* fleet); // Utilizing the fleet's resources, run simulations for 1 day.
 
     int addSail(int pos, ShipSails& sail);
     int removeSail(int pos, ShipSails& sail);

@@ -46,6 +46,7 @@ double Skill::getValue()
 }
 
 Player::Player()
+: ducats(0)
 {
     auto keys = ItemDict.getCategories();
     for (std::string s : keys)

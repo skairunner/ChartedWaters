@@ -65,7 +65,7 @@ void CombatMap::gen()
         temp += 0.7;
       temp += 0.0;
       // buffer[xcounter + ycounter * w] = temp > 0 ? temp * 20 : 0;
-      ref(xcounter, ycounter).moisture = temp;
+      ref(xcounter, ycounter).moisture = (float)temp;
       }
 
     setCoastFlags();

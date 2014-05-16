@@ -110,7 +110,9 @@ bool Engine::EngineInit()
   fleet.captain.faction = 1;
   fleet.addMoney(424242);
   fleet.changeShip(ShipDict.getShip(string("sloop")), 0);
+  fleet.changeShip(ShipDict.getShip(string("clipper_light")), 1);
   fleet.refSailors(0) = 15;
+  fleet.refSailors(1) = 14;
   fleet.addRations(500);
 
   pressedPeriod = true;
@@ -180,7 +182,7 @@ void Engine::Update()
     if (entityList.size() != 0 && entityList.front() != -10)
       {
       Ship& refToShip = TheWorld->shipList[entityList.front()];
-      newState = new State_ShipStatus(refToShip);
+//      newState = new State_ShipStatus(refToShip);
       PushState(newState);
       }
     }
@@ -337,7 +339,7 @@ void Engine::KeyDown(const int &key,const int &unicode)
     break;
 
   case 'S':
-    newState = new State_ShipStatus(TheWorld->getPlayerShip());
+    newState = new State_ShipStatus(TheWorld->getPlayerFleet());
     PushState(newState);
     break;
 

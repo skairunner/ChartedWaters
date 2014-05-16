@@ -25,6 +25,7 @@ public:
     
 
     int getRations(); // sum of all rations
+    int takeRations(const int& number); // extract rations from the fleet. Returns number of rations available.
     int getNumSailors();
     bool hasEnoughSailors(); // if any one of the ships don't have enough sailors, false.
 

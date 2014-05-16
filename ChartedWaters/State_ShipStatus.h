@@ -1,13 +1,13 @@
 #pragma once
 #include "GameState.h"
-#include "Ship.h"
+#include "Fleet.h"
 #include "goods.h"
 
 class State_ShipStatus : public GameState
   // Displays ship stuff.
   {
   public:
-    State_ShipStatus(Ship& ship);
+    State_ShipStatus(Fleet& fleet);    
     ~State_ShipStatus();
     virtual void Update();
     virtual void Render(TCODConsole *root);
@@ -39,7 +39,11 @@ class State_ShipStatus : public GameState
     void swapLineColors(TCODConsole* con, const int& line);
     void drawDebug();
 
-    Ship& refToShip;
+    Fleet &refToFleet;
+    std::vector<int> pages;
+    int page;
+    int pageit; // the position in the pages vector that yields page
+
     std::string newname;
     std::string header();
     std::string assembleOutput(const LedgerItemTuple& tuple);

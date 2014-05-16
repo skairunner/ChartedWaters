@@ -3,7 +3,7 @@
 #include <limits>
 
 Fleet::Fleet()
-: character('F')
+: character('F'), movementcounter(0), wrecked(false), invisible(false)
 {
 
 }
@@ -186,6 +186,28 @@ int Fleet::getRations()
     return num;
 }
 
+int Fleet::takeRations(const int& number)
+{
+    auto keys = getKeys(ships);
+    int taken = 0;
+    for (auto it = keys.begin(); it < keys.end(); it++)
+    {
+        if (ships[*it].rations + taken > number) // If the first ship has enough rations
+        {
+            ships[*it].rations -= (number - taken); // Fill up taken, and subtract the amount
+            taken = number;
+            break; // No need to continue.
+        }
+        else // the ship's supply of rations don't satisfy our needs
+        {
+            taken += ships[*it].rations;
+            ships[*it].rations = 0;
+        }
+    }
+
+    return taken;
+}
+
 int Fleet::numShips()
 {
     return ships.size();
@@ -224,6 +246,28 @@ int Fleet::getNumSailors()
     return num;
 }
 
+int Fleet::getMinSailors()
+{
+    auto keys = getKeys(ships);
+    int num = 0;
+    for (auto it = keys.begin(); it < keys.end(); it++)
+    {
+        num += ships[*it].getMinSailors();
+    }
+    return num;
+}
+
+int Fleet::getMaxSailors()
+{
+    auto keys = getKeys(ships);
+    int num = 0;
+    for (auto it = keys.begin(); it < keys.end(); it++)
+    {
+        num += ships[*it].getMaxSailors();
+    }
+    return num;
+}
+
 bool Fleet::hasEnoughSailors()
 {
     auto keys = getKeys(ships);
@@ -255,9 +299,61 @@ double Fleet::getSpeed()
     return lowest;
 }
 
+int Fleet::getWaveResistance()
+{
+    auto keys = getKeys(ships);
+    double lowest = std::numeric_limits<double>::max();
+    for (auto it = keys.begin(); it < keys.end(); it++)
+    {
+        int waveResistance = ships[*it].waveResistance;
+        if (waveResistance < lowest)
+            lowest = waveResistance;
+    }
+    return lowest;
+}
+
 int Fleet::getETA()
 {
     if (getSpeed() < 1)
         return 99999999;
     return (int)(ceil(path.size() / floor((double)getSpeed())));;
+}
+
+int Fleet::getMovementCounters()
+{
+    movementcounter += getSpeed();
+    int used = (int)movementcounter;
+    movementcounter -= used;
+    return used;
+}
+
+void Fleet::updatePos()
+{
+    if (path.size() > 0){
+        setPosition(path.back());
+        path.pop_back();
+
+        for (auto it = ships.begin(); it != ships.end(); it++)
+        {
+            it->second.setPosition(position);
+        }
+    }
+}
+
+void Fleet::step()
+{
+    starving = false;
+    wrecked = false;
+
+    if (position != lastVisitedCityCoords)
+    {
+        for (auto it = ships.begin(); it != ships.end(); it++)
+        {
+            it->second.fleetStep(this);
+            if (it->second.starving)
+                starving = true;
+            if (it->second.wrecked)
+                wrecked = true;
+        }    
+    }
 }

@@ -1,4 +1,5 @@
 #include "Ship.h"
+#include "Fleet.h"
 #include <algorithm>
 #include <cmath>
 
@@ -280,6 +281,41 @@ void Ship::step()
       }
     }
   }
+
+void Ship::fleetStep(Fleet* fleet)
+{
+    if (position != lastVisitedCityCoords)
+    {
+        starving = false;
+        sailorsDied = 0;
+        fatigue++;
+        training += 5;
+        training = training > 100 ? 100 : training;
+        rations -= sailors;
+        if (rations < 0)
+        {
+            int neededRations = -rations;
+            rations = 0; 
+            int fleetRations = fleet->takeRations(neededRations); // If there are not enough rations on board, use the fleet's rations.
+            if (fleetRations < neededRations) // not enough rations
+                starving = true;
+            // otherwise, we have enough food for now.
+        }
+        if (starving)
+            fatigue += 100;
+        if (fatigue >= 1000)
+        {
+            fatigue = 1000;
+            sailors -= int(sailors * 0.1 + 0.5);
+            sailors = sailors < 1 ? 1 : sailors;
+        }
+        if (durability <= 0)
+        {
+            durability = 0;
+            wrecked = true;
+        }
+    }
+}
 
 int Ship::getShipPrice()
   {

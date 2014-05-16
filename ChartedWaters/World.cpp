@@ -12,6 +12,7 @@ World::World(const int& w, const int& h)
 
   PlayerFleet = Fleet();
   PlayerFleet.setName("First");
+
   int size = cityList.size();
   int city = rand()%size;
   auto it = cityList.begin();
