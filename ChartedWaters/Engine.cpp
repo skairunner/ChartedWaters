@@ -111,6 +111,9 @@ bool Engine::EngineInit()
   fleet.addMoney(424242);
   fleet.changeShip(ShipDict.getShip(string("sloop")), 0);
   fleet.changeShip(ShipDict.getShip(string("clipper_light")), 1);
+  fleet.setShipName(TheWorld->nameFactory.getName(), 0);
+  fleet.setShipName(TheWorld->nameFactory.getName(), 1);
+
   fleet.refSailors(0) = 15;
   fleet.refSailors(1) = 14;
   fleet.addRations(500);
@@ -249,7 +252,7 @@ void Engine::Render(TCODConsole *root)
     durabilitycol = (TCOD_colctrl_t)2;
   else if (durability / (double)maxDurability < 0.5)
     durabilitycol = (TCOD_colctrl_t)3;
-  if (refToFleet.hasEnoughSailors())
+  if (!refToFleet.hasEnoughSailors())
     sailorcol = TCOD_COLCTRL_2;
 
   root->setDefaultForeground(TCODColor::lightestGrey);
@@ -298,10 +301,10 @@ void Engine::KeyDown(const int &key,const int &unicode)
   else if (key == SDLK_DOWN)
     focusY = focusY + scrollspeed <= height - screenheight/2 ? focusY + scrollspeed : height - screenheight /2;
   else if (key == SDLK_RETURN)
-    TheWorld->queryShop(TheWorld->getPlayerShip());
+    TheWorld->queryTown(TheWorld->getPlayerFleet());
   else if (key == SDLK_SPACE)
     {
-    auto pos = TheWorld->getPlayerShip().getPosition();
+    auto pos = TheWorld->getPlayerFleet().getPosition();
     auto shipTokenList = TheWorld->entityMap.getEntityList(pos);
     vector<Ship*> shipPointers;
     for (auto it = shipTokenList.begin(); it < shipTokenList.end(); it++)
@@ -309,8 +312,8 @@ void Engine::KeyDown(const int &key,const int &unicode)
       shipPointers.push_back(&TheWorld->shipList.at(*it));
       }
 
-    newState = new State_Combat(TheWorld->getPlayerShip(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second, shipPointers);
-    PushState(newState);
+//    newState = new State_Combat(TheWorld->getPlayerFleet(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second, shipPointers);
+//   PushState(newState);
     }
 
   switch (unicode)
@@ -329,7 +332,7 @@ void Engine::KeyDown(const int &key,const int &unicode)
     break;
 
   case 'k':
-      newState = new State_ShowSkills(TheWorld->getPlayerShip().captain);
+      newState = new State_ShowSkills(TheWorld->getPlayerFleet().captain);
       PushState(newState);
       break;
 
@@ -343,11 +346,11 @@ void Engine::KeyDown(const int &key,const int &unicode)
     PushState(newState);
     break;
 
-  case 's': // Check for shop.
-    if (TheWorld->queryShop(TheWorld->getPlayerShip()))
+  case 's': // Check for city.
+    if (TheWorld->queryTown(TheWorld->getPlayerFleet()))
       {
       daysPassed = 0;
-      newState = new State_TownMenu(TheWorld->getTown(TheWorld->getPlayerShip()), TheWorld->getPlayerShip());
+      newState = new State_TownMenu(TheWorld->getTown(TheWorld->getPlayerFleet()), TheWorld->getPlayerFleet());
       PushState(newState);
       }
     break;  
@@ -392,3 +395,4 @@ void Engine::MouseButtonDown(const int &iButton,const int &iX,const int &iY,cons
   if (iButton == SDL_BUTTON_RIGHT)
     mouseRightClick = true;
   }
+

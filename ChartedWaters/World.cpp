@@ -70,7 +70,7 @@ Fleet& World::getPlayerFleet()
     return PlayerFleet;
 }
 
-bool World::queryShop(Ship& ship)
+bool World::queryTown(Ship& ship)
   {
   auto it = cityList.find(ship.getPosition());
   if (it == cityList.end())
@@ -78,11 +78,25 @@ bool World::queryShop(Ship& ship)
   else return true;
   }
 
+bool World::queryTown(Fleet& fleet)
+{
+    auto it = cityList.find(fleet.getPosition());
+    if (it == cityList.end())
+        return false;
+    else return true;
+}
+
 Town& World::getTown(Ship& ship)
   {
   auto it = cityList.find(ship.getPosition());
   return it->second;
   }
+
+Town& World::getTown(Fleet& fleet)
+{
+    auto it = cityList.find(fleet.getPosition());
+    return it->second;
+}
 
 Town& World::getFirstTown()
   {
@@ -115,7 +129,7 @@ void World::step()
   int position = 0;
   for (auto it = shipList.begin(); it != shipList.end(); it++)
     {
-    if (queryShop(*it))
+    if (queryTown(*it))
       it->think(*pathfinder, cityList, getTown(*it));
     else it->think(*pathfinder, cityList);
     entityMap.setEntity(position, it->getPosition());

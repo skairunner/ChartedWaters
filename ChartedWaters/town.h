@@ -2,6 +2,7 @@
 #include <map>
 #include "goods.h"
 #include "Ship.h"
+#include "Fleet.h"
 #include <vector>
 
 enum TOWN_ERRORS {twNOT_ENOUGH_MONEY = -1, twSUCCESS = 1, twNO_SUCH_ITEM, twNOT_ENOUGH_ITEMS};
@@ -29,8 +30,6 @@ struct AIEconomyItemTuple
 class Town
   {
   private:
-    static std::string toNumber(const int& num);
-    //std::vector<EconomyItem> itemlist;
     std::map<std::string, EconomyItem> itemlist;
     std::string TownName;
     double taxRate;
@@ -55,6 +54,7 @@ class Town
     void step();
     int buyRations(Ship& ship, const int& number); // actual rations added = 10 * number
     static int recoverFatigue(Ship& ship, const int& number);
+    static int recoverFatigue(Fleet& fleet, const int& number, int index = -1); // Recovers for all ships, divides fatigue recovery
     static int getCost(const int& amount);//for fatigue
 
     std::vector<EconomyItemTuple> returnListOfItems(bool isHometown = false);

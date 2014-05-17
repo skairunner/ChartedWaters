@@ -11,6 +11,7 @@ class Fleet
 public:
     Fleet();
 	void setName(const std::string& newName);
+    void setShipName(const std::string& newName, int index);
 	std::string getName();
 	std::string getType();
 	bool addMoney(const int& amount); // false if the total money would go under 0.
@@ -22,12 +23,12 @@ public:
     int& refSailors(int index);
     void addRations(int number, int index = -1); // index being <0 means autofill from the first ship. Otherwise it means put all rations in one ship.
     void addSailors(int number, int training, int index = -1); // index of <0 means put sailors where needed, then put them in order from the first. Otherwise, put them all into the index ship.
-    
 
     int getRations(); // sum of all rations
     int takeRations(const int& number); // extract rations from the fleet. Returns number of rations available.
     int getNumSailors();
     bool hasEnoughSailors(); // if any one of the ships don't have enough sailors, false.
+    bool isLoadedProperly(); // If any of the ships have goods < goods_storage, false.
 
 
 	int getEstimatedRationsNeeded();
@@ -70,6 +71,7 @@ public:
 	int character; // default F
     int numShips();
 	int getFatigue(); // divide by 10; is weighted average of entire fleet
+    void removeFatigue(int number, int index = -1); // For all ships if index <0. Changes fatigue by number.
 	int sailorsDied;
 	int getTraining(); // divide by 10; is weighted average of entire fleet
 	int getDurability(); // Sum of entire fleet
@@ -79,6 +81,7 @@ public:
 	bool starving;
 	bool unpaid;
 	bool wrecked;
+
 
 	double movementcounter;
 

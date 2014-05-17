@@ -1,12 +1,12 @@
 #pragma once
 #include "GameState.h"
-#include "Ship.h"
+#include "Fleet.h"
 #include <libtcod.hpp>
 
 class State_Tavern: public GameState
   {
   public:
-    State_Tavern::State_Tavern(Ship& ship);
+    State_Tavern::State_Tavern(Fleet& fleet);
     virtual bool Init();
 
     virtual void Update(){}
@@ -24,7 +24,9 @@ class State_Tavern: public GameState
     virtual void MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
 
   private:
-    Ship& refToShip;
+      Fleet& refToFleet;
+
+
     TCODConsole* console;
     void drawMenu();
   };
@@ -32,7 +34,7 @@ class State_Tavern: public GameState
 class State_buySailors: public GameState
   {
   public:
-    State_buySailors(Ship& ship);
+    State_buySailors(Fleet& fleet);
 
     virtual bool Init();
 
@@ -55,7 +57,12 @@ class State_buySailors: public GameState
     bool yesno;
     bool getSomething;
     bool master;
-    Ship& refToShip;
+
+    Fleet& refToFleet;
+    std::vector<int> pages;
+    int page;
+    int pageit; // the position in the pages vector that yields page
+
     TCODConsole* console;
     int price;
     bool green;
@@ -67,7 +74,7 @@ class State_buySailors: public GameState
 class State_buyRations: public GameState
   {
   public:
-    State_buyRations(Ship& ship);
+    State_buyRations(Fleet& fleet);
     virtual bool Init();
 
     virtual void Update();
@@ -93,14 +100,19 @@ class State_buyRations: public GameState
     bool sell;
     bool daysworth;
     bool getSomething;
-    Ship& refToShip;
+
+    Fleet& refToFleet;
+    std::vector<int> pages;
+    int page;
+    int pageit; // the position in the pages vector that yields page
+
     TCODConsole* console;
   };
 
 class State_recoverFatigue: public GameState
   {
   public:
-    State_recoverFatigue(Ship& ship);
+    State_recoverFatigue(Fleet& fleet);
     virtual bool Init();
 
     virtual void Update();
@@ -125,6 +137,11 @@ class State_recoverFatigue: public GameState
     int recover;
     bool yesno;
     bool getSomething;
-    Ship& refToShip;
+
+    Fleet& refToFleet;
+    std::vector<int> pages;
+    int page;
+    int pageit; // the position in the pages vector that yields page
+
     TCODConsole* console;
   };

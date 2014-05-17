@@ -458,20 +458,29 @@ int Ship::removeSail(int pos, ShipSails& sail)
 
 void Ship::addSailors(const int& num, const int& addedtraining)
   {
-  if (num > 0)
+    if (num > 0)
     {
-    int totalFatigue = fatigue * sailors;
-    int totalTraining = sailors * training;
-    sailors += num;
-    totalTraining += addedtraining * num;
-    training = totalTraining / sailors;
-    fatigue = totalFatigue / sailors;
+        int totalFatigue = fatigue * sailors;
+        int totalTraining = sailors * training;
+        sailors += num;
+        totalTraining += addedtraining * num;
+        training = totalTraining / sailors;
+        fatigue = totalFatigue / sailors;
+    }
+    else
+    {
+        if (sailors > -num)
+            sailors += num; // Removing sailors doesn't affect the fatigue or training because those are averaged.
+        else
+            sailors = 0;
     }
   }
 
 void Ship::removeSailors(const int& num)
   {
   sailors -= num;
+  if (sailors < 0)
+      sailors = 0;
   }
 
 int Ship::getEstimatedRationsNeeded()

@@ -8,8 +8,8 @@
 #include "State_shipPartShop.h"
 using namespace std;
 
-State_TownMenu::State_TownMenu(Town& town, Ship& ship)
-  : refToTown(town), refToShip(ship)
+State_TownMenu::State_TownMenu(Town& town, Fleet& fleet)
+: refToTown(town), refToFleet(fleet)
   {
   int potenwidth = 14 + town.getName().size();
   potenwidth = potenwidth > 18 ? potenwidth : 18;
@@ -18,11 +18,11 @@ State_TownMenu::State_TownMenu(Town& town, Ship& ship)
 
 bool State_TownMenu::Init()
   {
-  if (refToShip.lastVisitedCity != refToTown.getName())
+  if (refToFleet.lastVisitedCity != refToTown.getName())
     {
-    refToShip.lastVisitedCity = refToTown.getName();
-    refToShip.lastVisitedCityCoords = refToTown.myPosition;
-    refToShip.fatigue = refToShip.fatigue > 50 ? refToShip.fatigue - 50 : 0;
+    refToFleet.lastVisitedCity = refToTown.getName();
+    refToFleet.lastVisitedCityCoords = refToTown.myPosition;
+    refToFleet.removeFatigue(-50); // Reduces all fatigue of ships by 50. 
     }
   
   drawMenu();
@@ -44,7 +44,7 @@ void State_TownMenu::KeyDown(const int &key,const int &unicode)
   {
   if (key == SDLK_ESCAPE)
     {
-    if (refToShip.getMaxStorage() >= refToShip.getTotalStorageUsed())
+    if (refToFleet.isLoadedProperly()) 
       popMe = true;
     else // too many items!
       {
@@ -56,24 +56,24 @@ void State_TownMenu::KeyDown(const int &key,const int &unicode)
 
   switch (key)
     {
-  case SDLK_t:
-    nextState = new State_Shop(refToTown, refToShip);
+ /* case SDLK_t:
+    nextState = new State_Shop(refToTown, refToFleet);
     pushSomething = true;
     break;
   case SDLK_d:
-    nextState = new State_Drydocks(refToTown, refToShip);
+    nextState = new State_Drydocks(refToTown, refToFleet);
     pushSomething = true;
     break;
   case SDLK_h:
-    break;
+    break;*/
   case SDLK_v:
-    nextState = new State_Tavern(refToShip);
+    nextState = new State_Tavern(refToFleet);
     pushSomething = true;
     break;
-  case SDLK_s:
-    nextState = new State_shipPartShop(&refToTown, &refToShip);
+  /*case SDLK_s:
+    nextState = new State_shipPartShop(&refToTown, &refToFleet);
     pushSomething = true;
-    break;
+    break;*/
   default:
     break;
     }

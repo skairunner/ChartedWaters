@@ -35,14 +35,6 @@ string Town::getName()
   return TownName;
   }
 
-string Town::toNumber(const int& num)
-  {
-  char price_cstr[50];
-  _snprintf(price_cstr, sizeof(price_cstr), "%d", num);
-  string buffer(price_cstr);
-  return buffer;
-  }
-
 vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
   {
   vector<EconomyItemTuple> returnVal;
@@ -55,16 +47,16 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
     buffer.itemID = it->second.ID;
     buffer.ItemName = it->second.name;
 
-    buffer.numberOfItems = toNumber(it->second.howMany());
+    buffer.numberOfItems = to_string(it->second.howMany());
     temporary = getBuyPrice(it->second.ID) * (1 + tax) * 10;
     secondtemp = temporary / 10.0f;
 
-    buffer.BuyPrice = toNumber(secondtemp);
+    buffer.BuyPrice = to_string(secondtemp);
     temporary = getSellPrice(it->second.ID) * 10 * (1 - tax);
     secondtemp = temporary / 10.0f;
-    buffer.SellPrice = toNumber(secondtemp);
+    buffer.SellPrice = to_string(secondtemp);
     int percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
-    buffer.percentageOfBasePrice = toNumber(percentage) + string("%%");
+    buffer.percentageOfBasePrice = to_string(percentage) + string("%%");
 
     returnVal.push_back(buffer);
     }
@@ -220,17 +212,35 @@ int Town::getCost(const int& amount)
 
 int Town::recoverFatigue(Ship& ship, const int& number)
   {
-  if (number < 0)
-    return twNOT_ENOUGH_MONEY;
-  if (getCost(number) > ship.captain.ducats)
-    return twNOT_ENOUGH_MONEY;
+    if (number < 0)
+        return twNOT_ENOUGH_MONEY;
+    if (getCost(number) > ship.captain.ducats)
+        return twNOT_ENOUGH_MONEY;
 
-  ship.fatigue -= number * 10;
-  ship.captain.ducats -= getCost(number);
-  if (ship.fatigue < 0)
-    ship.fatigue = 0;
-  return twSUCCESS;
+    ship.fatigue -= number * 10;
+    ship.captain.ducats -= getCost(number);
+    if (ship.fatigue < 0)
+        ship.fatigue = 0;
+    return twSUCCESS;
   }
+
+int Town::recoverFatigue(Fleet& fleet, const int& number, int index)
+{
+    if (number < 0)
+        return twNOT_ENOUGH_MONEY;
+    if (getCost(number) > fleet.captain.ducats)
+        return twNOT_ENOUGH_MONEY;
+    if (index == -1)
+        fleet.removeFatigue(number * 10 / (int)fleet.ships.size());
+    else
+    {
+        fleet.ships[index].fatigue -= 10 * number;
+        if (fleet.ships[index].fatigue < 0)
+            fleet.ships[index].fatigue = 0;
+    }
+    fleet.captain.ducats -= getCost(number);
+    return twSUCCESS;
+}
 
 double Town::getDistanceFromNearestSource(const std::string& ID)
   {

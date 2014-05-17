@@ -27,8 +27,10 @@ class World
     Ship& getPlayerShip();
     Fleet& getPlayerFleet();
     Pather *pathfinder;
-    bool queryShop(Ship& ship);
+    bool queryTown(Ship& ship);
+    bool queryTown(Fleet& fleet);
     Town& getTown(Ship& ship);
+    Town& getTown(Fleet& fleet);
     Town& getFirstTown();
     int random(const int& min, const int& max);
     coord getRandomCityCoord();
@@ -36,10 +38,9 @@ class World
     std::vector<AIShip> shipList;
     WorldMapClass WorldMap;
     EntityMap entityMap;
-
-  private:
     KoreanNameFactory nameFactory;
-    
+
+  private:    
     void populateCities(); // With items.
     void populateShips(); // AI ships.
     void pickCannons(Ship& ship);

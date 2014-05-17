@@ -1,6 +1,6 @@
 #include "Fleet.h"
 #include "utility.h"
-#include <limits>
+#include <limits> 
 
 Fleet::Fleet()
 : character('F'), movementcounter(0), wrecked(false), invisible(false)
@@ -16,6 +16,17 @@ std::string Fleet::getName()
 void Fleet::setName(const std::string& newName)
 {
     fleetname = newName;
+}
+
+void Fleet::setShipName(const std::string& newName, int index)
+{
+    if (index < 0 || index > 4)
+        throw std::out_of_range("Ship index out of range: must be [0, 4]");
+    if (ships.find(index) == ships.end())
+    {
+        throw std::out_of_range(("Ship index " + std::to_string(index) + "does not exist.").c_str());
+    }
+    ships[index].setName(newName);
 }
 
 coord Fleet::getPosition()
@@ -72,32 +83,69 @@ void Fleet::addRations(int number, int index)
         throw std::out_of_range("Ship index out of range: must be [0, 4]");
     if (index < 0)
     {
-        std::vector<int> indexes = getKeys(ships);
-        int iteration = 0;
-        while (number > 0)
+        if (number >= 0)
         {
-            Ship& ship = ships[indexes[iteration]];
-            int leftoverSpace = ship.getMaxGoods() - ship.getTotalGoods();
-            leftoverSpace *= 10; // because 1 cargo unit of rations is actually 10 rations.
-            if (leftoverSpace > number)
+            std::vector<int> indexes = getKeys(ships);
+            int iteration = 0;
+            while (number > 0)
+            {
+                Ship& ship = ships[indexes[iteration]];
+                int leftoverSpace = ship.getMaxGoods() - ship.getTotalGoods();
+                leftoverSpace *= 10; // because 1 cargo unit of rations is actually 10 rations.
+                if (leftoverSpace > number)
+                {
+                    ship.rations += number;
+                    number = 0;
+                }
+                else
+                {
+                    number -= leftoverSpace;
+                    ship.rations += leftoverSpace;
+                }
+                iteration++;
+            }
+            ships[indexes.back()].rations += number; // Just stuff all the leftover rations into the final ship :P
+        }
+        else // When removing rations, a slightly different method must be used.
+        {
+            std::vector<int> indexes = getKeys(ships);
+            int iteration = 0;
+            while (number > 0 && iteration < indexes.size())
+            {
+                Ship& ship = ships[indexes[iteration]];
+                int rationsRemovable = ship.rations;
+                if (rationsRemovable > -number)
+                {
+                    ship.rations += number;
+                    number = 0;
+                }
+                else // If I can't remove as many rations needed, subtract as much as possible and move on
+                {
+                    number += rationsRemovable;
+                    ship.rations = 0;
+                }
+                iteration++;
+            }
+            // Doesn't matter whether I haven't removed all the rations needed.
+        }        
+    }
+    else
+    {        
+        if (ships.find(index) == ships.end())
+            throw std::out_of_range(("The index " + std::to_string(index) + " does not exist.").c_str());
+        Ship& ship = ships[index];
+        if (number >= 0)
+            ship.rations += number; // slap every single ration into the single ship's hold.
+        else
+        {
+            if (ship.rations > -number)
             {
                 ship.rations += number;
                 number = 0;
             }
             else
-            {
-                number -= leftoverSpace;
-                ship.rations += leftoverSpace;
-            }
-            iteration++;
+                ship.rations = 0;
         }
-        ships[indexes.back()].rations += number; // Just stuff all the leftover rations into the final ship :P
-    }
-    else
-    {
-        if (ships.find(index) == ships.end())
-            throw std::out_of_range(("The index " + std::to_string(index) + " does not exist.").c_str());
-        ships[index].rations += number; // slap every single ration into the single ship's hold.
     }
 }
 
@@ -119,45 +167,103 @@ void Fleet::addSailors(int number, int training, int index)
 {
     if (index > 4)
         throw std::out_of_range("Ship index out of range: must be [0, 4]");
-    if (index < 0)
+    if (number >= 0)
     {
-        std::vector<int> indexes = getKeys(ships);
+        if (index < 0)
+        {
+            std::vector<int> indexes = getKeys(ships);
 
-        for (auto it = indexes.begin(); it < indexes.end(); it++)
-        {
-            if (number <= 0)
-                break;
-            Ship& ship = ships[*it];
-            int neededSailors = ship.getMinSailors() - ship.sailors;
-            if (neededSailors > 0 && neededSailors < number)
-            {
-                number -= neededSailors;
-                ship.addSailors(neededSailors, training);
-            }
-        }
-        if (number > 0) // oh no sailors are left over!
-        {
-            // fear not! just put them into ships that have left over spaces.
             for (auto it = indexes.begin(); it < indexes.end(); it++)
             {
                 if (number <= 0)
                     break;
                 Ship& ship = ships[*it];
-                int neededSailors = ship.getMaxSailors() - ship.sailors;
-                if (neededSailors > 0 && neededSailors < number)
+                int neededSailors = ship.getMinSailors() - ship.sailors;
+                if (neededSailors > 0 && neededSailors <= number)
                 {
                     number -= neededSailors;
                     ship.addSailors(neededSailors, training);
                 }
+                else if (neededSailors > 0 && neededSailors > number)
+                {
+                    number = 0;
+                    ship.addSailors(number, training);
+                }
             }
+            if (number > 0) // oh no sailors are left over!
+            {
+                // fear not! just put them into ships that have left over spaces.
+                for (auto it = indexes.begin(); it < indexes.end(); it++)
+                {
+                    if (number <= 0)
+                        break;
+                    Ship& ship = ships[*it];
+                    int sailorSpots = ship.getMaxSailors() - ship.sailors;
+                    if (sailorSpots > 0 && sailorSpots <= number)
+                    {
+                        number -= sailorSpots;
+                        ship.addSailors(sailorSpots, training);
+                    }
+                    else if (sailorSpots > 0 && sailorSpots > number)
+                    {
+                        ship.addSailors(number, training);
+                        number = 0;
+                    }
+                }
 
-            if (number > 0) // wait, there's still sailors left?
-                ships[indexes[0]].addSailors(number, training); // give them all to the first ship and let the player sort out the issues.
+                if (number > 0) // wait, there's still sailors left?
+                    ships[indexes[0]].addSailors(number, training); // give them all to the first ship and let the player sort out the issues.
+            }
+        }
+        else
+        {
+            ships[index].addSailors(number, training);
         }
     }
-    else
+    else // Dealing with negative numbers means we're removing sailors.
     {
-        ships[index].addSailors(number, training);
+        std::vector<int> indexes = getKeys(ships);
+        int iteration = 0;
+        // First trim off not necessarily needed sailors
+        while (number > 0 && iteration < indexes.size())
+        {
+            Ship& ship = ships[indexes[iteration]];
+            int removable = ship.sailors - ship.getMinSailors();
+            if (removable <= 0)
+                continue;
+            if (removable > -number)
+            {
+                ship.addSailors(number, 0);
+                number = 0;
+            }
+            else 
+            {
+                number += removable;
+                ship.addSailors(-removable, 0);
+            }
+            iteration++;
+        }
+
+        iteration = 0;
+        // If we can't remove enough sailors without harming ships' abilities, do it.
+        while (number > 0 && iteration < indexes.size())
+        {
+            Ship& ship = ships[indexes[iteration]];
+            int removable = ship.sailors;
+            if (removable <= 0)
+                continue;
+            if (removable > -number)
+            {
+                ship.addSailors(number, 0);
+                number = 0;
+            }
+            else
+            {
+                number += removable;
+                ship.addSailors(-removable, 0);
+            }
+            iteration++;
+        }
     }
 }
 
@@ -174,6 +280,30 @@ int Fleet::getFatigue()
     }
     return sum / total; // Throw away remainders!
 }
+
+void Fleet::removeFatigue(int number, int index)
+{
+    if (index > 4)
+        throw std::out_of_range("Ship index out of range: must be [0, 4]");
+    if (index < 0)
+    {
+        std::vector<int> indexes = getKeys(ships);
+
+        for (auto it = indexes.begin(); it < indexes.end(); it++)
+        {
+            ships[*it].fatigue -= number;
+            if (ships[*it].fatigue < 0)
+                ships[*it].fatigue = 0;
+        }
+    }
+    else
+    {
+        ships[index].fatigue -= number;
+        if (ships[index].fatigue < 0)
+            ships[index].fatigue = 0;
+    }
+}
+
 
 int Fleet::getRations()
 {
@@ -275,6 +405,18 @@ bool Fleet::hasEnoughSailors()
     {
         Ship& ship = ships[*it];
         if (ship.sailors < ship.getMinSailors())
+            return false;
+    }
+    return true;
+}
+
+bool Fleet::isLoadedProperly()
+{
+    auto keys = getKeys(ships);
+    for (auto it = keys.begin(); it < keys.end(); it++)
+    {
+        Ship& ship = ships[*it];
+        if (ship.getMaxStorage() < ship.getTotalStorageUsed())
             return false;
     }
     return true;
