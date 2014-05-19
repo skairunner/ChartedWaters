@@ -11,10 +11,13 @@ struct EconomyItemTuple
   {
   std::string itemID;
   std::string ItemName;
-  std::string numberOfItems;
-  std::string BuyPrice;
-  std::string SellPrice;
-  std::string percentageOfBasePrice;
+  int numberOfItems;
+  double BuyPrice;
+  std::string BuyPrice_s;
+  double SellPrice;
+  std::string SellPrice_s;
+  std::string percentageOfBasePrice_s;
+  double fractionOfBasePrice;
   };
 
 struct AIEconomyItemTuple
@@ -47,7 +50,9 @@ class Town
     Town(const std::string& newName, const double& tax, const int& ffaction = 0);
     std::string getName();
     int buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false); // if numberOf = -1, buy all items possible with the money.
+    int buyItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown = false); // if numberOf = -1, buy all items possible with the money.
     int sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false);
+    int sellItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown = false);
     void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
     void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.

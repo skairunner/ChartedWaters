@@ -1,13 +1,13 @@
 #pragma once
 #include "GameState.h"
 #include "town.h"
-#include "Ship.h"
+#include "Fleet.h"
 #include <libtcod.h>
 
 class State_Shop : public GameState
   {
   public:
-    State_Shop(Town& town, Ship& ship);
+    State_Shop(Town& town, Fleet& fleet);
     bool Init();
     void Render(TCODConsole *root);
     void Update();
@@ -47,7 +47,11 @@ class State_Shop : public GameState
     bool isHometown;
 
     Town& refToTown;
-    Ship& refToShip;
+    Fleet& refToFleet;
+    std::vector<int> pages;
+    int page;
+    int pageit; // the position in the pages vector that yields page
+
     std::vector<EconomyItemTuple> goods;
     std::vector<LedgerItemTuple> inventory;
     void redrawLeft();

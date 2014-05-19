@@ -438,6 +438,12 @@ int EconomyItem::getSupply()
 //////////
 ///////////////////////
 
+LedgerItem::LedgerItem()
+:Item("null"), totalItems(0)
+{
+
+}
+
 LedgerItem::LedgerItem(const std::string& ID)
   :Item(ID), totalItems(0)
   {

@@ -9,8 +9,8 @@ struct LedgerItemTuple
   {
   std::string itemID;
   std::string ItemName;
-  std::string numberOfItems;
-  std::string averagePurchasePrice;
+  int numberOfItems;
+  int averagePurchasePrice;
   };
 
 // success: delete original. swapped: don't delete original.
@@ -101,11 +101,12 @@ class Ship : protected ShipPrototype
     ShipStatue figurehead;
 
     bool invisible;
+
   protected:
     double getArmorSlowing();
     bool removeFromList(const std::string& itemID);
     std::string shipName;
     int storage; // counting only goods
-    std::vector<LedgerItem> itemList;
+    std::map<std::string, LedgerItem> itemList; // no idea why I didn't use a map in the first place...
     std::pair<int, int> position;
   };

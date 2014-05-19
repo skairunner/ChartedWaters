@@ -110,7 +110,6 @@ bool WorldMapClass::setCoastal(const int& xcounter, const int& ycounter)
   {
   if (ref(xcounter, ycounter).altitude <= 0 || ref(xcounter, ycounter).isCoastal)
     return true;
-  bool success;
   for (int y = ycounter - 1; y < ycounter + 2; y++)
     for (int x = xcounter - 1; x < xcounter + 2; x++)
       {

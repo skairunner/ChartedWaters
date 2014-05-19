@@ -23,7 +23,7 @@ class NameFactory
     std::vector<std::string> vowels;
     std::vector<std::string> trailingCon;
 
-    double minLength, maxLength;
+    int minLength, maxLength;
     int spaceChance;
     double leadingChance, vowelChance, trailingChance;
   };

@@ -64,7 +64,7 @@ string NameFactory::getLetter(const int& listType)
     list = &trailingCon;
 
   int size = list->size();
-  std::uniform_real_distribution<> dist(0, size-1);
+  std::uniform_int_distribution<> dist(0, size-1);
   return list->at(dist(gen));
   }
 

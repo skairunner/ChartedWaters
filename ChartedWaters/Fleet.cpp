@@ -55,7 +55,7 @@ void Fleet::changeShip(ShipPrototype& newship, int index)
     {
         ships[index] = Ship(newship);
     }
-    else 
+    else
         ships[index].changeShip(newship);
 }
 
@@ -110,7 +110,7 @@ void Fleet::addRations(int number, int index)
         {
             std::vector<int> indexes = getKeys(ships);
             int iteration = 0;
-            while (number > 0 && iteration < indexes.size())
+            while (number > 0 && (size_t)iteration < indexes.size())
             {
                 Ship& ship = ships[indexes[iteration]];
                 int rationsRemovable = ship.rations;
@@ -127,10 +127,10 @@ void Fleet::addRations(int number, int index)
                 iteration++;
             }
             // Doesn't matter whether I haven't removed all the rations needed.
-        }        
+        }
     }
     else
-    {        
+    {
         if (ships.find(index) == ships.end())
             throw std::out_of_range(("The index " + std::to_string(index) + " does not exist.").c_str());
         Ship& ship = ships[index];
@@ -225,7 +225,7 @@ void Fleet::addSailors(int number, int training, int index)
         std::vector<int> indexes = getKeys(ships);
         int iteration = 0;
         // First trim off not necessarily needed sailors
-        while (number > 0 && iteration < indexes.size())
+        while (number > 0 && (size_t)iteration < indexes.size())
         {
             Ship& ship = ships[indexes[iteration]];
             int removable = ship.sailors - ship.getMinSailors();
@@ -236,7 +236,7 @@ void Fleet::addSailors(int number, int training, int index)
                 ship.addSailors(number, 0);
                 number = 0;
             }
-            else 
+            else
             {
                 number += removable;
                 ship.addSailors(-removable, 0);
@@ -246,7 +246,7 @@ void Fleet::addSailors(int number, int training, int index)
 
         iteration = 0;
         // If we can't remove enough sailors without harming ships' abilities, do it.
-        while (number > 0 && iteration < indexes.size())
+        while (number > 0 && (size_t)iteration < indexes.size())
         {
             Ship& ship = ships[indexes[iteration]];
             int removable = ship.sailors;
@@ -304,6 +304,112 @@ void Fleet::removeFatigue(int number, int index)
     }
 }
 
+
+int Fleet::getMoney()
+{
+    return captain.ducats;
+}
+
+int Fleet::getTotalGoods()
+{
+    int total = 0;
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        total += it->second.getTotalGoods();
+    }
+    return total;
+}
+
+int Fleet::getMaxGoods()
+{
+    int total = 0;
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        total += it->second.getMaxGoods();
+    }
+    return total;
+}
+
+bool Fleet::removeItem(const std::string& ItemID, const int& numberOf)
+{
+    // First, count how many in total we have.
+    int count = getNumberOfItems(ItemID);
+    if (count < numberOf)
+        return false;
+
+    // Well, now that we know we have enough items to remove, let's set about doing it.
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        int num = it->second.getNumberOfItems(ItemID);
+        if (num != 0)
+            it->second.removeItem(ItemID, num);
+    }
+    return true;
+}
+
+int Fleet::getPurchasePriceOf(const std::string& ID)
+{
+    // Must recalculate the purchase price.
+    int totalPrice = 0;
+    int total = 0;
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        Ship& ship = it->second;
+        int price = ship.getPurchasePriceOf(ID);
+        int number = ship.getNumberOfItems(ID);
+        totalPrice += number * price;
+        total += number;
+    }
+
+    return totalPrice / total;
+}
+
+void Fleet::addItem(const Item& item, int numberOf, const int& averagePrice)
+{
+    // First try finding an existing item
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        Ship& ship = it->second;
+        // If a ship already has the item,
+        if (ship.getNumberOfItems(item.ID) > 0)
+        {
+            //  and it can hold all of the items.
+            if (ship.getTotalGoods() + numberOf <= ship.getMaxGoods())
+            {
+                ship.addItem(item, numberOf, averagePrice);
+                return;
+            }                
+            else // and it cannot hold -all- of the items
+            {
+                int possible = ship.getMaxGoods() - ship.getTotalGoods();
+                ship.addItem(item, possible, averagePrice);
+                numberOf -= possible;
+            }
+        }
+    }
+
+    // If none of the ships already have the item, or the ships that do can't hold all of them
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        Ship& ship = it->second;
+        if (ship.getTotalGoods() >= ship.getMaxGoods())
+            continue;
+        int possible = ship.getMaxGoods() - ship.getTotalGoods();
+        if (possible >= numberOf)
+        {
+            ship.addItem(item, numberOf, averagePrice);
+            return;
+        }
+        else // not enough space?
+        {
+            ship.addItem(item, numberOf, possible);
+            numberOf -= possible;
+        }
+    }
+
+    // If after all this there are still items left, put it all on the first ship and let the player deal with it.
+    ships.begin()->second.addItem(item, numberOf, averagePrice);
+}
 
 int Fleet::getRations()
 {
@@ -433,7 +539,7 @@ double Fleet::getSpeed()
     auto keys = getKeys(ships);
     double lowest = std::numeric_limits<double>::max();
     for (auto it = keys.begin(); it < keys.end(); it++)
-    {        
+    {
         double speed = ships[*it].getSpeed();
         if (speed < lowest)
             lowest = speed;
@@ -451,7 +557,18 @@ int Fleet::getWaveResistance()
         if (waveResistance < lowest)
             lowest = waveResistance;
     }
-    return lowest;
+    return int(lowest);
+}
+
+int Fleet::getNumberOfItems(const std::string& ItemID)
+{
+    // Gotta sum the entire fleet.
+    int count = 0;
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        count += it->second.getNumberOfItems(ItemID);
+    }
+    return count;
 }
 
 int Fleet::getETA()
@@ -496,6 +613,40 @@ void Fleet::step()
                 starving = true;
             if (it->second.wrecked)
                 wrecked = true;
-        }    
+        }
     }
+}
+
+std::vector<LedgerItemTuple> Fleet::returnListOfItems()
+{
+    std::vector<LedgerItemTuple> items;
+    for (auto it = ships.begin(); it != ships.end(); it++)
+    {
+        Ship& s = it->second;
+        auto shipItems = s.returnListOfItems();
+        items.reserve(items.size() + std::distance(shipItems.begin(), shipItems.end()));
+        items.insert(items.end(), shipItems.begin(), shipItems.end()); // basically Python's extend() method.
+    }
+
+    // The problem is that some items may be duplicated. Must consolidate them.
+    std::map<std::string, LedgerItemTuple> items2;
+    for (auto it = items.begin(); it != items.end(); it++)
+    {
+        if (items2.find(it->itemID) == items2.end())
+            items2[it->itemID] = *it;
+        else
+        {
+            auto& listing = items2[it->itemID]; // The consolidated one
+            int total = listing.averagePurchasePrice * listing.numberOfItems + it->averagePurchasePrice * it->numberOfItems;
+            int newaverage = total / (listing.numberOfItems + it->numberOfItems); // This is slightly inaccurate, but it does not matter that much.
+            listing.averagePurchasePrice = newaverage;
+            listing.numberOfItems += it->numberOfItems;
+        }
+    }
+
+    items.clear();
+    for (auto it = items2.begin(); it != items2.end(); it++)
+        items.push_back(it->second);
+
+    return items;
 }

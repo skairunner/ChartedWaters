@@ -20,7 +20,7 @@ bool State_shipPartInventory::Init()
 
   redrawLeft(partList);
   ShipPart* part = 0;
-  if (selector >= 3 && selector - 3 < partList.size())
+  if (selector >= 3 && (size_t)selector - 3 < partList.size())
     part = partList[selector-3];
   redrawRight(part);
 
@@ -34,7 +34,7 @@ void State_shipPartInventory::Update()
       redrawLeft(partList);
 
       ShipPart* part = 0;
-      if (selector >= 3 && selector - 3 < partList.size())
+      if (selector >= 3 && (size_t)selector - 3 < partList.size())
         part = partList[selector-3];
       redrawRight(part);
 

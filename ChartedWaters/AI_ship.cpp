@@ -278,31 +278,30 @@ int AIShip::random(const int& min, const int& max)
   }
 
 void AIShip::sell(Town& currentTown)
-  {
-  std::vector<std::string> itemsToSell;
-  for (auto it = itemList.begin(); it < itemList.end(); it++)
-  {
-      if (it->howMany() != 0)
-        itemsToSell.push_back(it->ID);
-  }
-    
-  bool isHome = false;
-  if (captain.faction == currentTown.getFactionID())
-    isHome = true;
-  for (auto it = itemsToSell.begin(); it < itemsToSell.end(); it++)
-    currentTown.sellItems(*this, *it, -1, isHome);
+{
+    std::vector<std::string> itemsToSell;
+    for (auto it = itemList.begin(); it != itemList.end(); it++)
+    {
+        if (it->second.howMany() != 0)
+            itemsToSell.push_back(it->second.ID);
+    }
 
-  for (size_t i = 0; i < itemList.size(); i++)
-  {
-      if (itemList[i].howMany() == 0)
-      {
-          removeInPlace(i, itemList);
-          i = 0;
-      }          
-  }
-  
-  state = STATE_MERCHANTLOGIC;
-  }
+    bool isHome = false;
+    if (captain.faction == currentTown.getFactionID())
+        isHome = true;
+    for (auto it = itemsToSell.begin(); it < itemsToSell.end(); it++)
+        currentTown.sellItems(*this, *it, -1, isHome);
+
+    std::vector<std::string> toRemove;
+    for (auto it = itemList.begin(); it != itemList.end(); it++)
+    if (it->second.howMany() == 0)
+        toRemove.push_back(it->second.ID);
+
+    for (auto id : toRemove)
+        itemList.erase(id);
+
+    state = STATE_MERCHANTLOGIC;
+}
 
 void AIShip::plotRandom(Pather& pather) // currently it chooses a random city out of known cities.
   {

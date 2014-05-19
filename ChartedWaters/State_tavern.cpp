@@ -734,7 +734,7 @@ void State_recoverFatigue::drawMenu()
   console->print(2, line++, "Recover %c1%c fatigue -   200 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(2, line++, "Recover %c2%c0 fatigue - 3200 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(2, line++, "Recover %c5%c0 fatigue - 6400 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-  int size = pages.size();
+  size_t size = pages.size();
   if (pageit == -1)
   {
       for (size_t c = 0; c < size; c++)

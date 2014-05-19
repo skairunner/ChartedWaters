@@ -56,11 +56,11 @@ void State_TownMenu::KeyDown(const int &key,const int &unicode)
 
   switch (key)
     {
- /* case SDLK_t:
+  case SDLK_t:
     nextState = new State_Shop(refToTown, refToFleet);
     pushSomething = true;
     break;
-  case SDLK_d:
+  /*case SDLK_d:
     nextState = new State_Drydocks(refToTown, refToFleet);
     pushSomething = true;
     break;

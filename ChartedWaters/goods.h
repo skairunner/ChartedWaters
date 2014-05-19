@@ -4,9 +4,6 @@
 #include <map>
 
 
-
-//enum ItemIDs {IID_NULL = 0, IID_FRIED_CHICKEN, IID_COOKED_LLAMA_CHOPS, IID_CHICKEN_CHEESE};
-
 class ItemDictionary;
 class Item;
 
@@ -26,7 +23,6 @@ class ItemDictionary
   {
   friend class JSONToItem;
   public:
-   // ItemDictionary();
     ItemDictionary();
     std::string findItemName(const std::string& ID);
     int findBasePrice(const std::string& ID);
@@ -102,8 +98,9 @@ class EconomyItem: public Item
   };
 
 class LedgerItem : public Item
-  {
-  public:
+{
+public:
+    LedgerItem();
     LedgerItem(const std::string& ID);
     LedgerItem(const Item& item, const int& howMany, const int& averagePrice);
     void addItem(const int& howMany, const int& averagePrice); // FILO
@@ -111,11 +108,11 @@ class LedgerItem : public Item
     int getAveragePrice();
     int howMany();
 
-  private:
+private:
     int totalItems;
     void countItems();
     std::vector<std::pair<int, int>> ledger; // numberOf, price.
-  };
+};
 
 class MemoryItem : public Item // This class is for each ship/merchant's personal memory of prices per city
   {

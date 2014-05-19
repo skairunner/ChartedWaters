@@ -2,7 +2,8 @@
 #include <cstdlib>
 #include <limits>
 #include <iostream>
-#pragma warning (disable : 4244)
+#include <cmath>
+#include "utility.h"
 
 using namespace std;
 
@@ -42,21 +43,22 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
   for (auto it = itemlist.begin(); it != itemlist.end(); it++)
     {
     EconomyItemTuple buffer;
-    int temporary;
-    double secondtemp; // To change the raw floats into 'clean', 1-decimal point numbers.
+    double price;
     buffer.itemID = it->second.ID;
     buffer.ItemName = it->second.name;
 
-    buffer.numberOfItems = to_string(it->second.howMany());
-    temporary = getBuyPrice(it->second.ID) * (1 + tax) * 10;
-    secondtemp = temporary / 10.0f;
+    buffer.numberOfItems = it->second.howMany();
+    price = getBuyPrice(it->second.ID) * (1 + tax);
+    buffer.BuyPrice_s = to_string(price);
+    buffer.BuyPrice = price;
 
-    buffer.BuyPrice = to_string(secondtemp);
-    temporary = getSellPrice(it->second.ID) * 10 * (1 - tax);
-    secondtemp = temporary / 10.0f;
-    buffer.SellPrice = to_string(secondtemp);
+    price = getSellPrice(it->second.ID) * (1 - tax);
+    buffer.SellPrice = price;
+    buffer.SellPrice_s = to_string(price);
+
     int percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
-    buffer.percentageOfBasePrice = to_string(percentage) + string("%%");
+    buffer.percentageOfBasePrice_s = to_string(percentage) + string("%%");
+    buffer.fractionOfBasePrice = (double)it->second.getPrice() / it->second.basePrice;
 
     returnVal.push_back(buffer);
     }
@@ -147,6 +149,46 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   return twSUCCESS;
   }
 
+int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown)
+{
+    if (numberOf == 0)
+        return 0;
+    lastTransaction = 0;
+    lastTransactionItemID.clear();
+    auto it = itemlist.find(ID);
+
+    if (it == itemlist.end())
+        return twNO_SUCH_ITEM; // item doesn't exist!
+
+    Skill& skill = fleet.captain.skills[it->second.category];
+
+    double currentTax = getTaxRate(hometown);
+    int baseprice = getBuyPrice(it->second.ID) * (1 + currentTax);
+    int actualprice = baseprice * (skill.getLevel() / 100.0); // Each level in the relevant skill equals a 1% discount.
+    if (numberOf < 0)
+    {
+        numberOf = fleet.getMoney() / actualprice; // FLOOR ( money / price ) = number of items buyable.
+        numberOf = numberOf > it->second.howMany() ? it->second.howMany() : numberOf; // If the possible number of items buyable is more than the total.
+    }
+    int price = numberOf * actualprice;
+
+    if (price > fleet.getMoney())
+        return twNOT_ENOUGH_MONEY; // don't have money to buy all that
+    if (numberOf > it->second.howMany())
+        return twNOT_ENOUGH_ITEMS; // not enough items to buy!
+
+    /// Finally, actually buy them items.
+    fleet.addItem(Item(ID), numberOf, getBuyPrice(ID) * (1 + currentTax));
+    fleet.addMoney(-price);
+    it->second.addItem(-numberOf);
+    it->second.addDemand(numberOf);
+    lastTransaction = price;
+    numberOfLastTransaction = numberOf;
+    unitPurchasePriceOfSell = 0;
+    lastTransactionItemID = ID;
+    return twSUCCESS;
+}
+
 int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown)
   {
   lastTransaction = 0;
@@ -180,6 +222,40 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometo
   
   return twSUCCESS;
   }
+
+int Town::sellItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown)
+{
+    lastTransaction = 0;
+    if (numberOf == 0)
+        return 0;
+    if (numberOf < 0)
+        numberOf = fleet.getNumberOfItems(ID);
+    lastTransactionItemID.clear();
+    // Set tax rate to 0 if it's hometown.
+    Skill& skill = fleet.captain.skills[ItemDict.findItemCategory(ID)];
+
+    double currentTax = getTaxRate(hometown);
+    unitPurchasePriceOfSell = fleet.getPurchasePriceOf(ID);
+    bool success = fleet.removeItem(ID, numberOf);
+    if (!success)
+        return twNOT_ENOUGH_ITEMS;
+    int earned = numberOf * getSellPrice(ID, 1.0 + skill.getLevel() / 100.0) * (1 - currentTax); // Each level in a skill increases price by 1%
+    addItems(ID, numberOf);
+    fleet.addMoney(earned);
+    lastTransaction = earned;
+
+    // Add training points equal to profit. If less than 0, add nothing.
+    int profit = earned - unitPurchasePriceOfSell * numberOf;
+    if (profit < 0) profit = 0;
+    skill.train(profit);
+    cout << "Debug: Trained skill " << skill.name << " by " << profit << ", level " << skill.getLevel() << ", progress " << skill.getValue() << "\n";
+
+
+    numberOfLastTransaction = numberOf;
+    lastTransactionItemID = ID;
+
+    return twSUCCESS;
+}
 
 int Town::buyRations(Ship& ship, const int& number)
   {

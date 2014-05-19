@@ -82,20 +82,13 @@ bool Ship::addMoney(const int& amount)
 
 void Ship::addItem(const Item& item, const int& numberOf, const int& averagePrice)
   {
-  auto it = itemList.begin();
-  for (; it < itemList.end(); it++)
+    if (itemList.find(item.ID) != itemList.end())
     {
-    if (item == *it)
-      break;
+        itemList[item.ID].addItem(numberOf, averagePrice);
     }
-  if (it == itemList.end())
+    else
     {
-    itemList.push_back(LedgerItem(item, numberOf, averagePrice));
-    it = itemList.end() - 1;
-    }
-  else
-    {
-    it->addItem(numberOf, averagePrice);
+        itemList[item.ID] = LedgerItem(item, numberOf, averagePrice);
     }
 
   storage += numberOf;
@@ -108,69 +101,46 @@ int Ship::getMoney()
 
 int Ship::getNumberOfItems(const std::string& ID)
   {
-  for (auto it = itemList.begin(); it < itemList.end(); it++)
-    if (ID == it->ID)
-      return it->howMany();
-  return 0; // if it's not in the list.
+    if (itemList.find(ID) != itemList.end())
+      return itemList[ID].howMany();
+    return 0; // if it's not in the list.
   }
 
 vector<LedgerItemTuple> Ship::returnListOfItems()
   {
   vector<LedgerItemTuple> returnVal;
   LedgerItemTuple buffer;
-  for (auto it = itemList.begin(); it < itemList.end(); it++)
+  for (auto it = itemList.begin(); it != itemList.end(); it++)
     {
-    buffer.itemID = it->ID;
-    buffer.ItemName = it->name;
-    buffer.averagePurchasePrice = to_string(it->getAveragePrice());
-    buffer.numberOfItems = to_string(it->howMany());
+    buffer.itemID = it->second.ID;
+    buffer.ItemName = it->second.name;
+    buffer.averagePurchasePrice = it->second.getAveragePrice();
+    buffer.numberOfItems = it->second.howMany();
     returnVal.push_back(buffer);
     }
- /* if(returnVal.size() == 0)
-    returnVal.push_back(string("Nothing to see here!"));*/
 
   return returnVal;
   }
 
 bool Ship::removeItem(const std::string& ItemID, const int& numberOf)
   {
-  auto it = itemList.begin();
-  for (; it < itemList.end(); it++)
-    if (it->ID == ItemID)
-      break;
-  if (it == itemList.end())
-    return false;
-  bool result = it->removeItems(numberOf);
-  if (it->howMany() == 0)
-    removeFromList(ItemID);
-  if (result) // if it succeeded
-    storage -= numberOf;
-  return result;
+    if (itemList.find(ItemID) != itemList.end())
+    {
+        bool result = itemList[ItemID].removeItems(numberOf); // result returns false if the specified number of items could not be removed.
+        if (itemList[ItemID].howMany() == 0)
+            itemList.erase(ItemID);
+        if (result)
+            storage -= numberOf;
+        return result;
+    }
+   return false;
   }
 
 int Ship::getPurchasePriceOf(const std::string& ID)
   {
-  auto it = itemList.begin();
-  for (; it < itemList.end(); it++)
-    if (it->ID == ID)
-      break;
-  if (it == itemList.end())
-    return false;
-  return it->getAveragePrice();
-  }
-
-bool Ship::removeFromList(const std::string& itemID)
-  {
-  size_t counter = 0;
-  for (; counter < itemList.size(); counter++)
-    if (itemID == itemList[counter].ID)
-      break;
-  if (counter == itemList.size())
-    return false;
-  for (size_t it = counter + 1; it < itemList.size(); it++)
-    itemList[it-1] = itemList[it];
-  itemList.pop_back();
-  return true;
+    if (itemList.find(ID) != itemList.end())
+        return itemList[ID].getAveragePrice();
+    else return 0;
   }
 
 int Ship::getTotalGoods()

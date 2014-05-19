@@ -39,6 +39,8 @@ string State_ShipStatus::assembleOutput(const LedgerItemTuple& tuple)
 
   string returnval;
 
+  string purchaseprice = to_string(tuple.averagePurchasePrice);
+
   returnval += tuple.ItemName.substr(0, 30);
   if(tuple.ItemName.size() < 30)
     for (size_t counter = 0; counter < 30 - tuple.ItemName.size(); counter++)
@@ -46,12 +48,12 @@ string State_ShipStatus::assembleOutput(const LedgerItemTuple& tuple)
 
   returnval += blank;
 
-  if (tuple.averagePurchasePrice.size() > 5)
+  if (purchaseprice.size() > 5)
     returnval += string("xxxx");
-  else returnval += tuple.averagePurchasePrice.substr(0, 5);
+  else returnval += purchaseprice.substr(0, 5);
 
-  if (tuple.averagePurchasePrice.size() < 5)
-    for (size_t counter = 0; counter < 5 - tuple.averagePurchasePrice.size(); counter++)
+  if (purchaseprice.size() < 5)
+  for (size_t counter = 0; counter < 5 - purchaseprice.size(); counter++)
       returnval += blank;
   
   returnval += string(" x");
@@ -274,7 +276,7 @@ void State_ShipStatus::KeyDown(const int &key,const int &unicode)
     }
     else if (key == SDLK_RIGHT)
     {
-        if (pageit < pages.size() - 1)
+        if ((size_t)pageit < pages.size() - 1)
         {
             pageit++;
             page = pages[pageit];

@@ -6,19 +6,21 @@
 #include "utility.h"
 #include <iostream>
 
-#pragma warning(disable : 4018)
-#pragma warning(disable : 4244)
-#pragma warning(disable : 4996)
-
 using namespace std;
 
-State_Shop::State_Shop(Town& town, Ship& ship)
-  : refToTown(town), refToShip(ship), selector(7), whichConsole(false), redraw(false), startbuy(false), startsell(false),
+State_Shop::State_Shop(Town& town, Fleet& fleet)
+  : refToTown(town), refToFleet(fleet), selector(7), whichConsole(false), redraw(false), startbuy(false), startsell(false),
   calculatebuy(false), calculatesell(false), isHometown(false), getPrompt(false)
   {
   consoleLeft = new TCODConsole(50, 48);
   consoleRight = new TCODConsole(50, 48);
-  if(ship.captain.faction == town.getFactionID())
+
+  // Trades with entire fleet by default.
+  pageit = -1;
+  pages = getKeys(fleet.ships);
+  page = -1;
+
+  if(fleet.captain.faction == town.getFactionID())
     isHometown = true;
   }
 
@@ -43,40 +45,39 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
   /// i: item id, _: space, n:name, p: purchase price, m: how many
   /// ID
   /// iiii_n{30}_ppppp_xmmm~
-  string blank(" ");
   string type = ItemDict.findItemTypeInitials(tuple.itemID);
 
   string returnval;
   returnval += type;
-  returnval += blank;
+  returnval += " ";
 
   returnval += tuple.ItemName.substr(0, 20);
-  if(tuple.ItemName.size() < 20)
-    for (int counter = 0; counter < 20 - tuple.ItemName.size(); counter++)
-      returnval += blank;
+  if (tuple.ItemName.size() < 20)
+  for (size_t counter = 0; counter < 20 - tuple.ItemName.size(); counter++)
+      returnval += " ";
 
-  returnval += blank;
+  returnval += " ";
 
-  if (tuple.averagePurchasePrice.size() > 5)
-    returnval += string("xxxx");
-  if (tuple.averagePurchasePrice.size() <= 5)
-    {
-    for (int counter = 0; counter < 5 - tuple.averagePurchasePrice.size(); counter++)
-      returnval += blank;
-    returnval += tuple.averagePurchasePrice.substr(0, 5);
-    }
+  std::string purchaseprice = to_string(tuple.averagePurchasePrice);
+
+  if (purchaseprice.size() > 5)
+      returnval += string("xxxx");
+  if (purchaseprice.size() <= 5)
+  {
+      for (size_t counter = 0; counter < 5 - purchaseprice.size(); counter++)
+          returnval += " ";
+      returnval += purchaseprice.substr(0, 5);
+  }
 
   
 
   returnval += string("   ");
 
   string sellprice = to_string(refToTown.getSellPrice(tuple.itemID) * (1.0f - refToTown.getTaxRate(isHometown)));
-
-  //returnval += string("~") + sellprice;
   
   if (sellprice.size() < 6)
-    for (int counter = 0; counter < 6 - sellprice.size() - 1; counter++)
-      returnval += blank;
+    for (size_t counter = 0; counter < 6 - sellprice.size() - 1; counter++)
+      returnval += " ";
   returnval += string("~") + sellprice.substr(0, 6);
 
   returnval += string("   x");
@@ -91,49 +92,48 @@ string State_Shop::assembleOutput(const EconomyItemTuple& tuple)
   /// i: item id, _: space, n:name, p: purchase price, m: how many
   /// ID
   /// iiii_n{18}_ppppp_xmmm~
-  string blank(" ");
 
   string type = ItemDict.findItemTypeInitials(tuple.itemID);
 
   string returnval;
-  returnval += type;
-  returnval += blank;
+  returnval += type + " ";
 
   returnval += tuple.ItemName.substr(0, 18);
   if(tuple.ItemName.size() < 18)
-    for (int counter = 0; counter < 18 - tuple.ItemName.size(); counter++)
-      returnval += blank;
+    for (size_t counter = 0; counter < 18 - tuple.ItemName.size(); counter++)
+      returnval += " ";
 
-  returnval += blank;
-  string buffer = tuple.BuyPrice;
-  buffer = changeToDecimal(buffer);
+  returnval += " ";
+  string buffer = tuple.BuyPrice_s;
+  //buffer = changeToDecimal(buffer);
   if (buffer.size() < 7)
-    for (int counter = 0; counter < 7 - buffer.size(); counter++)
-      returnval += blank;
+    for (size_t counter = 0; counter < 7 - buffer.size(); counter++)
+      returnval += " ";
   if (buffer.size() > 7)
     returnval += string("xxxxxxx");
   else returnval += buffer.substr(0, 7);
 
-  returnval += blank;
+  returnval += " ";
 
-  buffer = tuple.SellPrice;
-  buffer = changeToDecimal(buffer);
+  buffer = tuple.SellPrice_s;
+  //buffer = changeToDecimal(buffer);
   if (buffer.size() < 6)
-    for (int counter = 0; counter < 6 - buffer.size(); counter++)
-      returnval += blank;
+    for (size_t counter = 0; counter < 6 - buffer.size(); counter++)
+      returnval += " ";
   if (buffer.size() > 6)
     returnval += string("xxxxxx");
   else returnval += buffer.substr(0, 6);
 
    
-  
+  std::string numItems = to_string(tuple.numberOfItems);
   returnval += string(" x");
-  returnval += tuple.numberOfItems;
-  if (tuple.numberOfItems.size() < 4)
-    for (int counter = 0; counter < 4 - tuple.numberOfItems.size(); counter++)
-      returnval += blank;
-  returnval += blank;
-  returnval += tuple.percentageOfBasePrice;
+  returnval += numItems;
+
+  if (numItems.size() < 4)
+  for (size_t counter = 0; counter < 4 - numItems.size(); counter++)
+      returnval += " ";
+  returnval += " ";
+  returnval += tuple.percentageOfBasePrice_s;
   return returnval;
   }
 
@@ -153,7 +153,7 @@ void State_Shop::End()
 void State_Shop::invertLine(const int& line, TCODConsole* console)
   {
   
-  for (int counter = 1; counter < 50; counter++)
+  for (size_t counter = 1; counter < 50; counter++)
     {
     console->setCharBackground(counter, line, TCODColor::white);
     console->setCharForeground(counter, line, TCODColor::black);
@@ -170,12 +170,32 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
   int line = 3;
   
 
-  consoleLeft->print(1, line++, (string("The ") + refToShip.getName()).c_str());
-  consoleLeft->print(1, line++, (rightAlignNumber(refToShip.getMoney()) + string(" ducats")).c_str());
-  consoleLeft->print(1, line++, ("Storage " + to_string(refToShip.getTotalGoods()) + "/" +
-                             to_string(refToShip.getMaxGoods())).c_str());
+  if (page == -1)
+      consoleLeft->print(1, line++, ("The " + refToFleet.getName() + " Fleet").c_str());
+  else
+  {
+      Ship& ship = refToFleet.ships[pageit];
+      consoleLeft->print(1, line++, ("The " + ship.getType() + " "+ ship.getName()).c_str());
+  }
+      
+
+  consoleLeft->print(1, line++, (rightAlignNumber(refToFleet.getMoney()) + string(" ducats")).c_str());
+  if (page == -1)
+    consoleLeft->print(1, line++, ("Storage " + to_string(refToFleet.getTotalGoods()) + "/" +
+                             to_string(refToFleet.getMaxGoods())).c_str());
+  else
+  {
+      Ship& ship = refToFleet.ships[pageit];
+      consoleLeft->print(1, line++, ("Storage " + to_string(ship.getTotalGoods()) + "/" +
+          to_string(ship.getMaxGoods())).c_str());
+  }
+
+
   line++; // skip a line
-  inventory = refToShip.returnListOfItems();
+  if (page == -1)
+      inventory = refToFleet.returnListOfItems();
+  else
+      inventory = refToFleet.ships[pageit].returnListOfItems();
   /// 
   consoleLeft->setDefaultForeground(TCODColor::yellow);
   consoleLeft->print(1, line++, header().c_str());
@@ -189,6 +209,19 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
     consoleLeft->print(1, line++, assembleOutput(*it).c_str());
     }
 
+
+  size_t size = pages.size();
+  if (pageit == -1)
+  {
+      for (size_t c = 0; c < size; c++)
+          consoleLeft->putCharEx(1 + c, consoleLeft->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
+  }
+  else
+  {
+      for (size_t c = 0; c < size; c++)
+          consoleLeft->putCharEx(1 + c, consoleLeft->getHeight() - 2, 7, TCODColor::lightGrey, TCODColor::black);
+      consoleLeft->putCharEx(1 + pageit, consoleLeft->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
+  }
 
   consoleLeft->setDefaultForeground(TCODColor(96,71,64));
   consoleLeft->printFrame(0, 1, 50, 47, false);
@@ -262,7 +295,7 @@ void State_Shop::Update()
     redrawLeft();
     redrawRight();
     }
-  if (getPrompt  && startbuy) // If the player input something...
+  if (getPrompt && startbuy) // If the player input something...
       {
       if (promptResult.empty())
       {
@@ -275,13 +308,14 @@ void State_Shop::Update()
         numberToTrade = stoi(promptResult);
         string itemName = goods.at(selector-8).ItemName;
         itemIDToTrade = goods.at(selector-8).itemID;
+
         if (numberToTrade < 0)
           {
-          numberToTrade = refToShip.getMoney() / (refToTown.getBuyPrice(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown)));
+          numberToTrade = int(refToFleet.getMoney() / (refToTown.getBuyPrice(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown))));
           numberToTrade = numberToTrade > refToTown.getNumberOf(itemIDToTrade) ? refToTown.getNumberOf(itemIDToTrade) : numberToTrade;
           }
 
-        int total = numberToTrade * refToTown.getBuyPrice(itemIDToTrade) * (double)(1 + refToTown.getTaxRate());
+        int total = int(numberToTrade * refToTown.getBuyPrice(itemIDToTrade) * (double)(1 + refToTown.getTaxRate()));
         
         string print = string("Really buy ") + to_string(numberToTrade) + " " + itemName + " for " + to_string(total) + " ducats?";
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
@@ -302,7 +336,7 @@ void State_Shop::Update()
       }
   else if (startbuy)
     {
-      if (selector >= 8 && selector-8 < goods.size()) 
+      if ((size_t)selector >= 8 && (size_t)selector - 8 < goods.size())
       {
       promptResult.clear();
       nextState = new state_StringIn(32, promptResult, string("Buy how many? (-1 is 'all')"));
@@ -315,7 +349,7 @@ void State_Shop::Update()
     {
     if (yesNo) // if said yes
       {
-      int errors = refToTown.buyItems(refToShip, itemIDToTrade, numberToTrade, isHometown);
+      int errors = refToTown.buyItems(refToFleet, itemIDToTrade, numberToTrade, isHometown);
       string print;
       switch (errors)
         {
@@ -362,10 +396,10 @@ void State_Shop::Update()
         itemIDToTrade = inventory.at(selector-8).itemID;
         if (numberToTrade < 0)
           {
-          numberToTrade = stoi(inventory.at(selector-8).numberOfItems);
+          numberToTrade = inventory.at(selector-8).numberOfItems;
           }
 
-        int total = numberToTrade * refToTown.getSellPrice(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown));
+        int total = int(numberToTrade * refToTown.getSellPrice(itemIDToTrade) * (double)(1 - refToTown.getTaxRate(isHometown)));
         
         string print = string("Really sell ") + to_string(numberToTrade) + string(" ") + itemName + string(" for ") + to_string(total) + string(" ducats?");
         nextState = new State_Prompt(print.size()+4, 5, print, yesNo);
@@ -398,22 +432,22 @@ void State_Shop::Update()
         }
     }
   else if (startsell)
-    {
-    if (selector >= 8 && selector-8 < inventory.size()) 
+  {
+      if ((size_t)selector >= 8 && (size_t)selector - 8 < inventory.size())
       {
-      promptResult.clear();
-      nextState = new state_StringIn(32, promptResult, string("Sell how many? (-1 is 'all')"));
-      pushSomething = true;
-      getPrompt = true;
+          promptResult.clear();
+          nextState = new state_StringIn(32, promptResult, string("Sell how many? (-1 is 'all')"));
+          pushSomething = true;
+          getPrompt = true;
       }
-    else startsell = false;
-    }
+      else startsell = false;
+  }
   else if (calculatesell)
     {
     if (yesNo) // if said yes
       {
       int length;
-      int errors = refToTown.sellItems(refToShip, itemIDToTrade, numberToTrade, isHometown);
+      int errors = refToTown.sellItems(refToFleet, itemIDToTrade, numberToTrade, isHometown);
       string print;
       switch (errors)
         {
@@ -459,47 +493,62 @@ void State_Shop::Update()
   exit:;
   }
 
-void State_Shop::KeyDown(const int &key,const int &unicode)
+  void State_Shop::KeyDown(const int &key, const int &unicode)
   {
-  if (key == SDLK_ESCAPE)
-    {
-      popMe = true;
-    }
-  else if (key == SDLK_LEFT && whichConsole) // If the right side is selected, the left key swaps to the left.
-    {
-    whichConsole = false;
-    selector = 8;
-    
-    redrawLeft();
-    redrawRight();
-    invertLine(selector, consoleLeft);
-    }
-  else if (key == SDLK_RIGHT && !whichConsole) // opposite: swap to right
-    {
-    whichConsole = true;
-    selector = 8;
-    
-    redrawLeft();
-    redrawRight();
-    invertLine(selector, consoleRight);
-    }
-  else if (key == SDLK_DOWN && selector < 46)
-     {
-     selector++;
-     redraw = true;
-     }
-   else if (key == SDLK_UP && selector > 8)
-     {
-     selector--;
-     redraw = true;
-     }
-   else if (key == SDLK_RETURN) // Right side, ie shop.
-     {
-     if (whichConsole)
-       startbuy = true;
-     else
-       startsell = true;
-     }
+      if (key == SDLK_ESCAPE)
+      {
+          popMe = true;
+      }
+      else if (key == SDLK_LEFT && whichConsole) // If the right side is selected, the left key swaps to the left.
+      {
+          whichConsole = false;
+          selector = 8;
+
+          redrawLeft();
+          redrawRight();
+          invertLine(selector, consoleLeft);
+      }
+      else if (key == SDLK_RIGHT && !whichConsole) // opposite: swap to right
+      {
+          whichConsole = true;
+          selector = 8;
+
+          redrawLeft();
+          redrawRight();
+          invertLine(selector, consoleRight);
+      }
+      else if (key == SDLK_DOWN && selector < 46)
+      {
+          selector++;
+          redraw = true;
+      }
+      else if (key == SDLK_UP && selector > 8)
+      {
+          selector--;
+          redraw = true;
+      }
+      else if (key == SDLK_RETURN) // Right side, ie shop.
+      {
+          if (whichConsole)
+              startbuy = true;
+          else
+              startsell = true;
+      }
+      else if (unicode == '[' && pageit > -1)
+      {
+          pageit--;
+          if (pageit == -1)
+              page = -1;
+          else
+              page = pages[pageit];
+          redrawLeft();
+      }
+      else if (unicode == ']' && (size_t)pageit < pages.size() - 1)
+      {
+          pageit++;
+          page = pages[pageit];
+          redrawLeft();
+      }
   }
 
 /////////////////
