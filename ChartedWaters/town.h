@@ -50,9 +50,9 @@ class Town
     Town(const std::string& newName, const double& tax, const int& ffaction = 0);
     std::string getName();
     int buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false); // if numberOf = -1, buy all items possible with the money.
-    int buyItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown = false); // if numberOf = -1, buy all items possible with the money.
+    int buyItems(Fleet& fleet, const std::string& ID, int numberOf, int target = -1, bool hometown = false); // if numberOf = -1, buy all items possible with the money. If target == -1, entire fleet, else ship with that index.
     int sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometown = false);
-    int sellItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown = false);
+    int sellItems(Fleet& fleet, const std::string& ID, int numberOf, int target = -1, bool hometown = false);
     void addItems(const std::string& ID, const int& numberOf);
     int getFactionID();
     void spawnItems(); // For now, items spawn 100 each except for the Luxury category, which spawns 50 each.

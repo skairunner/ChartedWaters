@@ -330,7 +330,7 @@ int Fleet::getMaxGoods()
     return total;
 }
 
-bool Fleet::removeItem(const std::string& ItemID, const int& numberOf)
+bool Fleet::removeItem(const std::string& ItemID, int numberOf)
 {
     // First, count how many in total we have.
     int count = getNumberOfItems(ItemID);
@@ -341,8 +341,18 @@ bool Fleet::removeItem(const std::string& ItemID, const int& numberOf)
     for (auto it = ships.begin(); it != ships.end(); it++)
     {
         int num = it->second.getNumberOfItems(ItemID);
-        if (num != 0)
+        if (num == 0)
+            continue;
+        if (num > numberOf)
+        {
+            it->second.removeItem(ItemID, numberOf);
+            return true;
+        }            
+        else
+        {
             it->second.removeItem(ItemID, num);
+            numberOf -= num;
+        }
     }
     return true;
 }
@@ -402,7 +412,7 @@ void Fleet::addItem(const Item& item, int numberOf, const int& averagePrice)
         }
         else // not enough space?
         {
-            ship.addItem(item, numberOf, possible);
+            ship.addItem(item, possible, averagePrice);
             numberOf -= possible;
         }
     }

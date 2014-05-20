@@ -35,7 +35,10 @@ void State_ShowSkills::redraw()
     {
         if (it->first == "")
             continue;
-        std::string name = it->first;
+        std::string name = it->first.substr(0, 7);
+        if (name.size() < 7)
+        for (int i = 0; i <= 7 - name.size(); i++)
+            name += " ";
         int level = it->second.getLevel();
         int points = it->second.netPointsNeeded();
         double percentToNext = it->second.getValue() - level;

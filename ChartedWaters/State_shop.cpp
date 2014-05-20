@@ -71,17 +71,17 @@ string State_Shop::assembleOutput(const LedgerItemTuple& tuple)
 
   
 
-  returnval += string("   ");
+  returnval += "   ";
 
   string sellprice = to_string(refToTown.getSellPrice(tuple.itemID) * (1.0f - refToTown.getTaxRate(isHometown)));
   
   if (sellprice.size() < 6)
     for (size_t counter = 0; counter < 6 - sellprice.size() - 1; counter++)
       returnval += " ";
-  returnval += string("~") + sellprice.substr(0, 6);
+  returnval += "~" + sellprice.substr(0, 6);
 
-  returnval += string("   x");
-  returnval += tuple.numberOfItems;
+  returnval += "   x";
+  returnval += to_string(tuple.numberOfItems);
 
 
   return returnval;
@@ -349,7 +349,7 @@ void State_Shop::Update()
     {
     if (yesNo) // if said yes
       {
-      int errors = refToTown.buyItems(refToFleet, itemIDToTrade, numberToTrade, isHometown);
+      int errors = refToTown.buyItems(refToFleet, itemIDToTrade, numberToTrade, page, isHometown);
       string print;
       switch (errors)
         {
@@ -446,8 +446,8 @@ void State_Shop::Update()
     {
     if (yesNo) // if said yes
       {
-      int length;
-      int errors = refToTown.sellItems(refToFleet, itemIDToTrade, numberToTrade, isHometown);
+        int length, errors;
+        errors = refToTown.sellItems(refToFleet, itemIDToTrade, numberToTrade, page, isHometown);
       string print;
       switch (errors)
         {
@@ -543,7 +543,7 @@ void State_Shop::Update()
               page = pages[pageit];
           redrawLeft();
       }
-      else if (unicode == ']' && (size_t)pageit < pages.size() - 1)
+      else if (unicode == ']' && pageit < (int)pages.size() - 1)
       {
           pageit++;
           page = pages[pageit];

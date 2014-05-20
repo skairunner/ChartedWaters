@@ -5,6 +5,7 @@
 #include <map>
 
 std::string rightAlignNumber(const int& input, const int& size = -1);
+std::string rightAlignNumber(const double& input, const int& precision = 1);
 std::string rightAlign(const std::string& input, const size_t& size);
 std::string leftAlign(const std::string& input, const size_t& size);
 std::string changeToDecimal(const std::string& input);

@@ -28,6 +28,15 @@ string rightAlignNumber(const int& input, const int& size)
   return returnval;
   }
 
+string rightAlignNumber(const double& input, const int& precision)
+{
+    char price_cstr[50];
+    _snprintf_s(price_cstr, sizeof(price_cstr), ("%." + to_string(precision) + "f").c_str(), input);
+    string buffer(price_cstr);
+
+    return buffer;
+}
+
 std::string rightAlign(const string& input, const size_t& size)
   {
   string returnval;
@@ -53,6 +62,8 @@ std::string leftAlign(const std::string& input, const size_t& size)
       returnval += " ";
   return returnval;
   }
+
+
 
 std::string changeToDecimal(const std::string& input)
   {

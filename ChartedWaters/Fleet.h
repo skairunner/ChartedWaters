@@ -16,7 +16,7 @@ public:
 	std::string getType();
 	bool addMoney(const int& amount); // false if the total money would go under 0.
 	void addItem(const Item& item, int numberOf, const int& averagePrice);
-	bool removeItem(const std::string& ItemID, const int& numberOf); // return false in case there are not enough items to remove.
+	bool removeItem(const std::string& ItemID, int numberOf); // return false in case there are not enough items to remove.
 
     void changeShip(ShipPrototype& newship, int index); // Change the ship of the i'th index to the newship. If the index does not exist, create a new ship. If the index is larger than 4 or smaller than 0, throw a logic_exception.
     Ship& refShip(int index);

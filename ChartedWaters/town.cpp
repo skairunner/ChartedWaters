@@ -49,14 +49,14 @@ vector<EconomyItemTuple> Town::returnListOfItems(bool isHometown)
 
     buffer.numberOfItems = it->second.howMany();
     price = getBuyPrice(it->second.ID) * (1 + tax);
-    buffer.BuyPrice_s = to_string(price);
+    buffer.BuyPrice_s = rightAlignNumber(price);
     buffer.BuyPrice = price;
 
     price = getSellPrice(it->second.ID) * (1 - tax);
     buffer.SellPrice = price;
-    buffer.SellPrice_s = to_string(price);
+    buffer.SellPrice_s = rightAlignNumber(price);
 
-    int percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
+    float percentage = (double)it->second.getPrice()/it->second.basePrice * 100;
     buffer.percentageOfBasePrice_s = to_string(percentage) + string("%%");
     buffer.fractionOfBasePrice = (double)it->second.getPrice() / it->second.basePrice;
 
@@ -149,16 +149,20 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   return twSUCCESS;
   }
 
-int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown)
+int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, int target, bool hometown)
 {
     if (numberOf == 0)
         return 0;
+
     lastTransaction = 0;
     lastTransactionItemID.clear();
     auto it = itemlist.find(ID);
 
     if (it == itemlist.end())
         return twNO_SUCH_ITEM; // item doesn't exist!
+
+    if (target >= 0 && fleet.ships.find(target) == fleet.ships.end())
+        throw std::out_of_range(("Ship number " + to_string(target) + " does not exist.").c_str());
 
     Skill& skill = fleet.captain.skills[it->second.category];
 
@@ -178,7 +182,10 @@ int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, bool homet
         return twNOT_ENOUGH_ITEMS; // not enough items to buy!
 
     /// Finally, actually buy them items.
-    fleet.addItem(Item(ID), numberOf, getBuyPrice(ID) * (1 + currentTax));
+    if (target < 0)
+        fleet.addItem(Item(ID), numberOf, getBuyPrice(ID) * (1 + currentTax));
+    else
+        fleet.ships[target].addItem(Item(ID), numberOf, getBuyPrice(ID) * (1 + currentTax));
     fleet.addMoney(-price);
     it->second.addItem(-numberOf);
     it->second.addDemand(numberOf);
@@ -223,20 +230,35 @@ int Town::sellItems(Ship& ship, const std::string& ID, int numberOf, bool hometo
   return twSUCCESS;
   }
 
-int Town::sellItems(Fleet& fleet, const std::string& ID, int numberOf, bool hometown)
+int Town::sellItems(Fleet& fleet, const std::string& ID, int numberOf, int target, bool hometown)
 {
     lastTransaction = 0;
     if (numberOf == 0)
         return 0;
+
     if (numberOf < 0)
         numberOf = fleet.getNumberOfItems(ID);
+
+    if (target >= 0 && fleet.ships.find(target) == fleet.ships.end())
+        throw std::out_of_range(("Ship number " + to_string(target) + " does not exist.").c_str());
+
     lastTransactionItemID.clear();
     // Set tax rate to 0 if it's hometown.
     Skill& skill = fleet.captain.skills[ItemDict.findItemCategory(ID)];
 
     double currentTax = getTaxRate(hometown);
-    unitPurchasePriceOfSell = fleet.getPurchasePriceOf(ID);
-    bool success = fleet.removeItem(ID, numberOf);
+
+    if (target < 0)
+        unitPurchasePriceOfSell = fleet.getPurchasePriceOf(ID);
+    else
+        unitPurchasePriceOfSell = fleet.ships[target].getPurchasePriceOf(ID);
+
+    bool success = false;
+    if (target < 0)
+        success = fleet.removeItem(ID, numberOf);
+    else
+        success = fleet.ships[target].removeItem(ID, numberOf);
+
     if (!success)
         return twNOT_ENOUGH_ITEMS;
     int earned = numberOf * getSellPrice(ID, 1.0 + skill.getLevel() / 100.0) * (1 - currentTax); // Each level in a skill increases price by 1%
