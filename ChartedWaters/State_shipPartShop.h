@@ -8,7 +8,7 @@
 class State_shipPartShop : public GameState
   {
   public:
-    State_shipPartShop(Town* town = 0, Ship* ship = 0);
+    State_shipPartShop(Town* town = 0, Player* player = 0);
         
     virtual bool Init();
 
@@ -42,8 +42,8 @@ class State_shipPartShop : public GameState
     bool result;
     bool getSomething;
 
-    Town* refToTown;
-    Ship* refToShip;
+    Town* pToTown;
+    Player* pToPlayer;
 
     TCODConsole* consoleLeft, *consoleRight;
     int selector;

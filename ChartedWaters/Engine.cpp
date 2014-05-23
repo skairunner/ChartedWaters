@@ -290,92 +290,92 @@ const int scrollspeed = 2;
 
 ShipSails testsail;
 
-void Engine::KeyDown(const int &key,const int &unicode)
-  {
-  if (key == SDLK_RIGHT)
-    focusX = focusX + scrollspeed <= width - screenwidth/2 ? focusX + scrollspeed : width - screenwidth /2;
-  else if (key == SDLK_LEFT)
-    focusX = focusX - scrollspeed >= screenwidth /2 ? focusX - scrollspeed : screenwidth / 2;
-  else if (key == SDLK_UP)
-    focusY = focusY - scrollspeed >= screenheight/2 ? focusY - scrollspeed : screenheight/2;
-  else if (key == SDLK_DOWN)
-    focusY = focusY + scrollspeed <= height - screenheight/2 ? focusY + scrollspeed : height - screenheight /2;
-  else if (key == SDLK_RETURN)
-    TheWorld->queryTown(TheWorld->getPlayerFleet());
-  else if (key == SDLK_SPACE)
+void Engine::KeyDown(const int &key, const int &unicode)
+{
+    if (key == SDLK_RIGHT)
+        focusX = focusX + scrollspeed <= width - screenwidth / 2 ? focusX + scrollspeed : width - screenwidth / 2;
+    else if (key == SDLK_LEFT)
+        focusX = focusX - scrollspeed >= screenwidth / 2 ? focusX - scrollspeed : screenwidth / 2;
+    else if (key == SDLK_UP)
+        focusY = focusY - scrollspeed >= screenheight / 2 ? focusY - scrollspeed : screenheight / 2;
+    else if (key == SDLK_DOWN)
+        focusY = focusY + scrollspeed <= height - screenheight / 2 ? focusY + scrollspeed : height - screenheight / 2;
+    else if (key == SDLK_RETURN)
+        TheWorld->queryTown(TheWorld->getPlayerFleet());
+    else if (key == SDLK_SPACE)
     {
-    auto pos = TheWorld->getPlayerFleet().getPosition();
-    auto shipTokenList = TheWorld->entityMap.getEntityList(pos);
-    vector<Ship*> shipPointers;
-    for (auto it = shipTokenList.begin(); it < shipTokenList.end(); it++)
-      {
-      shipPointers.push_back(&TheWorld->shipList.at(*it));
-      }
+        auto pos = TheWorld->getPlayerFleet().getPosition();
+        auto shipTokenList = TheWorld->entityMap.getEntityList(pos);
+        vector<Ship*> shipPointers;
+        for (auto it = shipTokenList.begin(); it < shipTokenList.end(); it++)
+        {
+            shipPointers.push_back(&TheWorld->shipList.at(*it));
+        }
 
-//    newState = new State_Combat(TheWorld->getPlayerFleet(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second, shipPointers);
-//   PushState(newState);
+        //    newState = new State_Combat(TheWorld->getPlayerFleet(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second, shipPointers);
+        //   PushState(newState);
     }
 
-  switch (unicode)
+    switch (unicode)
     {
-  case '>':
-    pressedArrow = true;
-    break; 
+    case '>':
+        pressedArrow = true;
+        break;
 
-  case '.':
-    pressedPeriod = true;
-    break;
+    case '.':
+        pressedPeriod = true;
+        break;
 
-  case 'i':
-    newState = new State_shipPartInventory(TheWorld->getPlayerShip());
-    PushState(newState);
-    break;
+    case 'i':
+        newState = new State_shipPartInventory(TheWorld->getPlayerFleet().captain);
+        PushState(newState);
+        break;
 
-  case 'k':
-      newState = new State_ShowSkills(TheWorld->getPlayerFleet().captain);
-      PushState(newState);
-      break;
+    case 'k':
+        newState = new State_ShowSkills(TheWorld->getPlayerFleet().captain);
+        PushState(newState);
+        break;
 
-  case 'R': //Test button to spawn items in shops.
-    for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)
-      it->second.spawnItems();
-    break;
+    case 'R': //Test button to spawn items in shops.
+        for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)
+            it->second.spawnItems();
+        break;
 
-  case 'S':
-    newState = new State_ShipStatus(TheWorld->getPlayerFleet());
-    PushState(newState);
-    break;
+    case 'S':
+        newState = new State_ShipStatus(TheWorld->getPlayerFleet());
+        PushState(newState);
+        break;
 
-  case 's': // Check for city.
-    if (TheWorld->queryTown(TheWorld->getPlayerFleet()))
-      {
-      daysPassed = 0;
-      newState = new State_TownMenu(TheWorld->getTown(TheWorld->getPlayerFleet()), TheWorld->getPlayerFleet());
-      PushState(newState);
-      }
-    break;  
+    case 's': // Check for city.
+        if (TheWorld->queryTown(TheWorld->getPlayerFleet()))
+        {
+            daysPassed = 0;
+            newState = new State_TownMenu(TheWorld->getTown(TheWorld->getPlayerFleet()), TheWorld->getPlayerFleet());
+            PushState(newState);
+        }
+        break;
 
-  case 'T': 
-    testsail = ShipPartDict.getSail(string("sail_maintoproyal"));
-    TheWorld->getPlayerShip().addSail(0, testsail);
-    break;
+    case 'T':
+        testsail = ShipPartDict.getSail(string("sail_maintoproyal"));
+        TheWorld->getPlayerShip().addSail(0, testsail);
+        break;
 
-  case 'Y':
-    if (!lockedToShip)
-      {
-      auto entityList = TheWorld->entityMap.getEntityList(mouseX, mouseY);
-      if (entityList.size()) // if there is a ship on the tile, and we're not following a ship
-        lockedShip = &(TheWorld->shipList[entityList.front()]);
-      else 
-        lockedFleet = &(TheWorld->getPlayerFleet());
-      }
-    
-    lockedToShip = !lockedToShip;
-    break;
+    case 'Y':
+        if (!lockedToShip)
+        {
+            auto entityList = TheWorld->entityMap.getEntityList(mouseX, mouseY);
+            if (entityList.size()) // if there is a ship on the tile, and we're not following a ship
+                lockedShip = &(TheWorld->shipList[entityList.front()]);
+            else
+                lockedFleet = &(TheWorld->getPlayerFleet());
+        }
 
-  default: break;
+        lockedToShip = !lockedToShip;
+        break;
+
+    default: break;
     }
-  }
+}
 
 void Engine::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY)
   {

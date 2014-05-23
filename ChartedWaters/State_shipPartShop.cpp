@@ -13,8 +13,8 @@
 
 using namespace std;
 
-State_shipPartShop::State_shipPartShop(Town* town, Ship* ship)
-  : selector(3), refToTown(town), refToShip(ship), redraw(true), attemptBuy(true), getSomething(true), result(false)
+State_shipPartShop::State_shipPartShop(Town* town, Player* player)
+  : selector(3), pToTown(town), pToPlayer(player), redraw(true), attemptBuy(true), getSomething(true), result(false)
   {
   consoleLeft = new TCODConsole(50, 48);
   consoleRight = new TCODConsole(50, 48);
@@ -29,19 +29,19 @@ string State_shipPartShop::shopHeader()
   }
 
 bool State_shipPartShop::Init()
-  {
-  if (refToTown)
+{
+    if (pToTown)
     {
-    redrawLeft(refToTown->partList);
-    ShipPart* part = 0;
-    if (selector >= 3 && selector - 3 < refToTown->partList.size())
-      part = refToTown->partList[selector-3];
-    redrawRight(part);
+        redrawLeft(pToTown->partList);
+        ShipPart* part = 0;
+        if (selector >= 3 && selector - 3 < pToTown->partList.size())
+            part = pToTown->partList[selector - 3];
+        redrawRight(part);
     }
-  else return false;
+    else return false;
 
-  return true;
-  }
+    return true;
+}
 
 void State_shipPartShop::End()
   {
@@ -66,84 +66,84 @@ void State_shipPartShop::Render(TCODConsole *root)
   }
 
 void State_shipPartShop::Update()
-  {
-  if (refToTown)
+{
+    if (pToTown)
     {
-    /*consoleLeft->clear();
-    consoleLeft->setDefaultForeground(TCODColor::white);*/
-    if (attemptBuy && selector >= 3 && selector - 3 < refToTown->partList.size() && !getSomething)
-      {
-      pushSomething = true;
-      std::string msg ("Are you sure you want to buy ");
-      msg += refToTown->partList.at(selector-3)->shopName() + " for " + rightAlignNumber(refToTown->partList.at(selector-3)->shopPrice()) + " ducats?";
-      nextState = new State_Prompt(msg.size()+4, 4, msg, result);
-      getSomething = true;
-      }
-    else if (attemptBuy && getSomething)
-      {
-      std::string msg;
-      if (result)
+        /*consoleLeft->clear();
+        consoleLeft->setDefaultForeground(TCODColor::white);*/
+        if (attemptBuy && selector >= 3 && selector - 3 < pToTown->partList.size() && !getSomething)
         {
-        if (refToShip->captain.ducats < refToTown->partList.at(selector-3)->shopPrice())
-          {
-          msg += "Not enough money.";
-          nextState = new State_Prompt(msg.size()+4, 4, msg, result);
-          pushSomething = true;        
-          }
-        else
-          {        
-          msg += "Bought " + refToTown->partList.at(selector-3)->shopName() + ".";
-          nextState = new State_Prompt(msg.size()+4, 4, msg, result);
-          pushSomething = true; 
+            pushSomething = true;
+            std::string msg("Are you sure you want to buy ");
+            msg += pToTown->partList.at(selector - 3)->shopName() + " for " + rightAlignNumber(pToTown->partList.at(selector - 3)->shopPrice()) + " ducats?";
+            nextState = new State_Prompt(msg.size() + 4, 4, msg, result);
+            getSomething = true;
+        }
+        else if (attemptBuy && getSomething)
+        {
+            std::string msg;
+            if (result)
+            {
+                if (pToPlayer->ducats < pToTown->partList.at(selector - 3)->shopPrice())
+                {
+                    msg += "Not enough money.";
+                    nextState = new State_Prompt(msg.size() + 4, 4, msg, result);
+                    pushSomething = true;
+                }
+                else
+                {
+                    msg += "Bought " + pToTown->partList.at(selector - 3)->shopName() + ".";
+                    nextState = new State_Prompt(msg.size() + 4, 4, msg, result);
+                    pushSomething = true;
 
-          refToShip->captain.ducats -= refToTown->partList.at(selector-3)->shopPrice();
+                    pToPlayer->ducats -= pToTown->partList.at(selector - 3)->shopPrice();
 
-          auto part = refToTown->partList.at(selector-3);
-          if (part->type() == "cannon")
-            {
-            auto partpointer = dynamic_cast<ShipCannons*>(part);   
-            refToShip->captain.addPart(*partpointer);
-            }
-          else if (part->type() == "armor")
-            {
-            auto partpointer = dynamic_cast<ShipArmor*>(part);
-            refToShip->captain.addPart(*partpointer);
-            }
-          else if (part->type() == "statue")
-            {
-            auto partpointer = dynamic_cast<ShipStatue*>(part);       
-            refToShip->captain.addPart(*partpointer);
-            }
-          else if (part->type() == "sails")
-            {
-            auto partpointer = dynamic_cast<ShipSails*>(part);
-            refToShip->captain.addPart(*partpointer);
-            }
-          }
+                    auto part = pToTown->partList.at(selector - 3);
+                    if (part->type() == "cannon")
+                    {
+                        auto partpointer = dynamic_cast<ShipCannons*>(part);
+                        pToPlayer->addPart(*partpointer);
+                    }
+                    else if (part->type() == "armor")
+                    {
+                        auto partpointer = dynamic_cast<ShipArmor*>(part);
+                        pToPlayer->addPart(*partpointer);
+                    }
+                    else if (part->type() == "statue")
+                    {
+                        auto partpointer = dynamic_cast<ShipStatue*>(part);
+                        pToPlayer->addPart(*partpointer);
+                    }
+                    else if (part->type() == "sails")
+                    {
+                        auto partpointer = dynamic_cast<ShipSails*>(part);
+                        pToPlayer->addPart(*partpointer);
+                    }
+                }
 
+            }
+
+            attemptBuy = false;
+            result = false;
+            getSomething = false;
         }
 
-      attemptBuy = false;
-      result = false;
-      getSomething = false;
-      }
 
 
 
+        if (redraw)
+        {
+            redrawLeft(pToTown->partList);
 
-    if (redraw)
-      {
-      redrawLeft(refToTown->partList);
+            ShipPart* part = 0;
+            if (selector >= 3 && selector - 3 < pToTown->partList.size())
+                part = pToTown->partList[selector - 3];
+            redrawRight(part);
 
-      ShipPart* part = 0;
-      if (selector >= 3 && selector - 3 < refToTown->partList.size())
-        part = refToTown->partList[selector-3];
-      redrawRight(part);
-
-      redraw = false;
-      }
+            redraw = false;
+        }
     }
-  }
+}
 
 void State_shipPartShop::KeyDown(const int &key,const int &unicode)
   {
@@ -289,11 +289,10 @@ void State_shipPartShop::redrawRight(ShipPart* part)
       getProfile(*partpointer, line);
       }
     }
-  auto ship = refToShip;
   line=24;
 
   consoleRight->setDefaultForeground(TCODColor::yellow);
-  consoleRight->print(1, line++, "Current money = %d", refToShip->getMoney());
+  consoleRight->print(1, line++, "Current money = %d", pToPlayer->ducats);
   consoleRight->setDefaultForeground(TCODColor(96,71,64));
   consoleRight->printFrame(0, 1, 50, 22, false);
   consoleRight->printFrame(0, 23, 50, 25, false);

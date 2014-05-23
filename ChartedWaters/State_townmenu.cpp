@@ -70,10 +70,10 @@ void State_TownMenu::KeyDown(const int &key,const int &unicode)
     nextState = new State_Tavern(refToFleet);
     pushSomething = true;
     break;
-  /*case SDLK_s:
-    nextState = new State_shipPartShop(&refToTown, &refToFleet);
+  case SDLK_s:
+    nextState = new State_shipPartShop(&refToTown, &refToFleet.captain);
     pushSomething = true;
-    break;*/
+    break;
   default:
     break;
     }
@@ -92,7 +92,6 @@ void State_TownMenu::drawMenu()
   console->print(1, line++, "%cS%chip parts", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   //console->print(1, line++, "%cH%carbor", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->setDefaultForeground(TCODColor::grey);
-  //console->print(1, line++, "Ship parts");
   console->print(1, line++, "Harbor");
   console->setDefaultForeground(TCODColor::white);
   console->print(1, line++, "Ta%cv%cern", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
