@@ -55,6 +55,10 @@ void JSONToShip::readShips(ShipDictionary& dict)
     ShipPrototype buffer;
     buffer.typeID = ship["ID"].asString();
     buffer.typeName = ship["name"].asString();
+
+    if (buffer.typeName == "Sloop")
+        cout << "..";
+
     buffer.size = ship["size"].asString();
     buffer.specialization = ship["specialization"].asString();
     buffer.price = ship["price"].asInt();
@@ -64,13 +68,18 @@ void JSONToShip::readShips(ShipDictionary& dict)
     buffer.maxcannons = ship["max cannons"].asInt();
     buffer.maxcargo = ship["max cargo"].asInt();
     buffer.maxsailors = ship["max sailors"].asInt();
-    buffer.lateen = ship["lateen sail"].asInt();
-    buffer.square = ship["square sail"].asInt();
+    buffer.lateen = ship["lateen"].asInt();
+    buffer.square = ship["square"].asInt();
     buffer.minimumsailors = ship["min sailors"].asInt();
     buffer.waveResistance = ship["wave resistance"].asInt();
     buffer.turning = ship["turning"].asInt();
     buffer.baseArmor = ship["base armor"].asInt();
     buffer.maxDurability = ship["max durability"].asInt();
+    buffer.sailSlots = ship["sail slots"].asInt();
+    buffer.cannonSlots = ship["cannon slots"].asInt();
+    buffer.armorSlots = ship["armor slots"].asInt();
+    buffer.forecannonSlots = ship["fore cannon slots"].asInt();
+    buffer.aftcannonSlots = ship["aft cannon slots"].asInt();
     if (buffer.maxstorage != buffer.maxcannons + buffer.maxcargo + buffer.maxsailors)
       cerr << "Storage != cargo + sailors + cannons for " << buffer.typeID << "!\n";
     dict.ships[buffer.typeID] = buffer;

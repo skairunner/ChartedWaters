@@ -48,14 +48,26 @@ class Ship : protected ShipPrototype
     int getMaxSailors();
     int getWaveResistance();
     int getMaxDurability();
+
     int getArmor();
+    int getBaseArmor();
+    int getAddedArmor();
+
     int getLateen();
+    int getBaseLateen();
+    int getAddedLateen(); // sum up item effects
     int getSquare();
+    int getBaseSquare();
+    int getAddedSquare(); // same
     double getSpeed(); // Finds the lowest speed of the entire fleet.
     int getBaseSpeed();
     int getMovementCounters(); // This one keeps the decimals. Used for movement, not stat display. Alters the class.
     std::string getDescription();
+
     int getTurning();
+    int getBaseTurning();
+    int getAddedTurning(); // Should be negative.
+
     std::string getSize();
 
 
@@ -70,9 +82,16 @@ class Ship : protected ShipPrototype
     int addSail(int pos, ShipSails& sail);
     int removeSail(int pos, ShipSails& sail);
     int addArmor(int pos, ShipArmor& armor);
+    int removeArmor(int pos, ShipArmor& armor);
+    int addCannons(int pos, ShipCannons& cannons);
+    int removeCannons(int pos, ShipCannons& cannons);
+
     int addFigurehead(ShipArmor& figurehead);
     void addSailors(const int& num, const int& addedtraining);
     void removeSailors(const int& num);
+    int getSailSlots();
+    int getCannonSlots();
+    int getArmorSlots();
 
     std::pair<int, int> getPosition();
 
@@ -96,7 +115,7 @@ class Ship : protected ShipPrototype
     std::vector<std::pair<int,int>> path;
     std::map<int, ShipSails> sailList;
     std::map<int, ShipArmor> armorList;
-    std::vector<ShipCannons> cannonList;
+    std::map<int, ShipCannons> cannonList;
     
     ShipStatue figurehead;
 

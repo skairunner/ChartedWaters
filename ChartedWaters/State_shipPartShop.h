@@ -31,8 +31,6 @@ class State_shipPartShop : public GameState
     void redrawLeft(std::vector<ShipPart*>& partList);
     void redrawRight(ShipPart* part = 0);
 
-    void swapLineColors(TCODConsole* con, const int& counter);
-
     void getProfile(ShipArmor& item, int& line);
     void getProfile(ShipSails& item, int& line);
     void getProfile(ShipStatue& item, int& line);

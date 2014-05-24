@@ -209,19 +209,7 @@ void State_Shop::redrawLeft() // Similar to State_shipstatus
     consoleLeft->print(1, line++, assembleOutput(*it).c_str());
     }
 
-
-  size_t size = pages.size();
-  if (pageit == -1)
-  {
-      for (size_t c = 0; c < size; c++)
-          consoleLeft->putCharEx(1 + c, consoleLeft->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
-  }
-  else
-  {
-      for (size_t c = 0; c < size; c++)
-          consoleLeft->putCharEx(1 + c, consoleLeft->getHeight() - 2, 7, TCODColor::lightGrey, TCODColor::black);
-      consoleLeft->putCharEx(1 + pageit, consoleLeft->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
-  }
+  drawPageDots(consoleLeft, 1, consoleLeft->getHeight() - 2, pageit, pages.size());
 
   consoleLeft->setDefaultForeground(TCODColor(96,71,64));
   consoleLeft->printFrame(0, 1, 50, 47, false);

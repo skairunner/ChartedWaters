@@ -10,6 +10,10 @@ std::string rightAlign(const std::string& input, const size_t& size);
 std::string leftAlign(const std::string& input, const size_t& size);
 std::string changeToDecimal(const std::string& input);
 
+void swapLineColors(TCODConsole* con, const int& line);
+void drawPageDots(TCODConsole* console, const int& X, const int& Y, const int& picked, const size_t& length); // if picked < 0 color all circles.
+void invertLine(TCODConsole* console, const int& line);
+
 template<typename T> void removeInPlace(const int& i, std::vector<T>& v);
 template<typename K, typename T> std::vector<K> getKeys(std::map<K, T>& mp);
 

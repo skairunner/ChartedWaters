@@ -90,3 +90,35 @@ int stringToDecimal(const std::string& input)
   return result;
   }
 
+void swapLineColors(TCODConsole* con, const int& line)
+{
+    if (line % 2)
+        con->setDefaultForeground(TCODColor::lightestGreen);
+    else con->setDefaultForeground(TCODColor::lightestBlue);
+}
+
+void drawPageDots(TCODConsole* console, const int& X, const int& Y, const int& picked, const size_t& length)
+{
+    if (picked < 0)
+    {
+        for (size_t c = 0; c < length; c++)
+            console->putCharEx(X + c, Y, 7, TCODColor::white, TCODColor::black);
+    }
+    else
+    {
+        for (size_t c = 0; c < length; c++)
+            console->putCharEx(X + c, Y, 7, TCODColor::lightGrey, TCODColor::black);
+        console->putCharEx(X + picked, Y, 7, TCODColor::white, TCODColor::black);
+    }
+}
+
+void invertLine(TCODConsole* console, const int& line)
+{
+    TCODColor fore = console->getCharBackground(1, line);
+    TCODColor back = console->getCharForeground(1, line);
+    for (int i = 1; i < console->getWidth() - 1; i++)
+    {
+        console->setCharBackground(i, line, back);
+        console->setCharForeground(i, line, fore);
+    }
+}

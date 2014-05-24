@@ -129,13 +129,13 @@
     <ClCompile Include="player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="State_shipPartInventory.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
     <ClCompile Include="Fleet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="State_showskills.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="State_equipParts.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>
@@ -245,9 +245,6 @@
     <ClInclude Include="State_shipPartShop.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="State_shipPartInventory.h">
-      <Filter>Header Files\States</Filter>
-    </ClInclude>
     <ClInclude Include="dirent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -255,6 +252,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="State_showskills.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="State_equipParts.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>

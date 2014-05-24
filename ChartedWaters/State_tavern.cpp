@@ -343,18 +343,7 @@ void State_buySailors::drawMenu()
   console->setDefaultForeground(TCODColor::lightestRed);
   console->print(1, line++, "%cF%cire sailors", TCOD_COLCTRL_2, TCOD_COLCTRL_STOP);
 
-  int size = pages.size();
-  if (pageit == -1)
-  {
-      for (int c = 0; c < size; c++)
-          console->putCharEx(1 + c, console->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
-  }
-  else
-  {
-      for (int c = 0; c < size; c++)
-          console->putCharEx(1 + c, console->getHeight() - 2, 7, TCODColor::lightGrey, TCODColor::black);
-      console->putCharEx(1 + pageit, console->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
-  }
+  drawPageDots(console, 1, console->getHeight() - 2, pageit, pages.size());
 
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);
@@ -734,18 +723,8 @@ void State_recoverFatigue::drawMenu()
   console->print(2, line++, "Recover %c1%c fatigue -   200 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(2, line++, "Recover %c2%c0 fatigue - 3200 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(2, line++, "Recover %c5%c0 fatigue - 6400 ducats", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-  size_t size = pages.size();
-  if (pageit == -1)
-  {
-      for (size_t c = 0; c < size; c++)
-          console->putCharEx(1 + c, console->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
-  }
-  else
-  {
-      for (size_t c = 0; c < size; c++)
-          console->putCharEx(1 + c, console->getHeight() - 2, 7, TCODColor::lightGrey, TCODColor::black);
-      console->putCharEx(1 + pageit, console->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
-  }
+
+  drawPageDots(console, 1, console->getHeight() - 2, pageit, pages.size());
 
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);

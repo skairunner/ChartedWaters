@@ -298,11 +298,3 @@ void State_shipPartShop::redrawRight(ShipPart* part)
   consoleRight->printFrame(0, 23, 50, 25, false);
 
   }
-
-
-void State_shipPartShop::swapLineColors(TCODConsole* con, const int& counter)
-  {
-  if (counter %2)
-      con->setDefaultForeground(TCODColor::lightestGreen);
-  else con->setDefaultForeground(TCODColor::lightestBlue);
-  }

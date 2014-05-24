@@ -139,97 +139,108 @@ void World::step()
   }
 
 void World::populateCities()
-  {
-  ///// Use z=1.5 for food, 3.5 for industrial, 5.5 for other, 7.5 for luxury;
-  ///// Use z= 10.5 for population.
-  const double zoom = 0.01;
+{
+    ///// Use z=1.5 for food, 3.5 for industrial, 5.5 for other, 7.5 for luxury;
+    ///// Use z= 10.5 for population.
+    const double zoom = 0.01;
 
-  auto foodlist = ItemDict.getItemsPerCategory(std::string("Food"));
-  auto otherlist = ItemDict.getItemsPerCategory(std::string("Other"));
-  auto industlist = ItemDict.getItemsPerCategory(std::string("Raw materials"));
-  auto luxurylist = ItemDict.getItemsPerCategory(std::string("Luxury"));
-  for (auto it = cityList.begin(); it != cityList.end(); it++)
+    auto foodlist = ItemDict.getItemsPerCategory(std::string("Food"));
+    auto otherlist = ItemDict.getItemsPerCategory(std::string("Other"));
+    auto industlist = ItemDict.getItemsPerCategory(std::string("Raw materials"));
+    auto luxurylist = ItemDict.getItemsPerCategory(std::string("Luxury"));
+    for (auto it = cityList.begin(); it != cityList.end(); it++)
     {
-    
-    auto pos = it->first;
 
-    // Pick ships to stock in the drydocks.
-    for (int counter = 0; counter < 5; counter++)
-      {
-      it->second.shipList.push_back(ShipDict.getRandomShip());
-      }
+        auto pos = it->first;
 
-    // Add parts. Testing: one of each type
-    it->second.partList.push_back(new ShipArmor(ShipPartDict.getArmor("plate_reinforcedrosewood")));
-    it->second.partList.push_back(new ShipSails(ShipPartDict.getSail("sail_redracingstripes")));
-    it->second.partList.push_back(new ShipStatue(ShipPartDict.getFigurehead("statue_remalle")));
-    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 8));
-    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 2));
-    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 16));
-    it->second.partList.push_back(new ShipCannons(ShipPartDict.getCannons("cannon_howitzer"), 64));
+        // Pick ships to stock in the drydocks.
+        for (int counter = 0; counter < 5; counter++)
+        {
+            it->second.shipList.push_back(ShipDict.getRandomShip());
+        }
 
-    // First, Food.
-    double food = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 1.5);
-    double indust = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 3.5);
-    double other = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 5.5);
-    double luxury = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 7.5);
-    double population = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 10.5);
+        // Add parts. Two to six parts each for armor/sails/cannons and two for figureheads (planned).
+        std::uniform_int_distribution<> d2_6(2, 6);
+        std::uniform_int_distribution<> d1_5(2, 5);
+        int numArmor = d2_6(gen);
+        int numSails = d2_6(gen);
+        int numCannons = d2_6(gen);
+        for (int i = 0; i < numArmor; i++)
+            it->second.partList.push_back(new ShipArmor(ShipPartDict.getRandomArmor()));
+        for (int i = 0; i < numSails; i++)
+            it->second.partList.push_back(new ShipSails(ShipPartDict.getRandomSail()));
+        for (int i = 0; i < numCannons; i++)
+        {
+            // Cannon types are 2, 4, 6, 8, 16, 20.
+            int pairs = d1_5(gen);
+            if (pairs == 5)
+                it->second.partList.push_back(new ShipCannons(ShipPartDict.getRandomCannon(), 10)); // times two, because the constructor wants pairs
+            else
+                it->second.partList.push_back(new ShipCannons(ShipPartDict.getRandomCannon(), pow(2, pairs) / 2)); 
+        }
 
-    population += 2;
-    population = (int)(100 * abs(population));
-    it->second.population = (int)population;
+        // First, Food.
+        double food = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 1.5);
+        double indust = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 3.5);
+        double other = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 5.5);
+        double luxury = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 7.5);
+        double population = ItemMaps.GetValue(pos.first * zoom + 0.001, pos.second * zoom + 0.001, 10.5);
 
-    food += 2; // bump into positive.
-    other += 2;
-    indust += 2;
-    luxury += 2;
+        population += 2;
+        population = (int)(100 * abs(population));
+        it->second.population = (int)population;
 
-    food = (int)(2 * abs(food)); // Remove any vestigal negatives.
-    indust = (int)(2 * abs(indust));
-    other = (int)(2 * abs(other));
-    luxury = (int)(1.5 * abs(luxury));
+        food += 2; // bump into positive.
+        other += 2;
+        indust += 2;
+        luxury += 2;
 
-    if (food >= 4)
-      it->second.isAgri = true;
-    if (indust >= 4)
-      it->second.isIndustrial = true;
-    if (luxury >= 4)
-      it->second.isLuxury = true;
-    if (other >= 4)
-      it->second.isOther = true;
+        food = (int)(2 * abs(food)); // Remove any vestigal negatives.
+        indust = (int)(2 * abs(indust));
+        other = (int)(2 * abs(other));
+        luxury = (int)(1.5 * abs(luxury));
+
+        if (food >= 4)
+            it->second.isAgri = true;
+        if (indust >= 4)
+            it->second.isIndustrial = true;
+        if (luxury >= 4)
+            it->second.isLuxury = true;
+        if (other >= 4)
+            it->second.isOther = true;
 
 
-    while (food > 0)
-      {
-      food -= 1;
-      int number = random(0, foodlist.size()-1);
-      it->second.spawnList.push_back(foodlist.at(number));
-      }
-    while (indust > 0)
-      {
-      indust -= 1;
-      int number = random(0, industlist.size()-1);
-      it->second.spawnList.push_back(industlist.at(number));
-      }
-    while (other > 0)
-      {
-      other -= 1;
-      int number = random(0, otherlist.size()-1);
-      it->second.spawnList.push_back(otherlist.at(number));
-      }
-    while (luxury > 0)
-      {
-      luxury -= 1;
-      int number = random(0, luxurylist.size() -1);
-      it->second.spawnList.push_back(luxurylist.at(number));
-      }
+        while (food > 0)
+        {
+            food -= 1;
+            int number = random(0, foodlist.size() - 1);
+            it->second.spawnList.push_back(foodlist.at(number));
+        }
+        while (indust > 0)
+        {
+            indust -= 1;
+            int number = random(0, industlist.size() - 1);
+            it->second.spawnList.push_back(industlist.at(number));
+        }
+        while (other > 0)
+        {
+            other -= 1;
+            int number = random(0, otherlist.size() - 1);
+            it->second.spawnList.push_back(otherlist.at(number));
+        }
+        while (luxury > 0)
+        {
+            luxury -= 1;
+            int number = random(0, luxurylist.size() - 1);
+            it->second.spawnList.push_back(luxurylist.at(number));
+        }
 
-    for (auto itemID = it->second.spawnList.begin(); itemID < it->second.spawnList.end(); itemID++)
-      {
-      ItemDict.addCityToItem(*itemID, it->first);
-      }
+        for (auto itemID = it->second.spawnList.begin(); itemID < it->second.spawnList.end(); itemID++)
+        {
+            ItemDict.addCityToItem(*itemID, it->first);
+        }
     }
-  }
+}
 
 void World::populateShips()
   {
@@ -265,27 +276,28 @@ void World::populateShips()
   }
 
 void World::pickCannons(Ship& ship)
-  {
-  ShipCannons cannon_temp = ShipPartDict.getRandomCannon();
-  int cannons = ship.getMaxCannons();
-  int pairs = 8;
-  bool abort = false;
-  while (!abort)
+{
+    ShipCannons cannon_temp = ShipPartDict.getRandomCannon();
+    int cannons = ship.getMaxCannons();
+    int pairs = 8;
+    int slots = ship.getCannonSlots();
+    int slot = 0;
+    bool abort = false;
+    while (!abort)
     {
-    if (cannons < pairs * 2)
-      pairs--;
-    else if (pairs == 0)
-      abort = true;
-    else if (ship.cannonList.size() > 5)
-      abort = true;
-    else
-      {
-      cannon_temp.pairs = pairs;
-      cannons -= pairs * 2;
-      ship.cannonList.push_back(cannon_temp);
-      }
+        if (cannons < pairs * 2)
+            pairs--;
+        else if (pairs == 0 || slot >= slots)
+            abort = true;
+        else
+        {
+            cannon_temp.pairs = pairs;
+            cannons -= pairs * 2;
+            ship.cannonList[slot] = cannon_temp;
+            slot++;
+        }
     }
-  }
+}
 
 void World::pickArmor(Ship& ship)
   {

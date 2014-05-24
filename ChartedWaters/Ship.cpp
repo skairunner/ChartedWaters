@@ -52,6 +52,11 @@ void Ship::changeShip(const ShipPrototype& prototype)
   turning = prototype.turning;
   baseArmor = prototype.baseArmor;
   maxDurability = prototype.maxDurability;
+  sailSlots = prototype.sailSlots;
+  cannonSlots = prototype.cannonSlots;
+  armorSlots = prototype.armorSlots;
+  forecannonSlots = prototype.forecannonSlots;
+  aftcannonSlots = prototype.aftcannonSlots;
   durability = maxDurability;
   }
 
@@ -300,8 +305,8 @@ int Ship::getMaxCannons()
 int Ship::getCannons()
   {
   int counter = 0;
-  for (auto it = cannonList.begin(); it < cannonList.end(); it++)
-    counter += it->pairs * 2;
+  for (auto it = cannonList.begin(); it != cannonList.end(); it++)
+    counter += it->second.pairs * 2;
   return counter;
   }
 
@@ -327,27 +332,58 @@ int Ship::getMaxSailors()
 
 int Ship::getLateen()
   {
-  int addedLateen = 0;
-  for (auto it = sailList.begin(); it != sailList.end(); it++)
-    addedLateen += it->second.lateen;
-  return lateen + addedLateen;
+    return lateen + getAddedLateen();
   }
 
+int Ship::getBaseLateen()
+{
+    return lateen;
+}
+
+int Ship::getAddedLateen()
+{
+    int addedLateen = 0;
+    for (auto it = sailList.begin(); it != sailList.end(); it++)
+        addedLateen += it->second.lateen;
+    return addedLateen;
+}
+
 int Ship::getSquare()
-  {
-  int addedSquare = 0;
-  for (auto it = sailList.begin(); it != sailList.end(); it++)
-    addedSquare += it->second.square;
-  return square + addedSquare;
-  }
+{
+    return square + getAddedSquare();
+}
+
+int Ship::getAddedSquare()
+{
+    int addedSquare = 0;
+    for (auto it = sailList.begin(); it != sailList.end(); it++)
+        addedSquare += it->second.square;
+    return addedSquare;
+}
+
+int Ship::getBaseSquare()
+{
+    return square;
+}
 
 int Ship::getArmor()
   {
-  int addedArmor = 0;
-  for (auto it = armorList.begin(); it != armorList.end(); it++)
-    addedArmor += it->second.armor;
-  return baseArmor + addedArmor;
+
+  return baseArmor + getAddedArmor();
   }
+
+int Ship::getBaseArmor()
+{
+    return baseArmor;
+}
+
+int Ship::getAddedArmor()
+{
+    int addedArmor = 0;
+    for (auto it = armorList.begin(); it != armorList.end(); it++)
+        addedArmor += it->second.armor;
+    return addedArmor;
+}
 
 int Ship::getWaveResistance()
   {
@@ -365,14 +401,25 @@ std::string Ship::getDescription()
   }
 
 int Ship::getTurning()
-  {
-  int addedTurning = 0;
-  for (auto it = sailList.begin(); it != sailList.end(); it++)
-    addedTurning += it->second.turning;
-  if (addedTurning + turning < 1)
-    return 1;
-  else return addedTurning + turning;
-  }
+{
+    int addedTurning = getAddedTurning();
+    if (addedTurning + turning < 1)
+        return 1;
+    else return addedTurning + turning;
+}
+
+int Ship::getBaseTurning()
+{
+    return turning;
+}
+
+int Ship::getAddedTurning()
+{
+    int addedTurning = 0;
+    for (auto it = sailList.begin(); it != sailList.end(); it++)
+        addedTurning += it->second.turning;
+    return addedTurning;
+}
 
 string Ship::getSize()
   {
@@ -399,32 +446,87 @@ int Ship::addSail(int pos, ShipSails& sail)
   return shipSWAPPED;
   }
 
-int Ship::addArmor(int pos, ShipArmor& armor)
-  {  
-  auto it = armorList.find(pos);
-  if (it == armorList.end())
-    {
-    armorList[pos] = armor;
-    return shipSUCCESS;
-    }
-  // since it already exists...
-  ShipArmor temp = it->second;
-  armorList[pos] = armor;
-  armor = temp;
-  return shipSWAPPED;
-  }
-
 int Ship::removeSail(int pos, ShipSails& sail)
-  {
-  auto it = sailList.find(pos);
-  if (it == sailList.end())
+{
+    auto it = sailList.find(pos);
+    if (it == sailList.end())
     {
-    return 0;
+        return 0;
     }
-  sail = it->second;
-  sailList.erase(it);
-  return shipSUCCESS;
-  }
+    sail = it->second;
+    sailList.erase(it);
+    return shipSUCCESS;
+}
+
+int Ship::addArmor(int pos, ShipArmor& armor)
+{
+    auto it = armorList.find(pos);
+    if (it == armorList.end())
+    {
+        armorList[pos] = armor;
+        return shipSUCCESS;
+    }
+    // since it already exists...
+    ShipArmor temp = it->second;
+    armorList[pos] = armor;
+    armor = temp;
+    return shipSWAPPED;
+}
+
+int Ship::removeArmor(int pos, ShipArmor& armor)
+{
+    auto it = armorList.find(pos);
+    if (it == armorList.end())
+    {
+        return 0;
+    }
+    armor = it->second;
+    armorList.erase(it);
+    return shipSUCCESS;
+}
+
+int Ship::addCannons(int pos, ShipCannons& cannons)
+{
+    auto it = cannonList.find(pos);
+    if (it == cannonList.end())
+    {
+        cannonList[pos] = cannons;
+        return shipSUCCESS;
+    }
+    // since it already exists...
+    ShipCannons temp = it->second;
+    cannonList[pos] = cannons;
+    cannons = temp;
+    return shipSWAPPED;
+}
+
+int Ship::removeCannons(int pos, ShipCannons& cannons)
+{
+    auto it = cannonList.find(pos);
+    if (it == cannonList.end())
+    {
+        return 0;
+    }
+    cannons = it->second;
+    cannonList.erase(it);
+    return shipSUCCESS;
+}
+
+
+int Ship::getCannonSlots()
+{
+    return cannonSlots;
+}
+
+int Ship::getSailSlots()
+{
+    return sailSlots;
+}
+
+int Ship::getArmorSlots()
+{
+    return armorSlots;
+}
 
 void Ship::addSailors(const int& num, const int& addedtraining)
   {

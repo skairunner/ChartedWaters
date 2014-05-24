@@ -6,6 +6,7 @@
 #include "State_drydock.h"
 #include "State_tavern.h"
 #include "State_shipPartShop.h"
+#include "State_equipParts.h"
 using namespace std;
 
 State_TownMenu::State_TownMenu(Town& town, Fleet& fleet)
@@ -13,7 +14,7 @@ State_TownMenu::State_TownMenu(Town& town, Fleet& fleet)
   {
   int potenwidth = 14 + town.getName().size();
   potenwidth = potenwidth > 18 ? potenwidth : 18;
-  console = new TCODConsole(potenwidth, 9);
+  console = new TCODConsole(potenwidth, 10);
   }
 
 bool State_TownMenu::Init()
@@ -40,44 +41,46 @@ void State_TownMenu::End()
     delete console;
   }
 
-void State_TownMenu::KeyDown(const int &key,const int &unicode)
-  {
-  if (key == SDLK_ESCAPE)
+void State_TownMenu::KeyDown(const int &key, const int &unicode)
+{
+    if (key == SDLK_ESCAPE)
     {
-    if (refToFleet.isLoadedProperly()) 
-      popMe = true;
-    else // too many items!
-      {
-      string message("You have too many items.");
-      nextState = new State_Prompt(message.size()+4, 4, message, throwawayBool);
-      pushSomething = true;
-      }
+        if (refToFleet.isLoadedProperly())
+            popMe = true;
+        else // too many items!
+        {
+            string message("You have too many items.");
+            nextState = new State_Prompt(message.size() + 4, 4, message, throwawayBool);
+            pushSomething = true;
+        }
     }
 
-  switch (key)
+    switch (key)
     {
-  case SDLK_t:
-    nextState = new State_Shop(refToTown, refToFleet);
-    pushSomething = true;
-    break;
-  /*case SDLK_d:
-    nextState = new State_Drydocks(refToTown, refToFleet);
-    pushSomething = true;
-    break;
-  case SDLK_h:
-    break;*/
-  case SDLK_v:
-    nextState = new State_Tavern(refToFleet);
-    pushSomething = true;
-    break;
-  case SDLK_s:
-    nextState = new State_shipPartShop(&refToTown, &refToFleet.captain);
-    pushSomething = true;
-    break;
-  default:
-    break;
+    case SDLK_t:
+        nextState = new State_Shop(refToTown, refToFleet);
+        pushSomething = true;
+        break;
+        /*case SDLK_d:
+          nextState = new State_Drydocks(refToTown, refToFleet);
+          pushSomething = true;
+          break;*/
+    case SDLK_h:
+        nextState = new State_equipParts(refToFleet);
+        pushSomething = true;
+        break;
+    case SDLK_v:
+        nextState = new State_Tavern(refToFleet);
+        pushSomething = true;
+        break;
+    case SDLK_s:
+        nextState = new State_shipPartShop(&refToTown, &refToFleet.captain);
+        pushSomething = true;
+        break;
+    default:
+        break;
     }
-  }
+}
 
 void State_TownMenu::drawMenu()
   {
@@ -90,10 +93,7 @@ void State_TownMenu::drawMenu()
   console->print(1, line++, "%cT%crading post", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "%cD%crydocks", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "%cS%chip parts", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-  //console->print(1, line++, "%cH%carbor", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-  console->setDefaultForeground(TCODColor::grey);
-  console->print(1, line++, "Harbor");
-  console->setDefaultForeground(TCODColor::white);
+  console->print(1, line++, "%cH%carbor", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   console->print(1, line++, "Ta%cv%cern", TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
   console->setDefaultForeground(TCODColor(96,71,64));

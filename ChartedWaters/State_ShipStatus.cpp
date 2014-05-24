@@ -62,13 +62,6 @@ string State_ShipStatus::assembleOutput(const LedgerItemTuple& tuple)
   return returnval;
   }
 
-void State_ShipStatus::swapLineColors(TCODConsole* con, const int& line)
-  {
-  if (line %2)
-      con->setDefaultForeground(TCODColor::lightestGreen);
-  else con->setDefaultForeground(TCODColor::lightestBlue);
-  }
-
 void State_ShipStatus::printStats(TCODConsole* con, int& line)
   {
     Ship& current = refToFleet.ships[page];
@@ -143,57 +136,44 @@ void State_ShipStatus::redrawList()
     console->print(1, line++, assembleOutput(*it).c_str());
     }
 
-  int size = pages.size();
-  for (int c = 0; c < size; c++)
-      console->putCharEx(1 + c, console->getHeight() - 2, 7, TCODColor::lightGrey, TCODColor::black);
-  console->putCharEx(1 + pageit, console->getHeight() - 2, 7, TCODColor::white, TCODColor::black);
+  drawPageDots(console, 1, console->getHeight() - 2, pageit, pages.size());
 
   console->setDefaultForeground(TCODColor(96,71,64));
   console->printFrame(0, 0, 64, 46, false);
   }
 
 void State_ShipStatus::drawDebug()
-  {
+{
     Ship& current = refToFleet.ships[page];
 
-  debug->clear();
-  debug->setDefaultForeground(TCODColor::white);
-  debug->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
+    debug->clear();
+    debug->setDefaultForeground(TCODColor::white);
+    debug->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
 
-  int line = 1;
-  if (current.cannonList.size() == 0)
-    debug->print(1, line++, "No cannons! o_O");
-  else
-  for each (ShipCannons cannon in current.cannonList)
-    debug->print(1, line++, "%c%s%c    %d",TCOD_COLCTRL_1, cannon.name.c_str(), TCOD_COLCTRL_STOP, cannon.pairs * 2);
+    int line = 1;
+    /*if (current.cannonList.size() == 0)
+        debug->print(1, line++, "No cannons! o_O");
+    else
+    for each (ShipCannons cannon in current.cannonList)
+        debug->print(1, line++, "%c%s%c    %d", TCOD_COLCTRL_1, cannon.name.c_str(), TCOD_COLCTRL_STOP, cannon.pairs * 2);*/
 
-  line++;
+    line++;
 
-  if (current.armorList.size() == 0)
-    debug->print(1, line++, "No armor! O_o");
-  else for each (auto it in current.armorList)
-    debug->print(1, line++, "%c%s%c    %d armor", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.armor);
+    if (current.armorList.size() == 0)
+        debug->print(1, line++, "No armor! O_o");
+    else for each (auto it in current.armorList)
+        debug->print(1, line++, "%c%s%c    %d armor", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.armor);
 
-  line++;
+    line++;
 
-  if (current.sailList.size() == 0)
-    debug->print(1, line++, "No sails! o_o");
-  else for each (auto it in current.sailList)
-    debug->print(1, line++, "%c%s%c    %dsq, %dla", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.square, it.second.lateen);
+    if (current.sailList.size() == 0)
+        debug->print(1, line++, "No sails! o_o");
+    else for each (auto it in current.sailList)
+        debug->print(1, line++, "%c%s%c    %dsq, %dla", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.square, it.second.lateen);
 
-  debug->setDefaultForeground(TCODColor(96,71,64));
-  debug->printFrame(0, 0, 64, 23, false);
-  }
-
-void State_ShipStatus::invertLine(const int& line)
-  {
-  
-  for (int counter = 1; counter < 63; counter++)
-    {
-    console->setCharBackground(counter, line, TCODColor::white);
-    console->setCharForeground(counter, line, TCODColor::black);
-    }
-  }
+    debug->setDefaultForeground(TCODColor(96, 71, 64));
+    debug->printFrame(0, 0, 64, 23, false);
+}
 
 bool State_ShipStatus::Init()
   {
@@ -213,7 +193,7 @@ void State_ShipStatus::Render(TCODConsole *root)
   if (redraw)
     {
     redrawList();
-    invertLine(selector);
+    invertLine(console, selector);
     redraw = false;
     }
   TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 1, 1.0f, 0.7f);

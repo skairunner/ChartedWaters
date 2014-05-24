@@ -326,11 +326,6 @@ void Engine::KeyDown(const int &key, const int &unicode)
         pressedPeriod = true;
         break;
 
-    case 'i':
-        newState = new State_shipPartInventory(TheWorld->getPlayerFleet().captain);
-        PushState(newState);
-        break;
-
     case 'k':
         newState = new State_ShowSkills(TheWorld->getPlayerFleet().captain);
         PushState(newState);

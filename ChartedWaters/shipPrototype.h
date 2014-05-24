@@ -26,6 +26,8 @@ class ShipPrototype
     int waveResistance;
     int baseArmor;
     int maxDurability;
+
+    int sailSlots, cannonSlots, forecannonSlots, aftcannonSlots, armorSlots;
   };
 
 class ShipDictionary
