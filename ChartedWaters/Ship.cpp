@@ -227,35 +227,39 @@ void Ship::updatePos()
   }
 
 void Ship::step()
-  {
-  if (position != lastVisitedCityCoords)
+{
+    if (position != lastVisitedCityCoords)
     {
-    starving = false;
-    sailorsDied = 0;
-    fatigue++;
-    training += 5;
-    training = training > 100 ? 100 : training;
-    rations -=  sailors;
-    if (rations < 0)
-      {
-      rations = 0;
-      starving = true;
-      }
-    if (starving)
-      fatigue+=100;
-    if (fatigue >= 1000)
-      {
-      fatigue = 1000;
-      sailors -= int(sailors * 0.1 + 0.5);
-      sailors = sailors < 0 ? 0 : sailors;
-      }
-    if (durability <= 0)
-      {
-      durability = 0;
-      wrecked = true;
-      }
+        starving = false;
+        sailorsDied = 0;
+        fatigue++;
+        training += 5;
+        training = training > 100 ? 100 : training;
+        rations -= sailors;
+        if (rations < 0)
+        {
+            rations = 0;
+            starving = true;
+        }
+        if (starving)
+            fatigue += 100;
+        if (fatigue >= 1000)
+        {
+            fatigue = 1000;
+            int dSailors = int(sailors * 0.1 + 0.5);
+            if (dSailors == 0)
+                sailors--;
+            else
+                sailors -= dSailors;
+            sailors = sailors < 0 ? 0 : sailors;
+        }
+        if (durability <= 0)
+        {
+            durability = 0;
+            wrecked = true;
+        }
     }
-  }
+}
 
 void Ship::fleetStep(Fleet* fleet)
 {
@@ -281,8 +285,12 @@ void Ship::fleetStep(Fleet* fleet)
         if (fatigue >= 1000)
         {
             fatigue = 1000;
-            sailors -= int(sailors * 0.1 + 0.5);
-            sailors = sailors < 1 ? 1 : sailors;
+            int dSailors = int(sailors * 0.1 + 0.5);
+            if (dSailors == 0)
+                sailors--;
+            else
+                sailors -= dSailors;
+            sailors = sailors < 0 ? 0 : sailors;
         }
         if (durability <= 0)
         {

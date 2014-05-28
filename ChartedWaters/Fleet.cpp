@@ -278,6 +278,9 @@ int Fleet::getFatigue()
         total += ship.sailors;
         sum += ship.sailors * ship.fatigue;
     }
+
+    if (total == 0)
+        return 1000;
     return sum / total; // Throw away remainders!
 }
 
