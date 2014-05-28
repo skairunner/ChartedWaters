@@ -487,6 +487,7 @@ void State_selectPart::redraw()
     int line = 1;
 
     console->clear();
+    console->setDefaultForeground(TCODColor::white);
     console->print(1, line++, "");
 
     // First list all the relevant parts.
@@ -521,6 +522,7 @@ void State_selectPart::redraw()
 void State_selectPart::updateStats()
 {
     partConsole->clear();
+    partConsole->setDefaultForeground(TCODColor::white);
     if (parttype == 'c')
         getProfile(refToFleet.captain.cannonInventory[selector], 1);
     if (parttype == 's')
