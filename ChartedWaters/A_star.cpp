@@ -177,6 +177,7 @@ cell& PathMap::ref(const int& x, const int& y)
 std::vector<cell> PathMap::findNeighborList(const coord& current)
   {
   vector<cell> output;
+  output.reserve(8);
   if (!ref(current).accessible) // First, if the tile I am in isn't accessible, there are no neighbors.
     return output;
   // Check all eight directions.
