@@ -31,6 +31,8 @@ class WorldMapClass
     std::vector<coord> cities;
     long moistureSeed, altitudeSeed;
 
+    std::vector<std::pair<coord, int>> boatpaths; // the paths and IDs of the boat settlers.
+
   protected:
     void setCoastFlags();
     void setCityFlags();
@@ -53,6 +55,8 @@ class randomBoat // randomly walks.
     bool explore(WorldMapClass& wm);
     bool tryMove(WorldMapClass& wm); // Return false if you can't move.
     void setRandomPosUntilSea(WorldMapClass& wm);
+
+    std::vector<std::pair<coord, int>> path;
   private:
     void markZOC(WorldMapClass& wm, int cityCode);
     void recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double size);

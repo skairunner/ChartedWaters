@@ -29,6 +29,7 @@ int daysPassed = 0;
 
 World* TheWorld;
 TCODConsole* cityscreen;
+TCODConsole* trailsscreen; // A demo console to show off the settler boat pathing.
 TCODConsole* mapscreen;
 TCODConsole* ZOCscreen;
 TCODConsole* tooltip;
@@ -44,6 +45,8 @@ bool pressedPeriod = false;
 bool lockedToShip = false;
 bool pressedArrow = false; // ">"
 bool mouseRightClick = false;
+bool showTrails = false;
+bool showZOC = false;
 
 Fleet* lockedFleet;
 Ship* lockedShip;
@@ -93,11 +96,17 @@ bool Engine::EngineInit()
   cityscreen->setKeyColor(TCODColor::magenta);
   cityscreen->setDefaultBackground(TCODColor::magenta);
 
+  trailsscreen = new TCODConsole(width, height);
+  trailsscreen->clear();
+  trailsscreen->setKeyColor(TCODColor::magenta);
+  trailsscreen->setDefaultBackground(TCODColor::magenta);
+
   AccessibleScreen = new TCODConsole(width, height);
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
 
   Renderer::getTerrainBitmap(mapscreen, TheWorld->WorldMap);
   Renderer::getCityBitmap(cityscreen, *TheWorld);
+  Renderer::getTrailBitmap(trailsscreen, *TheWorld);
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
   Renderer::getShipBitmap(ShipScreen, *TheWorld);
 
@@ -146,6 +155,7 @@ void Engine::Update()
 #endif
     ZOCscreen->clear();
     cityscreen->clear();
+    trailsscreen->clear();
     mapscreen->clear();
     AccessibleScreen->clear();
     PathScreen->clear();
@@ -153,6 +163,7 @@ void Engine::Update()
     redo = false;
     Renderer::getTerrainBitmap(mapscreen, TheWorld->WorldMap);
     Renderer::getCityBitmap(cityscreen, *TheWorld);
+    Renderer::getTrailBitmap(trailsscreen, *TheWorld);
     Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
     for (int ycounter = 0; ycounter < height; ycounter++)
       for (int xcounter = 0; xcounter < width; xcounter++)
@@ -219,7 +230,10 @@ void Engine::Render(TCODConsole *root)
   {
   TCODConsole::blit(mapscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
 
-  //TCODConsole::blit(ZOCscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 0.8f, 0.0f);
+  if (showZOC)
+      TCODConsole::blit(ZOCscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 0.8f, 0.0f);
+  if (showTrails)
+      TCODConsole::blit(trailsscreen, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
   TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
   TCODConsole::blit(PathScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
   TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
@@ -355,6 +369,10 @@ void Engine::KeyDown(const int &key, const int &unicode)
         TheWorld->getPlayerShip().addSail(0, testsail);
         break;
 
+    case 't':
+        showTrails = !showTrails;
+        break;
+
     case 'Y':
         if (!lockedToShip)
         {
@@ -366,6 +384,10 @@ void Engine::KeyDown(const int &key, const int &unicode)
         }
 
         lockedToShip = !lockedToShip;
+        break;
+
+    case 'z':
+        showZOC = !showZOC;
         break;
 
     default: break;

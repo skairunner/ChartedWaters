@@ -447,16 +447,27 @@ void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
   }
 
 void Renderer::getCityBitmap(TCODConsole* cities, World& world)
-  {
-  for (auto it = world.cityList.begin(); it != world.cityList.end(); it++)
-      {
-      int coordx = it->first.first;
-      int coordy = it->first.second;
+{
+    for (auto it = world.cityList.begin(); it != world.cityList.end(); it++)
+    {
+        int coordx = it->first.first;
+        int coordy = it->first.second;
 
-      TCODColor citycolor = findFactionColor(it->second.getFactionID());
-      cities->putCharEx(coordx % world.width, coordy, 99, citycolor, TCODColor::lerp(citycolor, TCODColor::black, 0.7f));
-      }
-  }
+        TCODColor citycolor = findFactionColor(it->second.getFactionID());
+        cities->putCharEx(coordx % world.width, coordy, 99, citycolor, TCODColor::lerp(citycolor, TCODColor::black, 0.7f));
+    }
+}
+
+void Renderer::getTrailBitmap(TCODConsole* cities, World& world)
+{
+    for (auto it = world.WorldMap.boatpaths.begin(); it < world.WorldMap.boatpaths.end(); it++)
+    {
+        int x = it->first.first;
+        int y = it->first.second;
+        TCODColor color = findFactionColor(it->second);
+        cities->putCharEx(x, y, 99, color, TCODColor::darkBlue);
+    }
+}
 
 void Renderer::getAccessBitmap(TCODConsole* accessmap, PathMap& pm)
   {

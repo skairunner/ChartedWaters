@@ -18,9 +18,8 @@ WorldMapClass::WorldMapClass(const int& width, const int& height)
 
 void WorldMapClass::gen()
   {
-  for (int counter = 0; counter < 50; counter++)
-    rand();
   cities.clear();
+  boatpaths.clear();
   noise::module::Perlin moisture;
   noise::module::Perlin altitude;
   moistureSeed = rand();
@@ -125,22 +124,26 @@ bool WorldMapClass::setCoastal(const int& xcounter, const int& ycounter)
   }
 
 void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCities, const unsigned long int& seed)
-  { // Set faction cities.
-  int tries = 0;
-  randomBoat f(coord(w, h), faction, seed); 
-  f.setRandomPosUntilSea(*this);
-  bool result = f.explore(*this);
-  int num_cities = numberOfCities;
-  do {
-    tries++;
-    result = f.explore(*this);
-    if (result)
-      num_cities -= result;
-    if (tries > numberOfCities * numberOfCities)
-      return;
+{ // Set faction cities.
+    int tries = 0;
+    randomBoat f(coord(w, h), faction, seed);
+    f.setRandomPosUntilSea(*this);
+    bool result = f.explore(*this);
+    int num_cities = numberOfCities;
+    do {
+        tries++;
+        result = f.explore(*this);
+        if (result)
+            num_cities -= result;
+        if (tries > numberOfCities * numberOfCities)
+            return;
 
     } while (num_cities > 0); // 
-  }
+
+    // Finally, add this to the list of paths taken.
+    boatpaths.reserve(boatpaths.size() + distance(f.path.begin(), f.path.end()));
+    boatpaths.insert(boatpaths.end(), f.path.begin(), f.path.end());
+}
 
 void WorldMapClass::setCityFlags()
   {
@@ -184,6 +187,8 @@ randomBoat::randomBoat(const coord& dim, const int& ffaction,const unsigned long
   gen.seed(seed);
   if (start == coord(-1, -1))
     setRandomPos(dim);
+
+  path.push_back(pair<coord, int>(start, faction));
   }
 
 void randomBoat::setRandomPos(const coord& dimensions)
@@ -205,38 +210,38 @@ void randomBoat::setSeed(unsigned long int seed)
   }
 
 bool randomBoat::explore(WorldMapClass& wm)
-  {
-  uniform_int_distribution<> dist(50, 100);
-  int moves = dist(gen);
-  int failures = 0;
-  while (moves > 0)
+{
+    uniform_int_distribution<> dist(50, 100);
+    int moves = dist(gen);
+    int failures = 0;
+    while (moves > 0)
     {
-    bool result = tryMove(wm); /// discount failed moves
-    auto it = wm.ref(currentPosition.first, currentPosition.second);
+        bool result = tryMove(wm); /// discount failed moves
+        auto it = wm.ref(currentPosition.first, currentPosition.second);
 
-    if (it.isCoastal && it.isInZOC == 0)
-      {
-      wm.ref(currentPosition.first, currentPosition.second).isCity = true;
-      wm.cities.push_back(currentPosition);
-      int cityCode = wm.cities.size();
-     // markZOC(wm, cityCode);
-      recursiveZOC(currentPosition.first, currentPosition.second, wm, 5);
-      
-      return true;
-      }
+        path.push_back(pair<coord, int>(currentPosition, faction));
 
-    if (!result)
-      {
-      moves++;
-      failures++;
-      if (failures > 20)
-        return false;
-      }
-    moves--;
+        if (it.isCoastal && it.isInZOC == 0)
+        {
+            wm.ref(currentPosition.first, currentPosition.second).isCity = true;
+            wm.cities.push_back(currentPosition);
+            int cityCode = wm.cities.size();
+            recursiveZOC(currentPosition.first, currentPosition.second, wm, 5);
+            return true;
+        }
+
+        if (!result)
+        {
+            moves++;
+            failures++;
+            if (failures > 20)
+                return false;
+        }
+        moves--;
     }
 
-  return false;
-  }
+    return false;
+}
 
 void randomBoat::recursiveZOC(const int& x,const int& y, WorldMapClass& wm, double size)
   {

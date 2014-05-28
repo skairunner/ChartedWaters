@@ -40,6 +40,8 @@ class World
     EntityMap entityMap;
     KoreanNameFactory nameFactory;
 
+
+
   private:    
     void populateCities(); // With items.
     void populateShips(); // AI ships.
@@ -63,6 +65,7 @@ class Renderer // Accesses World and returns bitmaps.
     static void getTerrainBitmap(TCODConsole* map, WorldMapClass& wm);
     static void getHighResTerrainBitmap(TCODConsole* map, WorldMapClass& wm);
     static void getCityBitmap(TCODConsole* cities, World& world);
+    static void getTrailBitmap(TCODConsole* cities, World& world);
     static TCODColor findFactionColor(const int& faction);
     static std::string findCityName(const coord& coords, World& world);
     static void getAccessBitmap(TCODConsole* accessmap, PathMap& pm);

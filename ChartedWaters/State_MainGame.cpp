@@ -20,10 +20,6 @@ MainGameState::~MainGameState()
 bool MainGameState::Init()
   {
   console = new TCODConsole(width, height);
-  TCODImage* image = new TCODImage("resources/shipbackground.png");
-  image->blit2x(console, 0, 0);
-
-  delete image;
   return true;
   }
 void MainGameState::Update()
