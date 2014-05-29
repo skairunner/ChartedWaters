@@ -376,31 +376,6 @@ std::vector<coord> Pather::reconstructPath(std::unordered_map<coord, node, KeyHa
 
 vector<coord> Pather::getFillNeighbors(coord current)
 {
-    /*vector<coord> output;
-    if (!map.ref(current).accessible) // First, if the tile I am in isn't accessible, there are no neighbors.
-    return output;
-    // Check top, topleft, left, botleft, bot
-    // topleft
-    auto neighbor = map.ref(current.first - 1, current.second - 1);
-    if (!neighbor.null && neighbor.accessible)
-    output.push_back(neighbor.xy);
-
-    neighbor = map.ref(current.first, current.second - 1); // top
-    if (!neighbor.null && neighbor.accessible)
-    output.push_back(neighbor.xy);
-
-    neighbor = map.ref(current.first - 1, current.second); // left
-    if (!neighbor.null && neighbor.accessible)
-    output.push_back(neighbor.xy);
-
-    neighbor = map.ref(current.first - 1, current.second +1); // bottom left
-    if (!neighbor.null && neighbor.accessible)
-    output.push_back(neighbor.xy);
-
-    neighbor = map.ref(current.first, current.second + 1); // bottom
-    if (!neighbor.null && neighbor.accessible)
-    output.push_back(neighbor.xy);*/
-
     auto output = map.findNeighborList(current);
 
 

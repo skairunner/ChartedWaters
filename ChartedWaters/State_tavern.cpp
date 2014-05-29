@@ -81,9 +81,8 @@ State_buySailors::State_buySailors(Fleet& fleet)
   :refToFleet(fleet), green(0), exp(0), buy(0), yesno(0), price(0), getSomething(0), master(0), sell(0)
   {
   console = new TCODConsole(35, 12);
-  pageit = 0;
+  page = pageit = -1;
   pages = getKeys(fleet.ships);
-  page = pages[0];
   }
 
 void State_buySailors::End()
@@ -358,9 +357,8 @@ State_buyRations::State_buyRations(Fleet& fleet)
   :refToFleet(fleet), buy(0), yesno(0), getSomething(0), sell(0), daysworth(0)
   {
   console = new TCODConsole(45, 12);
-  pageit = 0;
+  page = pageit = -1;
   pages = getKeys(fleet.ships);
-  page = pages[0];
   }
 
 void State_buyRations::End()
@@ -603,9 +601,8 @@ State_recoverFatigue::State_recoverFatigue(Fleet& fleet)
   :refToFleet(fleet), yesno(0), getSomething(0), recover(0)
   {
   console = new TCODConsole(36, 10);
-  pageit = 0;
+  page = pageit = -1;
   pages = getKeys(fleet.ships);
-  page = pages[0];
   }
 
 void State_recoverFatigue::End()

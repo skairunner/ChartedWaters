@@ -126,10 +126,18 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
   int baseprice = getBuyPrice(it->second.ID) * (1 + currentTax);
   int actualprice = baseprice * (skill.getLevel() / 100.0); // Each level in the relevant skill equals a 1% discount.
   if (numberOf < 0)
-    {
-    numberOf = ship.getMoney() / actualprice; // FLOOR ( money / price ) = number of items buyable.
-    numberOf = numberOf > it->second.howMany() ? it->second.howMany() : numberOf; // If the possible number of items buyable is more than the total.
-    }
+  {
+      if (actualprice == 0)
+      {
+          numberOf = 0;
+          cout << "divbyzero";
+      }
+      else
+      {
+          numberOf = ship.getMoney() / actualprice; // FLOOR ( money / price ) = number of items buyable.
+          numberOf = numberOf > it->second.howMany() ? it->second.howMany() : numberOf; // If the possible number of items buyable is more than the total.
+      }
+  }
   int price = numberOf * actualprice;
 
   if (price > ship.getMoney())

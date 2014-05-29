@@ -587,7 +587,7 @@ int Fleet::getNumberOfItems(const std::string& ItemID)
 int Fleet::getETA()
 {
     if (getSpeed() < 1)
-        return 99999999;
+        return 0;
     return (int)(ceil(path.size() / floor((double)getSpeed())));;
 }
 
