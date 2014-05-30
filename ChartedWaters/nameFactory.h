@@ -44,3 +44,5 @@ class EnglishNameFactory : public NameFactory
     void abstractify(){}
    // std::string getName();
   };
+
+extern KoreanNameFactory nameFactory;

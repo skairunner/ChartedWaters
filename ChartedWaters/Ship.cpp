@@ -2,6 +2,7 @@
 #include "Fleet.h"
 #include <algorithm>
 #include <cmath>
+#include "nameFactory.h"
 
 using namespace std;
 
@@ -16,13 +17,14 @@ Ship::Ship()
   }
 
 Ship::Ship(const ShipPrototype& prototype)
-  : storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
-  , wrecked(false), invisible(false)
-  {
-  captain.faction = 0;
-  captain.ducats = 1000;
-  changeShip(prototype);
-  }
+: storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
+, wrecked(false), invisible(false)
+{
+    setName(nameFactory.getName());
+    captain.faction = 0;
+    captain.ducats = 1000;
+    changeShip(prototype);
+}
 
 void Ship::changeShip(const ShipPrototype& prototype)
   {

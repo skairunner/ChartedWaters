@@ -118,10 +118,8 @@ bool Engine::EngineInit()
   Fleet& fleet = TheWorld->getPlayerFleet();
   fleet.captain.faction = 1;
   fleet.addMoney(424242);
-  fleet.changeShip(ShipDict.getShip(string("sloop")), 0);
-  fleet.changeShip(ShipDict.getShip(string("clipper_light")), 1);
-  fleet.setShipName(TheWorld->nameFactory.getName(), 0);
-  fleet.setShipName(TheWorld->nameFactory.getName(), 1);
+  fleet.changeShip(ShipDict.getShip("sloop"), 0);
+  fleet.changeShip(ShipDict.getShip("clipper_light"), 1);
 
   fleet.refSailors(0) = 15;
   fleet.refSailors(1) = 14;

@@ -1,13 +1,13 @@
 #pragma once
 #include "GameState.h"
 #include "town.h"
-#include "Ship.h"
+#include "Fleet.h"
 #include <libtcod.h>
 
 class State_Drydocks : public GameState
   {
   public:
-    State_Drydocks(Town& town, Ship& ship);
+    State_Drydocks(Town& town, Fleet& fleet);
     bool Init();
     void Render(TCODConsole *root);
     void Update();
@@ -47,10 +47,14 @@ class State_Drydocks : public GameState
     bool isHometown;
 
     Town& refToTown;
-    Ship& refToShip;
+    Fleet& refToFleet;
     std::vector<EconomyItemTuple> goods;
     std::vector<LedgerItemTuple> inventory;
     void redrawLeft();
     void redrawRight();
     void invertLine(const int& line, TCODConsole* console);
+
+    int page;
+    int pageit;
+    std::vector<int> pages;
   };

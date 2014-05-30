@@ -6,21 +6,21 @@
 #include "utility.h"
 #include <iostream>
 
-#pragma warning(disable : 4018)
-#pragma warning(disable : 4244)
-#pragma warning(disable : 4996)
-
 using namespace std;
 
-State_Drydocks::State_Drydocks(Town& town, Ship& ship)
-  : refToTown(town), refToShip(ship), selector(3), redraw(false), startbuy(false), startsell(false),
-  calculatebuy(false), calculatesell(false), isHometown(false), getPrompt(false)
-  {
-  consoleLeft = new TCODConsole(50, 48);
-  consoleRight = new TCODConsole(50, 48);
-  if(ship.captain.faction == town.getFactionID())
-    isHometown = true;
-  }
+State_Drydocks::State_Drydocks(Town& town, Fleet& fleet)
+: refToTown(town), refToFleet(fleet), selector(3), redraw(false), startbuy(false), startsell(false),
+calculatebuy(false), calculatesell(false), isHometown(false), getPrompt(false)
+{
+    consoleLeft = new TCODConsole(50, 48);
+    consoleRight = new TCODConsole(50, 48);
+    if (fleet.captain.faction == town.getFactionID())
+        isHometown = true;
+
+    pages = getKeys(fleet.ships);
+    pageit = 0;
+    page = pages[pageit];
+}
 
 string drydocksHeader()
   {
@@ -41,7 +41,7 @@ string State_Drydocks::assembleOutput(const ShipPrototype& sp)
 
   returnval += sp.typeName.substr(0, 15);
   if(sp.typeName.size() < 15)
-    for (int counter = 0; counter < 15 - sp.typeName.size(); counter++)
+    for (size_t counter = 0; counter < 15 - sp.typeName.size(); counter++)
       returnval += blank;
 
   returnval += blank;
@@ -107,108 +107,159 @@ void State_Drydocks::RecoverFromPush()
   }
 
 void State_Drydocks::Update()
-  {
-  consoleLeft->clear();
-  consoleLeft->setDefaultForeground(TCODColor::white);
-
-  if (getPrompt && calculatebuy)
+{
+    if (getPrompt && calculatebuy)
     {
-    if (yesNo)
-      {
-      int price = refToTown.shipList.at(selector-3).price - refToShip.getShipPrice();
-      if (refToShip.getMoney() < price)
+        if (yesNo)
         {
-        nextState = new State_Prompt(21, 4, string("Not enough money."), yesNo);
-        pushSomething = true;
+            int price = 0;
+            if (page == -1)
+                price = refToTown.shipList.at(selector - 3).price;
+            else
+                price = refToTown.shipList.at(selector - 3).price - refToFleet.ships[page].getShipPrice();
+
+            if (refToFleet.getMoney() < price)
+            {
+                nextState = new State_Prompt(21, 4, string("Not enough money."), yesNo);
+                pushSomething = true;
+            }
+            else
+            {
+                if (page != -1)
+                {
+                    refToFleet.changeShip(refToTown.shipList.at(selector - 3), page);
+                    refToFleet.addMoney(-price);
+                    string output = "You have purchased a " + refToFleet.ships[page].getType() + ".";
+                    nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
+                    pushSomething = true;
+                }
+                else // gotta buy a new ship.
+                {
+                    // find an empty number, from 0 to 3.
+                    int newIndex = 0;
+                    for (; newIndex < 4; newIndex++)
+                    {
+                        if (refToFleet.ships.find(newIndex) == refToFleet.ships.end())
+                            break;
+                    }
+                    refToFleet.ships[newIndex] = Ship(refToTown.shipList.at(selector - 3));     
+                    pages = getKeys(refToFleet.ships);
+                    redraw = true;
+                }
+            }
         }
-      else
-        {
-        refToShip.changeShip(refToTown.shipList.at(selector-3));
-        refToShip.addMoney(-price);
-        string output = "You have purchased a " + refToShip.getType() + ".";
+        getPrompt = false;
+    }
+    if (startbuy && selector >= 3 && (size_t)selector < refToTown.shipList.size() + 3)
+    {
+        promptResult.clear();
+        int price = 0;
+        if (page == -1)
+            price = refToTown.shipList.at(selector - 3).price;
+        else
+            price = refToTown.shipList.at(selector - 3).price - refToFleet.ships[page].getShipPrice();
+        int digits = (int)floor(log10(abs(price))) + 1;
+        if (price < 0) digits++;
+        string output = string("Really buy a ") + refToTown.shipList.at(selector - 3).typeName + " for " + rightAlignNumber(price, digits) + " ducats?";
+        yesNo = false;
         nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
         pushSomething = true;
-        }
-      }
-    getPrompt = false;
+        getPrompt = true;
+        startbuy = false;
+        calculatebuy = true;
     }
-  if(startbuy && selector >= 3 && selector < refToTown.shipList.size()+3)
+
+
+    if (redraw)
     {
-    promptResult.clear();
-    int price = refToTown.shipList.at(selector-3).price - refToShip.getShipPrice();
-    int digits = floor(log10((float)abs(price))) + 1;
-    if (price < 0) digits++;
-    string output = string("Really buy a ") + refToTown.shipList.at(selector-3).typeName + " for " + rightAlignNumber(price, digits) + " ducats?";
-    yesNo = false;
-    nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
-    pushSomething = true;
-    getPrompt = true;
-    startbuy = false;
-    calculatebuy = true;
+        redrawLeft();
+        redrawRight();
+        redraw = false;
     }
+}
 
-
-  if (redraw)
-    {
-    redrawLeft();
-    redrawRight();
-    }
-  }
-
-void State_Drydocks::KeyDown(const int &key,const int &unicode)
-  {
+void State_Drydocks::KeyDown(const int &key, const int &unicode)
+{
     if (key == SDLK_ESCAPE)
-      {popMe = true;}
-  else if (key == SDLK_DOWN && selector < 46)
-     {
-     selector++;
-     redraw = true;
-     }
-   else if (key == SDLK_UP && selector > 2)
-     {
-     selector--;
-     redraw = true;
-     }
-   else if (key == SDLK_RETURN)
-     {
-     startbuy = true;
-     }
-  }
+    {
+        popMe = true;
+    }
+    else if (key == SDLK_DOWN && selector < 46)
+    {
+        selector++;
+        redraw = true;
+    }
+    else if (key == SDLK_UP && selector > 2)
+    {
+        selector--;
+        redraw = true;
+    }
+    else if (key == SDLK_RETURN)
+    {
+        startbuy = true;
+    }
+    // The left and right keys flip between ships. If pageit >= size of pages, that means purchase a new ship. however, pageit cannot be larger than 3.
+    else if (key == SDLK_LEFT)
+    {
+        if (pageit > 0)
+        {
+            pageit--;
+            page = pages[pageit];
+            redraw = true;
+        }            
+    }
+    else if (key == SDLK_RIGHT)
+    {
+        if (pageit < 3 && pageit <= pages.size() - 1)
+        {
+            pageit++;
+            if (pageit == pages.size())
+                page = -1;
+            else
+                page = pages[pageit];
+            redraw = true;
+        }
+    }
+
+}
 
 /////////////////
 /////////////////
 /////////////////
 
 void State_Drydocks::redrawLeft()
-  {
-  consoleLeft->clear();
+{
+    consoleLeft->clear();
 
-  consoleLeft->setDefaultForeground(TCODColor::grey);
-  consoleLeft->print(1, 0, "(0) Trade shop (1) Drydocks");
-  int line = 2;
+    consoleLeft->setDefaultForeground(TCODColor::grey);
+    consoleLeft->print(1, 0, "(0) Trade shop (1) Drydocks");
+    int line = 2;
 
-  consoleLeft->setDefaultForeground(TCODColor::yellow);
-  consoleLeft->print(1, line++, drydocksHeader().c_str());
-  consoleLeft->setDefaultForeground(TCODColor::white);
+    consoleLeft->setDefaultForeground(TCODColor::yellow);
+    consoleLeft->print(1, line++, drydocksHeader().c_str());
+    consoleLeft->setDefaultForeground(TCODColor::white);
 
-  for (auto it = refToTown.shipList.begin(); it < refToTown.shipList.end(); it++)
+    for (auto it = refToTown.shipList.begin(); it < refToTown.shipList.end(); it++)
     {
-    string buffer;
-    buffer += leftAlign(it->typeName, 25) + " ";
-    buffer += leftAlign(it->size, 7) + " ";
-    char price_cstr[14];
-    _snprintf(price_cstr, sizeof(price_cstr), "%d", it->price - refToShip.getShipPrice());
-    string price(price_cstr);
-    buffer += rightAlign(price, 14) + " ";
-    consoleLeft->print(1, line++, buffer.c_str());
+        string buffer;
+        buffer += leftAlign(it->typeName, 25) + " ";
+        buffer += leftAlign(it->size, 7) + " ";
+        string price;
+        if (page == -1)
+            price = to_string(it->price);
+        else
+            price = to_string(it->price - refToFleet.ships[page].getShipPrice());
+
+        buffer += rightAlign(price, 14) + " ";
+        consoleLeft->print(1, line++, buffer.c_str());
     }
 
-  if (selector > 1)
-    invertLine(selector, consoleLeft);
+    if (selector > 1)
+        invertLine(selector, consoleLeft);
 
-  consoleLeft->setDefaultForeground(TCODColor(96,71,64));
-  consoleLeft->printFrame(0, 1, 50, 47, false);
-  }
+    consoleLeft->setDefaultForeground(TCODColor(96, 71, 64));
+    consoleLeft->printFrame(0, 1, 50, 47, false);
+}
 
 void State_Drydocks::redrawRight()
   {
@@ -216,7 +267,7 @@ void State_Drydocks::redrawRight()
   consoleRight->setDefaultForeground(TCODColor::white);
 
   int line = 2;
-  if (selector >= 3 && selector-3 < refToTown.shipList.size())
+  if (selector >= 3 && (size_t)(selector-3) < refToTown.shipList.size())
     {
     auto ship = refToTown.shipList.at(selector-3);
     
@@ -237,35 +288,51 @@ void State_Drydocks::redrawRight()
     int height = consoleRight->printRect(1, line, 48, 0, "%s", ship.desc.c_str());
     line += height;
     }
-  auto ship = refToShip;
-  line=24;
 
-  consoleRight->setDefaultForeground(TCODColor::yellow);
-  consoleRight->print(1, line++, "<Current ship>");
 
-  swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Name : %s", ship.getType().c_str()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Size : %s", ship.getSize().c_str()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Price: %d", ship.getShipPrice()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Total storage: %d", ship.getMaxStorage()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.getMaxGoods(), ship.getMinSailors(), ship.getMaxSailors(), ship.getMaxCannons()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.getLateen(), ship.getSquare()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Base speed: %d", ship.getBaseSpeed()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Turning: %d", ship.getTurning()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Base armor: %d", ship.getArmor()); swapLineColors(consoleRight, line);
-  consoleRight->print(1, line++, "Max durability: %d", ship.getMaxDurability()); swapLineColors(consoleRight, line);
-  consoleRight->setDefaultForeground(TCODColor::silver);
-  line++;
-  int height = consoleRight->printRect(1, line, 48, 0, "%s", ship.getDescription().c_str());
-  line += height;
-  line+=3;
-  consoleRight->setDefaultForeground(TCODColor::yellow);
-  consoleRight->print(1, line++, "Current money = %d", ship.getMoney());
+  if (page != -1) // means we are upgrading an existing ship
+  {
+      auto& ship = refToFleet.ships[page];
+      line = 24;
+
+      consoleRight->setDefaultForeground(TCODColor::yellow);
+      consoleRight->print(1, line++, "<Current ship>");
+
+      swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Name : %s", ship.getType().c_str()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Size : %s", ship.getSize().c_str()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Price: %d", ship.getShipPrice()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Total storage: %d", ship.getMaxStorage()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.getMaxGoods(), ship.getMinSailors(), ship.getMaxSailors(), ship.getMaxCannons()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.getLateen(), ship.getSquare()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Base speed: %d", ship.getBaseSpeed()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Turning: %d", ship.getTurning()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Base armor: %d", ship.getArmor()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Max durability: %d", ship.getMaxDurability()); swapLineColors(consoleRight, line);
+      consoleRight->setDefaultForeground(TCODColor::silver);
+      line++;
+      int height = consoleRight->printRect(1, line, 48, 0, "%s", ship.getDescription().c_str());
+      line += height;
+      line += 3;
+      consoleRight->setDefaultForeground(TCODColor::yellow);
+      consoleRight->print(1, line++, "Current money = %d", refToFleet.getMoney());
+  }
+  else // else, we are buying a new ship
+  {
+      line = 24;
+      consoleRight->setDefaultForeground(TCODColor::yellow);
+      consoleRight->print(1, line++, "<Purchase new ship>");
+      line++;
+      consoleRight->print(1, line++, "Current money = %d", refToFleet.getMoney());
+  }
+  
+  
+  drawPageDots(consoleRight, 1, consoleRight->getHeight()-1, pageit, pages.size());
   consoleRight->setDefaultForeground(TCODColor(96,71,64));
   consoleRight->printFrame(0, 1, 50, 22, false);
   consoleRight->printFrame(0, 23, 50, 25, false);
-  }
+}
 
 void State_Drydocks::swapLineColors(TCODConsole* con, const int& counter)
   {

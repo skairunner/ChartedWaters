@@ -38,7 +38,7 @@ class World
     std::vector<AIShip> shipList;
     WorldMapClass WorldMap;
     EntityMap entityMap;
-    KoreanNameFactory nameFactory;
+
 
 
 

@@ -3,6 +3,8 @@
 
 using namespace std;
 
+KoreanNameFactory nameFactory = KoreanNameFactory(rand());
+
 NameFactory::NameFactory(const unsigned long int& seed)
   : minLength(2), maxLength(5), spaceChance(15), leadingChance(0.5f), vowelChance(1.0f), trailingChance(0.5f)
   {

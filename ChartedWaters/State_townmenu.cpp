@@ -61,10 +61,10 @@ void State_TownMenu::KeyDown(const int &key, const int &unicode)
         nextState = new State_Shop(refToTown, refToFleet);
         pushSomething = true;
         break;
-        /*case SDLK_d:
+    case SDLK_d:
           nextState = new State_Drydocks(refToTown, refToFleet);
           pushSomething = true;
-          break;*/
+          break;
     case SDLK_h:
         nextState = new State_equipParts(refToFleet);
         pushSomething = true;

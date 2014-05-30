@@ -3,9 +3,8 @@
 #include <time.h>
 
 World::World(const int& w, const int& h)
-  : width(w), height(h), WorldMap(w, h), nameFactory(rand()), first(true), entityMap(w, h)
+  : width(w), height(h), WorldMap(w, h), first(true), entityMap(w, h)
   {
-  nameFactory = KoreanNameFactory(rand());
 
   regen();
   pathfinder = new Pather(WorldMap);
@@ -176,7 +175,7 @@ void World::populateCities()
             if (pairs == 5)
                 it->second.partList.push_back(new ShipCannons(ShipPartDict.getRandomCannon(), 10)); // times two, because the constructor wants pairs
             else
-                it->second.partList.push_back(new ShipCannons(ShipPartDict.getRandomCannon(), pow(2, pairs) / 2)); 
+                it->second.partList.push_back(new ShipCannons(ShipPartDict.getRandomCannon(), int(pow(2, pairs) / 2) )); 
         }
 
         // First, Food.
