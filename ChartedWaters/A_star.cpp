@@ -53,6 +53,8 @@ node HeapMap::findLowestF()
         if (it == closed.end())
             return temp;
     }
+
+    return node();
 }
 
 bool HeapMap::isInClosedset(const coord& key)

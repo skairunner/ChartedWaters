@@ -212,7 +212,7 @@ void State_Drydocks::KeyDown(const int &key, const int &unicode)
     }
     else if (key == SDLK_RIGHT)
     {
-        if (pageit < 3 && pageit <= pages.size() - 1)
+        if (pageit < 3 && pageit <= (int)pages.size() - 1)
         {
             pageit++;
             if (pageit == pages.size())

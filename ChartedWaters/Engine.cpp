@@ -194,8 +194,8 @@ void Engine::Update()
     if (entityList.size() != 0 && entityList.front() != -10)
       {
       Ship& refToShip = TheWorld->shipList[entityList.front()];
-//      newState = new State_ShipStatus(refToShip);
-      PushState(newState);
+      //newState = new State_ShipStatus(refToShip);
+      //PushState(newState);
       }
     }
 
@@ -343,9 +343,8 @@ void Engine::KeyDown(const int &key, const int &unicode)
         PushState(newState);
         break;
 
-    case 'R': //Test button to spawn items in shops.
-        for (auto it = TheWorld->cityList.begin(); it != TheWorld->cityList.end(); it++)
-            it->second.spawnItems();
+    case 'R': //Test button to give player 100k money
+        TheWorld->getPlayerFleet().captain.ducats += 100000;
         break;
 
     case 'S':
@@ -364,7 +363,7 @@ void Engine::KeyDown(const int &key, const int &unicode)
 
     case 'T':
         testsail = ShipPartDict.getSail(string("sail_maintoproyal"));
-        TheWorld->getPlayerShip().addSail(0, testsail);
+        TheWorld->getPlayerFleet().captain.sailInventory.push_back(testsail);
         break;
 
     case 't':

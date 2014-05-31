@@ -216,7 +216,7 @@ void JSONToShipPart::readShipParts(ShipPartDictionary& dict)
       sails.price = shippart["price"].asInt();
       sails.lateen = shippart["lateen"].asInt();
       sails.square = shippart["square"].asInt();
-      sails.turning = shippart["turning"].asDouble();
+      sails.turning = shippart["turning"].asInt();
       if(!shippart["desc"].isNull())
         sails.desc = shippart["desc"].asString();
       dict.sailList[sails.ID] = sails;

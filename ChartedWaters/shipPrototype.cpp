@@ -93,7 +93,7 @@ void JSONToShip::readShips(ShipDictionary& dict)
 
 int ShipPrototype::baseSpeed(const int& lateens, const int& squares)
   {
-  return baseSpeed_d(lateens, squares);
+     return (int)baseSpeed_d(lateens, squares);
   }
 
 ShipPrototype ShipDictionary::getRandomShip()

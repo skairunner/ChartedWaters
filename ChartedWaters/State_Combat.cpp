@@ -84,6 +84,11 @@ maptile& CombatMap::ref(const coord& pos)
   return ref(pos.first, pos.second);
   }
 
+maptile& CombatMap::ref(const coord_d& pos)
+{
+    return ref((int)pos.first, (int)pos.second);
+}
+
 //////
 //////
 //////

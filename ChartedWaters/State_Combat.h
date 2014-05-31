@@ -43,6 +43,7 @@ class CombatMap : public WorldMapClass
     virtual void gen();
     maptile& ref(const coord& pos);
     virtual maptile& ref(const int& x, const int& y);
+    maptile& ref(const coord_d& pos);
   private:
     int x, y; // coords
   };

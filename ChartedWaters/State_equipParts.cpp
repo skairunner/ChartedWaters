@@ -195,7 +195,7 @@ void State_equipParts::KeyDown(const int &key, const int &unicode)
         }
         break;
     case SDLK_RIGHT:
-        if (pageit < refToFleet.ships.size() - 1)
+        if (pageit < int(refToFleet.ships.size()) - 1)
         {
             pageit++;
             page = pages[pageit];
