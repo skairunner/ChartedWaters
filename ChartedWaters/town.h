@@ -67,6 +67,7 @@ class Town
     int getPriceOf(const std::string& ID);
     double  getSellPrice(const std::string& ID, const double& bonus = 1);
     double getBuyPrice(const std::string& ID);
+    double getActualBuyPrice(const std::string& ID, bool isHome, Player& player);
     double getTaxRate(bool hometown = false);
     int getNumberOf(const std::string& ID);
 

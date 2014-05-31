@@ -447,6 +447,7 @@ void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
 
 void Renderer::getCityBitmap(TCODConsole* cities, World& world)
 {
+    cities->clear();
     for (auto it = world.cityList.begin(); it != world.cityList.end(); it++)
     {
         int coordx = it->first.first;

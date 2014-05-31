@@ -172,11 +172,7 @@ int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, int target
     if (target >= 0 && fleet.ships.find(target) == fleet.ships.end())
         throw std::out_of_range(("Ship number " + to_string(target) + " does not exist.").c_str());
 
-    Skill& skill = fleet.captain.skills[it->second.category];
-
-    double currentTax = getTaxRate(hometown);
-    int baseprice = int(getBuyPrice(it->second.ID) * (1 + currentTax));
-    int actualprice = int(baseprice * (1.0 - skill.getLevel() / 100.0)); // Each level in the relevant skill equals a 1% discount.
+    int actualprice = getActualBuyPrice(ID, hometown, fleet.captain);
     if (numberOf < 0)
     {
         numberOf = fleet.getMoney() / actualprice; // FLOOR ( money / price ) = number of items buyable.
@@ -191,9 +187,9 @@ int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, int target
 
     /// Finally, actually buy them items.
     if (target < 0)
-        fleet.addItem(Item(ID), numberOf, int(getBuyPrice(ID) * (1 + currentTax)));
+        fleet.addItem(Item(ID), numberOf, actualprice);
     else
-        fleet.ships[target].addItem(Item(ID), numberOf, int(getBuyPrice(ID) * (1 + currentTax)));
+        fleet.ships[target].addItem(Item(ID), numberOf, actualprice);
     fleet.addMoney(-price);
     it->second.addItem(-numberOf);
     it->second.addDemand(numberOf);
@@ -463,6 +459,20 @@ double Town::getBuyPrice(const std::string& ID)
 
   return getPriceOf(ID) * distanceMult * produceZone;
   }
+
+double Town::getActualBuyPrice(const std::string& ID, bool isHome, Player& player)
+{
+    int base = getBuyPrice(ID);
+    double tax = getTaxRate(isHome);
+    auto it = itemlist.find(ID);
+    if (it == itemlist.end())
+        return -1; // item doesn't exist!
+
+    Skill& skill = player.skills[it->second.category];
+    double discount = 1 - skill.getLevel() / 100.0;  // Each level in the relevant skill equals a 1% discount.
+
+    return base * (1 + tax) * discount;
+}
 
 double Town::getTaxRate(bool hometown)
   {

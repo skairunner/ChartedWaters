@@ -297,10 +297,17 @@ void State_Shop::Update()
             string itemName = goods.at(selector - 8).ItemName;
             itemIDToTrade = goods.at(selector - 8).itemID;
 
-            if (numberToTrade < 0)
+            if (numberToTrade < 0) // If number to trade is -1, find as many as the player can buy.
             {
-                numberToTrade = int(refToFleet.getMoney() / (refToTown.getBuyPrice(itemIDToTrade) * (1 + refToTown.getTaxRate(isHometown))));
-                numberToTrade = numberToTrade > refToTown.getNumberOf(itemIDToTrade) ? refToTown.getNumberOf(itemIDToTrade) : numberToTrade;
+                
+                numberToTrade = int(refToFleet.getMoney() / refToTown.getActualBuyPrice(itemIDToTrade, isHometown, refToFleet.captain));
+                numberToTrade = numberToTrade > refToTown.getNumberOf(itemIDToTrade) ? refToTown.getNumberOf(itemIDToTrade) : numberToTrade; // Adjust if the total is higher than what exists
+                int space = 0;
+                if (pageit == -1)
+                    space = refToFleet.getMaxGoods() - refToFleet.getTotalGoods();
+                else
+                    space = refToFleet.ships[page].getMaxGoods() - refToFleet.ships[page].getTotalGoods();
+                numberToTrade = numberToTrade > space ? space : numberToTrade; // Make sure it's not more than the total storage.
             }
 
             int total = int(numberToTrade * refToTown.getBuyPrice(itemIDToTrade) * (double)(1 + refToTown.getTaxRate()));
