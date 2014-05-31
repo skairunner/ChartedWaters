@@ -26,7 +26,9 @@ int Skill::pointsNeeded(int level)
 {
     if (level < 1)
         return 0;
-    return int(pow(1.5, level) * 1000);
+    if (level <= 10)
+        return int(pow(2, level) * 1000);
+    return int(pow(2, 10) * 1000) + 512000 * level;
 }
 
 int Skill::netPointsNeeded()

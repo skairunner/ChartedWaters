@@ -124,7 +124,7 @@ int Town::buyItems(Ship& ship, const std::string& ID, int numberOf, bool hometow
 
   double currentTax = getTaxRate(hometown);
   int baseprice = int(getBuyPrice(it->second.ID) * (1 + currentTax));
-  int actualprice = int(baseprice * (skill.getLevel() / 100.0)); // Each level in the relevant skill equals a 1% discount.
+  int actualprice = int(baseprice * (1 - skill.getLevel() / 100.0)); // Each level in the relevant skill equals a 1% discount.
   if (numberOf < 0)
   {
       if (actualprice == 0)
@@ -176,7 +176,7 @@ int Town::buyItems(Fleet& fleet, const std::string& ID, int numberOf, int target
 
     double currentTax = getTaxRate(hometown);
     int baseprice = int(getBuyPrice(it->second.ID) * (1 + currentTax));
-    int actualprice = int(baseprice * (skill.getLevel() / 100.0)); // Each level in the relevant skill equals a 1% discount.
+    int actualprice = int(baseprice * (1.0 - skill.getLevel() / 100.0)); // Each level in the relevant skill equals a 1% discount.
     if (numberOf < 0)
     {
         numberOf = fleet.getMoney() / actualprice; // FLOOR ( money / price ) = number of items buyable.

@@ -268,11 +268,11 @@ void Engine::Render(TCODConsole *root)
     sailorcol = TCOD_COLCTRL_2;
 
   root->setDefaultForeground(TCODColor::lightestGrey);
-  root->print(0, 48, "Durability: %c%d%c/%d    Fatigue: %c%.1f%c/100%c    Rations: %c%.1f%c    Estimated rations for path: %c%.1f%c", durabilitycol, durability, TCOD_COLCTRL_STOP, maxDurability,
+  root->print(0, 48, "Dur.: %c%d%c/%d   Storage %d/%d   Fatigue: %c%.1f%c/100%c   Rations: %c%.1f%c   Est. rations req.: %c%.1f%c", durabilitycol, durability, TCOD_COLCTRL_STOP, maxDurability, refToFleet.getTotalGoods(), refToFleet.getMaxGoods(),
       fatiguecol, fatigue / 10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToFleet.getRations() / 10.0f, TCOD_COLCTRL_STOP,
     TCOD_COLCTRL_4, refToFleet.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
 
-  root->print(0, 49, "Day %d    ETA: %c%d%c days    Sailors: %c%d%c(%d)%c/%d    Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToFleet.getETA(), TCOD_COLCTRL_STOP, 
+  root->print(0, 49, "Day %d   ETA: %c%d%c days   Sailors: %c%d%c(%d)%c/%d   Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToFleet.getETA(), TCOD_COLCTRL_STOP, 
     sailorcol, refToFleet.getNumSailors(), TCOD_COLCTRL_1, refToFleet.getMinSailors(), TCOD_COLCTRL_STOP, refToFleet.getMaxSailors(),
     TCOD_COLCTRL_5, refToFleet.captain.ducats, TCOD_COLCTRL_STOP);
   }
