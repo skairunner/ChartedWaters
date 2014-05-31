@@ -31,7 +31,6 @@ private:
     Fleet& refToFleet;
 
     int printStats();
-    int printEquipment(int line); // line to start drawing from.
     void updateLookup(); // update partsLookup.
     TCODConsole* console;
 

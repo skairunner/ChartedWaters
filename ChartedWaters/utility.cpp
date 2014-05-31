@@ -7,6 +7,17 @@ using namespace std;
 TCODColor MabinogiBrown = TCODColor(95, 71, 61);
 TCODColor DarkMabinogiBrown = TCODColor(71, 53, 46);
 
+namespace vectornumbers
+{
+    std::vector<int> zero;
+    std::vector<int> one = { 0 };
+    std::vector<int> two = { 0, 1 };
+    std::vector<int> three = { 0, 1, 2 };
+    std::vector<int> four = { 0, 1, 2, 3 };
+    std::vector<int> five = { 0, 1, 2, 3, 4, 5 };
+    std::vector<std::vector<int>> indexes = { zero, one, two, three, four, five };
+}
+
 string rightAlignNumber(const int& input, const int& size)
   {
   char price_cstr[50];
@@ -115,6 +126,44 @@ void drawPageDots(TCODConsole* console, const int& X, const int& Y, const int& p
             console->putCharEx(X + c, Y, 7, TCODColor::lightGrey, TCODColor::black);
         console->putCharEx(X + picked, Y, 7, TCODColor::white, TCODColor::black);
     }
+}
+
+int printEquipment(TCODConsole* console, Ship& ship, int line)
+{
+    console->setDefaultForeground(TCODColor::white);
+    console->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
+
+
+    std::vector<int>& cannons = vectornumbers::indexes[ship.getCannonSlots()];
+    for (int i : cannons)
+    {
+        if (ship.cannonList.find(i) == ship.cannonList.end())
+            console->print(1, line++, "<Empty cannon slot>");
+        else
+            console->print(1, line++, "%s", ship.cannonList[i].shopName().c_str());
+    }
+
+    std::vector<int>& armors = vectornumbers::indexes[ship.getArmorSlots()];
+    for (int i : armors)
+    {
+        if (ship.armorList.find(i) == ship.armorList.end())
+            console->print(1, line++, "<Empty armor slot>");
+        else
+            console->print(1, line++, "%s", ship.armorList[i].shopName().c_str());
+    }
+
+    std::vector<int>& sails = vectornumbers::indexes[ship.getSailSlots()];
+    for (int i : sails)
+    {
+        if (ship.sailList.find(i) == ship.sailList.end())
+            console->print(1, line++, "<Empty sail slot>");
+        else
+        {
+            ShipSails& s = ship.sailList[i];
+            console->print(1, line++, "%s    %dsq, %dla", s.shopName().c_str(), s.square, s.lateen);
+        }
+    }
+    return line;
 }
 
 void invertLine(TCODConsole* console, const int& line)

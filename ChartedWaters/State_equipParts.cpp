@@ -2,14 +2,7 @@
 #include "utility.h"
 #include <SDL.h>
 
-std::vector<int> zero;
-std::vector<int> one = { 0 };
-std::vector<int> two = { 0, 1 };
-std::vector<int> three = { 0, 1, 2 };
-std::vector<int> four = { 0, 1, 2, 3 };
-std::vector<int> five = { 0, 1, 2, 3, 4, 5 };
 
-std::vector<std::vector<int>> indexes = { zero, one, two, three, four, five };
 
 
 State_equipParts::State_equipParts(Fleet& fleet)
@@ -90,54 +83,13 @@ int State_equipParts::printStats()
     return line;
 }
 
-int State_equipParts::printEquipment(int line)
-{
-    Ship& current = refToFleet.ships[page];
-
-
-    console->setDefaultForeground(TCODColor::white);
-    console->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
-
-
-    std::vector<int>& cannons = indexes[current.getCannonSlots()];
-    for (int i : cannons)
-    {
-        if (current.cannonList.find(i) == current.cannonList.end())
-            console->print(1, line++, "<Empty cannon slot>");
-        else
-            console->print(1, line++, "%s", current.cannonList[i].shopName().c_str());
-    }
-
-    std::vector<int>& armors = indexes[current.getArmorSlots()];
-    for (int i : armors)
-    {
-        if (current.armorList.find(i) == current.armorList.end())
-            console->print(1, line++, "<Empty armor slot>");
-        else
-            console->print(1, line++, "%s", current.armorList[i].shopName().c_str());
-    }
-
-    std::vector<int>& sails = indexes[current.getSailSlots()];
-    for (int i : sails)
-    {
-        if (current.sailList.find(i) == current.sailList.end())
-            console->print(1, line++, "<Empty sail slot>");
-        else
-        {
-            ShipSails& s = current.sailList[i];
-            console->print(1, line++, "%s    %dsq, %dla", s.shopName().c_str(), s.square, s.lateen);
-        }
-    }
-    return line;
-}
-
 void State_equipParts::updateLookup()
 {
     Ship& current = refToFleet.ships[page];
     partsLookup.clear();
-    std::vector<int>& cannons = indexes[current.getCannonSlots()];
-    std::vector<int>& armors = indexes[current.getArmorSlots()];
-    std::vector<int>& sails = indexes[current.getSailSlots()];
+    std::vector<int>& cannons = vectornumbers::indexes[current.getCannonSlots()];
+    std::vector<int>& armors = vectornumbers::indexes[current.getArmorSlots()];
+    std::vector<int>& sails = vectornumbers::indexes[current.getSailSlots()];
     for (int i : cannons)
         partsLookup.push_back(std::pair<char, int>('c', i));
     for (int i : armors)
@@ -152,7 +104,7 @@ void State_equipParts::redraw()
     console->clear();
     int startline = printStats();
     selectorStart = startline + 1;
-    startline = printEquipment(startline + 1);    
+    startline = printEquipment(console, refToFleet.ships[page], startline + 1);    
     drawPageDots(console, 1, startline + 1, pageit, refToFleet.ships.size());
     console->setDefaultForeground(TCODColor(96, 71, 64));
     console->printFrame(0, 0, console->getWidth(), console->getHeight(), false);

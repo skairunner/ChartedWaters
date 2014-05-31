@@ -121,7 +121,6 @@ void State_ShipStatus::redrawList()
 
   console->print(1, line++, ("The " + current.getType() + " " + current.getName()).c_str());
   line++;
-  console->print(1, line++, ("%c" + rightAlignNumber(current.captain.ducats) + string("%c ducats")).c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
   printStats(console, line);
   line++; // skip a line
   auto list = current.returnListOfItems();
@@ -138,8 +137,10 @@ void State_ShipStatus::redrawList()
 
   drawPageDots(console, 1, console->getHeight() - 2, pageit, pages.size());
 
-  console->setDefaultForeground(TCODColor(96,71,64));
+  console->setDefaultForeground(MabinogiBrown);
   console->printFrame(0, 0, 64, 46, false);
+  console->setDefaultForeground(TCODColor::white);
+  console->print(20, 45, "Press D to view equipment");
   }
 
 void State_ShipStatus::drawDebug()
@@ -147,29 +148,8 @@ void State_ShipStatus::drawDebug()
     Ship& current = refToFleet.ships[page];
 
     debug->clear();
-    debug->setDefaultForeground(TCODColor::white);
-    debug->setColorControl(TCOD_COLCTRL_1, TCODColor::yellow, TCODColor::black);
-
-    int line = 1;
-    /*if (current.cannonList.size() == 0)
-        debug->print(1, line++, "No cannons! o_O");
-    else
-    for each (ShipCannons cannon in current.cannonList)
-        debug->print(1, line++, "%c%s%c    %d", TCOD_COLCTRL_1, cannon.name.c_str(), TCOD_COLCTRL_STOP, cannon.pairs * 2);*/
-
-    line++;
-
-    if (current.armorList.size() == 0)
-        debug->print(1, line++, "No armor! O_o");
-    else for each (auto it in current.armorList)
-        debug->print(1, line++, "%c%s%c    %d armor", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.armor);
-
-    line++;
-
-    if (current.sailList.size() == 0)
-        debug->print(1, line++, "No sails! o_o");
-    else for each (auto it in current.sailList)
-        debug->print(1, line++, "%c%s%c    %dsq, %dla", TCOD_COLCTRL_1, it.second.name.c_str(), TCOD_COLCTRL_STOP, it.second.square, it.second.lateen);
+    int line = 1; 
+    line = printEquipment(debug, current, line);    
 
     debug->setDefaultForeground(TCODColor(96, 71, 64));
     debug->printFrame(0, 0, 64, 23, false);
@@ -189,17 +169,18 @@ void State_ShipStatus::Update()
   }
 
 void State_ShipStatus::Render(TCODConsole *root)
-  {
-  if (redraw)
+{
+    if (redraw)
     {
-    redrawList();
-    invertLine(console, selector);
-    redraw = false;
+        redrawList();
+        drawDebug();
+        invertLine(console, selector);
+        redraw = false;
     }
-  TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 1, 1.0f, 0.7f);
-  if (showDebug)
-    TCODConsole::blit(debug, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 24, 1.0f, 0.78f);
-  }
+    TCODConsole::blit(console, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 1, 1.0f, 0.7f);
+    if (showDebug)
+        TCODConsole::blit(debug, 0, 0, 0, 0, root, root->getWidth() / 2 - 31, 24, 1.0f, 0.78f);
+}
 void State_ShipStatus::End()
   {
   delete console;
@@ -218,56 +199,62 @@ void State_ShipStatus::RecoverFromPush()
         Init();
         newname.clear();
     }
+    if (nextState)
+        delete nextState;
 }
 
-void State_ShipStatus::KeyDown(const int &key,const int &unicode)
-  {
-    if (key == SDLK_ESCAPE)
+void State_ShipStatus::KeyDown(const int &key, const int &unicode)
+{
+    switch (key)
     {
+    case SDLK_ESCAPE:
         if (showDebug)
             showDebug = false;
         else
             popMe = true;
-    }
-    else if (unicode == (int)'R')
-    {
+        break;
+    case SDLK_r:
         newname.clear();
         nextState = new state_StringIn(30, newname);
         pushSomething = true;
-    }
-    else if (key == SDLK_DOWN && selector < 60)
-    {
-        selector++;
-        redraw = true;
-    }
-    else if (key == SDLK_UP && selector > 6)
-    {
-        selector--;
-        redraw = true;
-    }
-    else if (key == SDLK_LEFT) // Change the page.
-    {
+        break;
+    case SDLK_DOWN:
+        if (selector < 60)
+        {
+            selector++;
+            redraw = true;
+        }
+        break;
+    case SDLK_UP:
+        if (selector > 6)
+        {
+            selector--;
+            redraw = true;
+        }
+        break;
+    case SDLK_LEFT:
         if (pageit > 0)
         {
             pageit--;
             page = pages[pageit];
             redraw = true;
         }
-    }
-    else if (key == SDLK_RIGHT)
-    {
+        break;
+    case SDLK_RIGHT:
         if ((size_t)pageit < pages.size() - 1)
         {
             pageit++;
             page = pages[pageit];
             redraw = true;
         }
-    }
-
-    if (unicode == (int)'D')
+        break;
+    case SDLK_d:
         showDebug = !showDebug;
-
-  }
+        break;
+    default:
+        break;
+    }
+}
 
 void State_ShipStatus::MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
 void State_ShipStatus::MouseButtonUp(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
