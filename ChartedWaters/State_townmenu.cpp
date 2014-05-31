@@ -23,7 +23,7 @@ bool State_TownMenu::Init()
     {
     refToFleet.lastVisitedCity = refToTown.getName();
     refToFleet.lastVisitedCityCoords = refToTown.myPosition;
-    refToFleet.removeFatigue(-50); // Reduces all fatigue of ships by 50. 
+    refToFleet.removeFatigue(50); // Reduces all fatigue of ships by 50. 
     }
   
   drawMenu();
