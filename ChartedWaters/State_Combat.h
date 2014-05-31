@@ -8,13 +8,13 @@
 
 typedef std::pair<double, double> coord_d;
 
-enum SailState{SS_ANCHOR = 1, SS_CLOSED, SS_QUARTER, SS_HALF, SS_THREEQUARTERS, SS_FULL};
-enum Rotation{SS_COUNTERCLOCKWISE = 1, SS_CLOCKWISE};
+enum SailState{ SS_ANCHOR = 1, SS_CLOSED, SS_QUARTER, SS_HALF, SS_THREEQUARTERS, SS_FULL };
+enum Rotation{ SS_COUNTERCLOCKWISE = 1, SS_CLOCKWISE };
 
 class CombatShip
-  {
-  public:
-    
+{
+public:
+
     CombatShip(Ship& rToShip);
     Ship& refToShip;
     coord_d localPosition;
@@ -27,50 +27,50 @@ class CombatShip
     std::deque<coord_d> trail;
 
     PieSlice testrange;
-  private:
+private:
     double targetAngle;
     void normalizeAngles(); // if angle > 2pi + a, angle = a. 
-                            // if angle < -2pi + a (a < 0), angle = a
-    
+    // if angle < -2pi + a (a < 0), angle = a
+
     int getDirectionToTurn(const double& target);
     double getAngleDifference(const double& target);
-  };
+};
 
 class CombatMap : public WorldMapClass
-  {
-  public:
+{
+public:
     CombatMap(const long& altSeed, const long& moistSeed, const int& xc, const int& yc);
     virtual void gen();
     maptile& ref(const coord& pos);
     virtual maptile& ref(const int& x, const int& y);
     maptile& ref(const coord_d& pos);
-  private:
+private:
     int x, y; // coords
-  };
+};
 
 class State_Combat : public GameState
-  {
-  public:
-   // State_Combat(const int& wwidth, const int& hheight);
+{
+public:
+    // State_Combat(const int& wwidth, const int& hheight);
     State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord, const std::vector<Ship*> ships = std::vector<Ship*>());
     virtual bool Init();
 
     virtual void Update();
     virtual void Render(TCODConsole *root);
     virtual void End();
-    virtual void RecoverFromPush() {if (!nextState) delete nextState; pushSomething = false;}
+    virtual void RecoverFromPush() { if (!nextState) delete nextState; pushSomething = false; }
     //
-    virtual void Resize(int new_w,int new_h){}
+    virtual void Resize(int new_w, int new_h){}
     virtual void WindowActive(){}
     virtual void WindowInactive(){}
-    virtual void KeyUp(const int &key,const int &unicode){}
-    virtual void KeyDown(const int &key,const int &unicode);
-    virtual void MouseMoved(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
-    virtual void MouseButtonUp(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY){}
-    virtual void MouseButtonDown(const int &iButton,const int &iX,const int &iY,const int &iRelX,const int &iRelY);
+    virtual void KeyUp(const int &key, const int &unicode){}
+    virtual void KeyDown(const int &key, const int &unicode);
+    virtual void MouseMoved(const int &iButton, const int &iX, const int &iY, const int &iRelX, const int &iRelY);
+    virtual void MouseButtonUp(const int &iButton, const int &iX, const int &iY, const int &iRelX, const int &iRelY){}
+    virtual void MouseButtonDown(const int &iButton, const int &iX, const int &iY, const int &iRelX, const int &iRelY);
 
-  private:
-   // PieSlice test;
+private:
+    // PieSlice test;
 
     CombatMap map;
     CombatShip player;
@@ -95,4 +95,4 @@ class State_Combat : public GameState
     int x, y;
     int mouseX, mouseY;
     int focusX, focusY;
-  };
+};
