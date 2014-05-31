@@ -146,8 +146,9 @@ void State_Drydocks::Update()
                     refToFleet.ships[newIndex] = Ship(refToTown.shipList.at(selector - 3));     
                     pages = getKeys(refToFleet.ships);
                     page = pages[pageit];
-                    redraw = true;
                 }
+
+                redraw = true;
             }
         }
         getPrompt = false;
@@ -160,9 +161,7 @@ void State_Drydocks::Update()
             price = refToTown.shipList.at(selector - 3).price;
         else
             price = refToTown.shipList.at(selector - 3).price - refToFleet.ships[page].getShipPrice();
-        int digits = (int)floor(log10(abs(price))) + 1;
-        if (price < 0) digits++;
-        string output = string("Really buy a ") + refToTown.shipList.at(selector - 3).typeName + " for " + rightAlignNumber(price, digits) + " ducats?";
+        string output = string("Really buy a ") + refToTown.shipList.at(selector - 3).typeName + " for " + to_string(price) + " ducats?";
         yesNo = false;
         nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
         pushSomething = true;
@@ -170,7 +169,42 @@ void State_Drydocks::Update()
         startbuy = false;
         calculatebuy = true;
     }
+    if (getPrompt && calculatesell)
+    {
+        if (yesNo)
+        {
+            Ship& ship = refToFleet.ships[page];
+            ship.returnParts(refToFleet.captain);
+            int rations = ship.rations;
+            int sailors = ship.sailors;
+            int training = ship.training;
+            auto items = ship.returnListOfItems();
 
+            refToFleet.ships.erase(page);
+            pages = getKeys(refToFleet.ships);
+            page = pages[pageit];
+            refToFleet.addRations(rations);
+            refToFleet.addSailors(sailors, training);
+            for (auto it : items)
+            {
+                Item temp = ItemDict.getItemTemplate(it.itemID);
+                refToFleet.addItem(temp, it.numberOfItems, it.averagePurchasePrice);
+            }
+            redraw = true;
+        }
+        getPrompt = false;
+    }
+    if (startsell && page != -1 && refToFleet.ships.size() != 1)
+    {
+        promptResult.clear();
+        Ship& ship = refToFleet.ships[page];
+        int price = int(ship.getShipPrice() * .8);        
+        string output = "Do you really want to sell the " + ship.getType() + " " + ship.getName() + "for " + to_string(price) + " ducats?";
+        getPrompt = true;
+        startsell = false;
+        calculatesell = true;
+        nextState = new State_Prompt(output.size() + 4, 4, output, yesNo);
+    }
 
     if (redraw)
     {
@@ -222,7 +256,10 @@ void State_Drydocks::KeyDown(const int &key, const int &unicode)
             redraw = true;
         }
     }
-
+    else if (key == SDLK_d)
+    {
+        startsell = true;
+    }
 }
 
 /////////////////
@@ -278,7 +315,7 @@ void State_Drydocks::redrawRight()
     consoleRight->print(1, line++, "Size : %s", ship.size.c_str()); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Price: %d", ship.price); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Total storage: %d", ship.maxstorage); swapLineColors(consoleRight, line);
-    consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.maxcargo, ship.minimumsailors, ship.maxsailors, ship.maxcannons); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Goods: %d    Sailors: min %d/%d    Cannons: %d", ship.maxcargo, ship.minimumsailors, ship.maxsailors, ship.maxcannons); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.lateen, ship.square); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Base speed: %d", ship.baseSpeed(ship.lateen, ship.square)); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Wave resistance: %d", ship.waveResistance); swapLineColors(consoleRight, line);
@@ -305,7 +342,7 @@ void State_Drydocks::redrawRight()
       consoleRight->print(1, line++, "Size : %s", ship.getSize().c_str()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Price: %d", ship.getShipPrice()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Total storage: %d", ship.getMaxStorage()); swapLineColors(consoleRight, line);
-      consoleRight->print(1, line++, "Goods: %d    Sailors: %d/%d    Cannons: %d", ship.getMaxGoods(), ship.getMinSailors(), ship.getMaxSailors(), ship.getMaxCannons()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Goods: %d    Sailors: min %d/%d    Cannons: %d", ship.getMaxGoods(), ship.getMinSailors(), ship.getMaxSailors(), ship.getMaxCannons()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Lateen sails: %d    Square sails: %d", ship.getLateen(), ship.getSquare()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Base speed: %d", ship.getBaseSpeed()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Wave resistance: %d", ship.getWaveResistance()); swapLineColors(consoleRight, line);

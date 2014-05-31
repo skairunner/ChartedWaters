@@ -186,8 +186,8 @@ void Fleet::addSailors(int number, int training, int index)
                 }
                 else if (neededSailors > 0 && neededSailors > number)
                 {
-                    number = 0;
                     ship.addSailors(number, training);
+                    number = 0;
                 }
             }
             if (number > 0) // oh no sailors are left over!

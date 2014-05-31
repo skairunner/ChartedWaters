@@ -17,12 +17,12 @@ Ship::Ship()
   }
 
 Ship::Ship(const ShipPrototype& prototype)
-: storage(0), character(127), rations(50), sailors(5), fatigue(0), training(500), durability(0), movementcounter(0)
+: storage(0), character(127), rations(0), sailors(0), fatigue(0), training(0), durability(0), movementcounter(0)
 , wrecked(false), invisible(false)
 {
     setName(nameFactory.getName());
     captain.faction = 0;
-    captain.ducats = 1000;
+    captain.ducats = 0;
     changeShip(prototype);
 }
 
@@ -61,6 +61,16 @@ void Ship::changeShip(const ShipPrototype& prototype)
   aftcannonSlots = prototype.aftcannonSlots;
   durability = maxDurability;
   }
+
+void Ship::returnParts(Player& player)
+{
+    for (auto it = cannonList.begin(); it != cannonList.end(); it++)
+        player.cannonInventory.push_back(it->second);
+    for (auto it = sailList.begin(); it != sailList.end(); it++)
+        player.sailInventory.push_back(it->second);
+    for (auto it = armorList.begin(); it != armorList.end(); it++)
+        player.armorInventory.push_back(it->second);
+}
 
 string Ship::getName()
   {
@@ -546,8 +556,16 @@ void Ship::addSailors(const int& num, const int& addedtraining)
         int totalTraining = sailors * training;
         sailors += num;
         totalTraining += addedtraining * num;
-        training = totalTraining / sailors;
-        fatigue = totalFatigue / sailors;
+        if (sailors == 0)
+        {
+            training = 0;
+            fatigue = 0;
+        }
+        else
+        {
+            training = totalTraining / sailors;
+            fatigue = totalFatigue / sailors;
+        }
     }
     else
     {

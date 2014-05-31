@@ -23,6 +23,7 @@ class Ship : protected ShipPrototype
     Ship();
     Ship(const ShipPrototype& prototype);
     void changeShip(const ShipPrototype& prototype);
+    void returnParts(Player& player); // unequip all ship parts and return to inventory
     Player captain;
 
     void setName(const std::string& newName);
