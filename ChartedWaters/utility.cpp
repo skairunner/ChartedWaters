@@ -19,8 +19,13 @@ string rightAlignNumber(const int& input, const int& size)
 
   string returnval;
   if (buffer.size() < sizet)
-    for (size_t counter = 0; counter < sizet - buffer.size(); counter++)
+  for (size_t counter = 0; counter < sizet - buffer.size(); counter++)
+  {
       returnval += " ";
+      if (returnval.size() > 100)
+          cout << "?!"; // Sometimes this enters an infinite loop. Must fix.
+  }
+
   if (buffer.size() > sizet)
     for (size_t counter = 0; counter < sizet; counter++)
       returnval += "x";

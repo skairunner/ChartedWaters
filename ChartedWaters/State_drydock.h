@@ -26,7 +26,6 @@ class State_Drydocks : public GameState
     std::string assembleOutput(const LedgerItemTuple& tuple);
     std::string assembleOutput(const EconomyItemTuple& tuple);
     std::string assembleOutput(const ShipPrototype& sp);
-    void swapLineColors(TCODConsole* con, const int& counter);
 
     TCODConsole* consoleLeft; // ship
     TCODConsole* consoleRight; // shop

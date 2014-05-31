@@ -142,8 +142,10 @@ void State_Drydocks::Update()
                         if (refToFleet.ships.find(newIndex) == refToFleet.ships.end())
                             break;
                     }
+                    refToFleet.addMoney(-price);
                     refToFleet.ships[newIndex] = Ship(refToTown.shipList.at(selector - 3));     
                     pages = getKeys(refToFleet.ships);
+                    page = pages[pageit];
                     redraw = true;
                 }
             }
@@ -272,7 +274,7 @@ void State_Drydocks::redrawRight()
     auto ship = refToTown.shipList.at(selector-3);
     
     swapLineColors(consoleRight, line);
-    consoleRight->print(1, line++, "Name : %s", ship.typeName.c_str()); swapLineColors(consoleRight, line);
+    consoleRight->print(1, line++, "Type : %s", ship.typeName.c_str()); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Size : %s", ship.size.c_str()); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Price: %d", ship.price); swapLineColors(consoleRight, line);
     consoleRight->print(1, line++, "Total storage: %d", ship.maxstorage); swapLineColors(consoleRight, line);
@@ -299,7 +301,7 @@ void State_Drydocks::redrawRight()
       consoleRight->print(1, line++, "<Current ship>");
 
       swapLineColors(consoleRight, line);
-      consoleRight->print(1, line++, "Name : %s", ship.getType().c_str()); swapLineColors(consoleRight, line);
+      consoleRight->print(1, line++, "Name : The %s %s", ship.getType().c_str(), ship.getName().c_str()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Size : %s", ship.getSize().c_str()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Price: %d", ship.getShipPrice()); swapLineColors(consoleRight, line);
       consoleRight->print(1, line++, "Total storage: %d", ship.getMaxStorage()); swapLineColors(consoleRight, line);
@@ -328,15 +330,8 @@ void State_Drydocks::redrawRight()
   }
   
   
-  drawPageDots(consoleRight, 1, consoleRight->getHeight()-1, pageit, pages.size());
+  drawPageDots(consoleRight, 1, consoleRight->getHeight() - 2, pageit, pages.size());
   consoleRight->setDefaultForeground(TCODColor(96,71,64));
   consoleRight->printFrame(0, 1, 50, 22, false);
   consoleRight->printFrame(0, 23, 50, 25, false);
 }
-
-void State_Drydocks::swapLineColors(TCODConsole* con, const int& counter)
-  {
-  if (counter %2)
-      con->setDefaultForeground(TCODColor::lightestGreen);
-  else con->setDefaultForeground(TCODColor::lightestBlue);
-  }
