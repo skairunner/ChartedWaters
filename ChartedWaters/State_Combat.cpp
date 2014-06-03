@@ -269,52 +269,38 @@ forward.redraw();
 backward.redraw();
 }*/
 
-State_Combat::State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord, const std::vector<Ship*> ships)
-: map(altSeed, moistSeed, xcoord, ycoord), scrollspeed(5), player(aShip), mouseX(0), mouseY(0), mouseRightClick(false), shipRefList(ships)
-// , testPair(5, 10, PieSlice::pi / 2)
+State_Combat::State_Combat(Fleet& fleet, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord)
+: map(altSeed, moistSeed, xcoord, ycoord), scrollspeed(5), playerFleet(fleet), mouseX(0), mouseY(0), mouseRightClick(false), redraw(false)
 {
-    focusX = 50;
+    focusX = 100;
     focusY = 50;
     console = new TCODConsole(200, 200);
     shipconsole = new TCODConsole(200, 200);
     rangeconsole = new TCODConsole(200, 200);
-    for (auto it = shipRefList.begin(); it < shipRefList.end(); it++)
+    trailconsole = new TCODConsole(200, 200);
+
+    int startx = 100;
+    int starty = 100;
+    int dX = -2;
+    int dY = 0;
+
+    for (auto it = fleet.ships.begin(); it != fleet.ships.end(); it++)
     {
-        shipList.push_back(CombatShip(**it));
-        shipList.back().localPosition = coord_d(rand() % 200, rand() % 200);
+        playerShips.push_back(CombatShip(it->second));
+        playerShips.back().localPosition = coord(startx, starty);
+        startx -= dX;
+        starty -= dY;
     }
+
+    pages = getKeys(fleet.ships);
+    pageit = 0;
+    page = pages[pageit];
 }
 
 bool State_Combat::Init()
 {
     Renderer::getHighResTerrainBitmap(console, map);
-    rangeconsole->setDefaultBackground(TCODColor(255, 0, 255));
-    rangeconsole->setKeyColor(TCODColor(255, 0, 255));
-    rangeconsole->clear();
-    TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
-    if (map.ref(player.localPosition).altitude > 0)
-    {
-        player.localPosition = displace(player.localPosition);
-        if (player.localPosition.first == -1 && player.localPosition.second == -1)
-        {
-            cout << "Error: did not find a land tile for player ship\n";
-            popMe = true;
-            return true;
-        }
-    }
-    for (auto it = shipList.begin(); it < shipList.end(); it++)
-    {
-        if (map.ref(it->localPosition).altitude > 0)
-        {
-            it->localPosition = displace(it->localPosition);
-            if (it->localPosition.first == -1 && it->localPosition.second == -1)
-            {
-                cout << "Error: did not find a land tile for NPC ship\n";
-                popMe = true;
-                return true;
-            }
-        }
-    }
+    updateShips();
 
     return true;
 }
@@ -323,78 +309,34 @@ void State_Combat::End()
 {
     delete console;
     delete shipconsole;
+    delete rangeconsole;
+    delete trailconsole;
 }
 
 void State_Combat::Update()
 {
     if (mouseRightClick)
     {
-        vector3 newDirection(mouseX, mouseY, 0, player.localPosition.first, player.localPosition.second, 0);
+        vector3 newDirection(mouseX, mouseY, 0, playerShips[pageit].localPosition.first, playerShips[pageit].localPosition.second, 0);
         vector3 xAxis(1, 0, 0);
         double result = newDirection.dot(xAxis) / newDirection.length;
         result = acos(result);
-        if (mouseY > player.localPosition.second)
+        if (mouseY > playerShips[pageit].localPosition.second)
             result *= -1;
-        player.setTargetAngle(result);
+        playerShips[pageit].setTargetAngle(result);
         mouseRightClick = false;
     }
 
-    if (map.ref(player.localPosition).altitude > 0) // ON LAND
-    {
-        player.localPosition = displace(player.localPosition);
-        if (player.localPosition.first == -1 && player.localPosition.second == -1)
-        {
-            cout << "Error: did not find a land tile?\n";
-            popMe = true;
-            return;
-        }
-        player.refToShip.durability -= int(player.speed * player.speed + 1);
-        player.speed = 0;
-        player.trail.clear();
-    }
-    for (auto it = shipList.begin(); it < shipList.end(); it++)
-    {
-        if (map.ref(it->localPosition).altitude > 0)
-        {
-            it->localPosition = displace(it->localPosition);
-            if (it->localPosition.first == -1 && it->localPosition.second == -1)
-            {
-                cout << "Error: did not find a land tile for NPC ship\n";
-                popMe = true;
-                return;
-            }
-            it->refToShip.durability -= int(player.speed * player.speed + 1);
-            it->speed = 0;
-            it->trail.clear();
-        }
-    }
-
-
-
-    if (player.localPosition.first < 0 || player.localPosition.first > 200 || player.localPosition.second < 0 || player.localPosition.second > 200)
-        popMe = true;
     if (update)
     {
         update = false;
-        player.step();
-        shipconsole->clear();
-        rangeconsole->clear();
-
-        double intensity = 1;
-        for (auto it = player.trail.rbegin(); it < player.trail.rend(); it++)
-        {
-            shipconsole->putCharEx((int)it->first, (int)it->second, 177, TCODColor::lerp(TCODColor::darkBlue, TCODColor::white, (float)intensity), TCODColor::black);
-            intensity -= 0.05;
-        }
-
-        shipconsole->putCharEx((int)player.localPosition.first, (int)player.localPosition.second, player.refToShip.character, Renderer::findFactionColor(player.refToShip.captain.faction), TCODColor::black);
-        TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
-
-        for (auto it = shipList.begin(); it < shipList.end(); it++)
-        {
-            shipconsole->putCharEx((int)it->localPosition.first, (int)it->localPosition.second, it->refToShip.character, Renderer::findFactionColor(it->refToShip.captain.faction), TCODColor::black);
-            // TCODConsole::blit(it->testrange.image, 0, 0, 0, 0, rangeconsole, (int)it->localPosition.first - it->testrange.maxrange, (int)it->localPosition.second - it->testrange.maxrange, 1.0f, 1.0f);
-        }
+        updateShips();
+    }
+    if (redraw)
+    {
+        redraw = false;
+        highlighted.clear();
+        redrawShips();
     }
 
     if (lock)
@@ -411,15 +353,20 @@ void State_Combat::Render(TCODConsole *root)
 {
     root->setKeyColor(TCODColor(255, 0, 255));
 
-    TCODConsole::blit(console, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
+   /* TCODConsole::blit(console, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);
     //testPair.setDirection(-player.angle);
     TCODConsole::blit(player.testrange.image, 0, 0, 0, 0, rangeconsole, (int)(player.localPosition.first - player.testrange.maxrange), (int)(player.localPosition.second - player.testrange.maxrange), 1.0f, 1.0f);
+   */ 
+    TCODConsole::blit(console, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 1.0f);        
+    TCODConsole::blit(trailconsole, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
     TCODConsole::blit(shipconsole, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
     TCODConsole::blit(rangeconsole, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
 
+    for (coord xy : highlighted)
+        root->setCharBackground(xy.first - focusX - screenwidth/2, xy.second - focusY - screenheight/2, TCODColor::white);
 
     string state;
-    switch (player.sailState)
+    switch (playerShips[pageit].sailState)
     {
     case SS_ANCHOR:
         state = "Anchored";
@@ -443,10 +390,14 @@ void State_Combat::Render(TCODConsole *root)
         state = "Error state";
         break;
     }
-    root->print(0, 0, state.c_str());
-    root->print(0, 1, "Speed: %.2f", player.speed);
-    root->print(0, 2, "Angle: %.2f degrees", player.angle * 180 / PieSlice::pi);
-    root->print(0, 3, "Target angle: %.2f degrees", player.getTargetAngle() * 180 / PieSlice::pi);
+
+    
+    int line = 0;
+    root->print(0, line++, ("Ship " + to_string(pageit+1)).c_str());
+    root->print(0, line++, state.c_str());
+    root->print(0, line++, "Speed: %.2f", playerShips[pageit].speed);
+    root->print(0, line++, "Angle: %.2f degrees", playerShips[pageit].angle * 180 / PieSlice::pi);
+    root->print(0, line++, "Target angle: %.2f degrees", playerShips[pageit].getTargetAngle() * 180 / PieSlice::pi);
     /* root->setKeyColor(TCODColor(255,0,255));
      root->print(0, 0, "Angle: %.2f", angle * 180.0f / PieSlice::pi);
      TCODConsole::blit(left.image, 0, 0, 0, 0, root, x, y, 0.0f, 0.5f);
@@ -463,28 +414,41 @@ void State_Combat::KeyDown(const int &key, const int &unicode)
        else if (key == SDLK_DOWN)
        angle -= 0.05;
        else */
-    if (key == SDLK_ESCAPE)
+
+    switch (key)
     {
+    case SDLK_ESCAPE:
         popMe = true;
+        break;
+    case SDLK_RIGHT:
+        focusX = (focusX + scrollspeed <= 200 - screenwidth / 2) ? focusX + scrollspeed : 200 - screenwidth / 2;
+        redraw = true;
+        break;
+    case SDLK_LEFT:
+        focusX = (focusX - scrollspeed >= screenwidth / 2) ? focusX - scrollspeed : screenwidth / 2;
+        redraw = true;
+        break;
+    case SDLK_UP:
+        focusY = (focusY - scrollspeed >= screenheight / 2) ? focusY - scrollspeed : screenheight / 2;
+        redraw = true;
+        break;
+    case SDLK_DOWN:
+        focusY = (focusY + scrollspeed <= 200 - screenheight / 2) ? focusY + scrollspeed : 200 - screenheight / 2;
+        redraw = true;
+        break;
+    default:
+        break;
     }
-    else if (key == SDLK_RIGHT)
-        focusX = focusX + scrollspeed <= 200 - screenwidth / 2 ? focusX + scrollspeed : 200 - screenwidth / 2;
-    else if (key == SDLK_LEFT)
-        focusX = focusX - scrollspeed >= screenwidth / 2 ? focusX - scrollspeed : screenwidth / 2;
-    else if (key == SDLK_UP)
-        focusY = focusY - scrollspeed >= screenheight / 2 ? focusY - scrollspeed : screenheight / 2;
-    else if (key == SDLK_DOWN)
-        focusY = focusY + scrollspeed <= 200 - screenheight / 2 ? focusY + scrollspeed : 200 - screenheight / 2;
 
     switch (unicode)
     {
     case '+':
-        if (player.sailState < SS_FULL)
-            player.sailState++;
+        if (playerShips[pageit].sailState < SS_FULL)
+            playerShips[pageit].sailState++;
         break;
     case '-':
-        if (player.sailState > SS_ANCHOR)
-            player.sailState--;
+        if (playerShips[pageit].sailState > SS_ANCHOR)
+            playerShips[pageit].sailState--;
         break;
     case '.':
         update = true;
@@ -493,10 +457,26 @@ void State_Combat::KeyDown(const int &key, const int &unicode)
         lock = !lock;
         break;
     case '>':
-        player.setTargetAngle(player.getTargetAngle() + 0.05);
+        playerShips[pageit].setTargetAngle(playerShips[pageit].getTargetAngle() + 0.05);
         break;
     case '<':
-        player.setTargetAngle(player.getTargetAngle() - 0.05);
+        playerShips[pageit].setTargetAngle(playerShips[pageit].getTargetAngle() - 0.05);
+        break;
+    case '[':
+        if (pageit > 0)
+        {
+            pageit--;
+            page = pages[pageit];
+            redraw = true;
+        }
+        break;
+    case ']':
+        if (pageit < pages.size() - 1)
+        {
+            pageit++;
+            page = pages[pageit];
+            redraw = true;
+        }
         break;
     default:
         break;
@@ -505,11 +485,7 @@ void State_Combat::KeyDown(const int &key, const int &unicode)
 
 void State_Combat::lockToShip() // sets camera to ship.
 {
-    auto pos = player.localPosition;
-    /*coord pos;
-    if (TheWorld->shipList.begin() != TheWorld->shipList.end())
-    pos = TheWorld->shipList.begin()->getPosition();
-    else pos = TheWorld->getPlayerShip().getPosition();*/
+    auto pos = playerShips[pageit].localPosition;
     focusX = pos.first < screenwidth / 2 ? screenwidth / 2 : (int)pos.first; // Make sure it's within bounds.
     focusY = pos.second < screenheight / 2 ? screenheight / 2 : (int)pos.second;
     focusX = focusX > 200 - screenwidth / 2 ? 200 - screenwidth / 2 : focusX;
@@ -566,4 +542,79 @@ coord State_Combat::displace(const coord& pos)
 
     }
     return coord(-1, -1);
+}
+
+void State_Combat::updateShips()
+{
+    shipconsole->clear();
+
+    rangeconsole->setDefaultBackground(TCODColor(255, 0, 255));
+    rangeconsole->setKeyColor(TCODColor(255, 0, 255));
+    rangeconsole->clear();
+
+    trailconsole->clear();
+
+    for (auto it = playerShips.begin(); it < playerShips.end(); it++)
+    {
+        it->step();
+    }
+
+    int counter = 0;
+    for (auto it = playerShips.begin(); it < playerShips.end(); it++)
+    {
+        int x = it->localPosition.first;
+        int y = it->localPosition.second;
+        if (x < 0 || x > 200 || y < 0 || y > 200)
+            popMe = true;
+
+        blitShip(*it);
+        counter++;
+    }
+}
+
+void State_Combat::redrawShips()
+{
+    int counter = 0;
+    for (auto it = playerShips.begin(); it < playerShips.end(); it++)
+    {
+        if (counter == pageit)
+            highlighted.push_back(it->localPosition);
+        blitShip(*it);
+        counter++;
+    }
+}
+
+void State_Combat::blitShip(CombatShip& ship)
+{
+    int x = (int)ship.localPosition.first;
+    int y = (int)ship.localPosition.second;
+    int c = ship.refToShip.character;
+
+    //Check that coords are not on land
+    if (map.ref(x, y).altitude > 0)
+    {
+        auto coords = displace(coord(x, y));
+        if (coords.first == -1 && coords.second == -1)
+        {
+            cout << "Error: did not find non-land tile\n";
+            popMe = true;
+            return;
+        }
+        ship.localPosition = coords;
+        x = coords.first;
+        y = coords.second;
+        // Since the ship presumably crashed into land, take some HP off, scaling w/square of speed.
+        ship.refToShip.durability -= int(ship.speed * ship.speed + 1);
+        ship.speed = 0;
+        ship.trail.clear();
+    }
+    shipconsole->putCharEx(x, y, c, Renderer::findFactionColor(ship.refToShip.captain.faction), TCODColor::black);
+    // Draw the trails next
+    
+    float intensity = 1;
+    for (auto it = ship.trail.rbegin(); it < ship.trail.rend(); it++)
+    {
+        trailconsole->putCharEx((int)it->first, (int)it->second, 177, TCODColor::lerp(TCODColor::darkBlue, TCODColor::white, intensity), TCODColor::black);
+        intensity -= 0.05;
+    }
 }

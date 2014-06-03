@@ -27,6 +27,7 @@ public:
     std::deque<coord_d> trail;
 
     PieSlice testrange;
+    int owner;
 private:
     double targetAngle;
     void normalizeAngles(); // if angle > 2pi + a, angle = a. 
@@ -52,7 +53,7 @@ class State_Combat : public GameState
 {
 public:
     // State_Combat(const int& wwidth, const int& hheight);
-    State_Combat(Ship& aShip, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord, const std::vector<Ship*> ships = std::vector<Ship*>());
+    State_Combat(Fleet& fleet, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord);
     virtual bool Init();
 
     virtual void Update();
@@ -70,28 +71,32 @@ public:
     virtual void MouseButtonDown(const int &iButton, const int &iX, const int &iY, const int &iRelX, const int &iRelY);
 
 private:
-    // PieSlice test;
 
     CombatMap map;
-    CombatShip player;
+
+    std::vector<CombatShip> playerShips;
+    Fleet& playerFleet;
+    int page, pageit;
+    std::vector<int> pages;
+
     void lockToShip();
     bool mouseClick, mouseRightClick;
     coord displace(const coord& pos);
-    std::vector<Ship*> shipRefList;
-    std::vector<CombatShip> shipList;
-    //PieSlice testPair;
 
-    /*
-    SinglePieSlice forward;
-    SinglePieSlice backward;
-    SinglePieSlice left;
-    SinglePieSlice right;*/
+    void updateShips();
+    void redrawShips();
+    void blitShip(CombatShip& ship);
+
+    std::vector<CombatShip> shipList;
+
     const int scrollspeed;
-    bool update;
+    bool update, redraw;
     bool lock;
     TCODConsole* console;
+    TCODConsole* trailconsole;
     TCODConsole* shipconsole;
     TCODConsole* rangeconsole;
+    std::vector<coord> highlighted;
     int x, y;
     int mouseX, mouseY;
     int focusX, focusY;

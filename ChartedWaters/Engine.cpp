@@ -324,8 +324,8 @@ void Engine::KeyDown(const int &key, const int &unicode)
             shipPointers.push_back(&TheWorld->shipList.at(*it));
         }
 
-        //    newState = new State_Combat(TheWorld->getPlayerFleet(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second, shipPointers);
-        //   PushState(newState);
+        newState = new State_Combat(TheWorld->getPlayerFleet(), TheWorld->WorldMap.altitudeSeed, TheWorld->WorldMap.moistureSeed, pos.first, pos.second);
+        PushState(newState);
     }
 
     switch (unicode)

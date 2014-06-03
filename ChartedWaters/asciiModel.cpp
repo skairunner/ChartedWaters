@@ -22,9 +22,8 @@ void ASCIIImage::setAngle(const double& val)
   }
 
 PieSlice::PieSlice(const double& r)
-  : arcAngle(pi/2), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
+: arcAngle(pi / 2), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0), image(new TCODConsole((int)(2 * r) + 1, (int)(2 * r) + 1))
   {
-  image = new TCODConsole((int)(2 * r) + 1, (int)(2 * r) + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
   color = TCODColor::lighterBlue;
@@ -32,9 +31,8 @@ PieSlice::PieSlice(const double& r)
   }
 
 PieSlice::PieSlice(const double& r, const double& angle)
-  : arcAngle(angle), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0)
+: arcAngle(angle), maxrange(r), minrange(0), direction(r, r, 0, r, 0, 0), image(new TCODConsole((int)(2 * r) + 1, (int)(2 * r) + 1))
   {
-  image = new TCODConsole((int)(2 * r) + 1, (int)(2 * r) + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
   color = TCODColor::lighterBlue;
@@ -42,19 +40,35 @@ PieSlice::PieSlice(const double& r, const double& angle)
   }
 
 PieSlice::PieSlice(const double& minR, const double& maxR, const double& angle)
-  : arcAngle(angle), maxrange(maxR), minrange(minR), direction(maxR, maxR, 0, maxR, 0, 0)
+: arcAngle(angle), maxrange(maxR), minrange(minR), direction(maxR, maxR, 0, maxR, 0, 0), image(new TCODConsole((int)(2 * maxR) + 1, (int)(2 * maxR) + 1))
   {
-  image = new TCODConsole((int)(2 * maxR) + 1 , (int)(2 * maxR) + 1);
   image->setKeyColor(TCODColor(255,0,255));
   image->setDefaultBackground(TCODColor(255, 0, 255));
   color = TCODColor::lighterBlue;
   setAngle(arcAngle);
   }
 
-PieSlice::~PieSlice()
-  {
-  delete image;
-  }
+PieSlice::PieSlice(const PieSlice& p)
+{
+    *this = p;
+}
+
+PieSlice& PieSlice::operator= (const PieSlice& p)
+{
+    direction = p.direction;
+    arcAngle = p.arcAngle;
+
+    // Must deep-copy "image".
+    int w = p.image->getWidth();
+    int h = p.image->getHeight();
+    image = std::shared_ptr<TCODConsole>(new TCODConsole(w, h));
+    TCODConsole::blit(p.image.get(), 0, 0, 0, 0, image.get(), 0, 0, 1.0f, 1.0f);
+
+    color = p.color;
+    maxrange = p.maxrange;
+    minrange = p.minrange;
+    return *this;
+}
 
 void PieSlice::setAngle(const double& val)
   {
