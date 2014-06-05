@@ -90,6 +90,7 @@ private:
     std::vector<CombatShip> shipList;
 
     const int scrollspeed;
+    int turn; // divide by 10 for actual turns.
     bool update, redraw;
     bool lock;
     TCODConsole* console;

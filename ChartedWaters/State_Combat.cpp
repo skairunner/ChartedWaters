@@ -6,6 +6,7 @@
 #include "World.h" //test
 #include <string>
 #include <iostream>
+#include "State_ShipStatus.h"
 
 using namespace std;
 
@@ -270,7 +271,8 @@ backward.redraw();
 }*/
 
 State_Combat::State_Combat(Fleet& fleet, const long& altSeed, const long& moistSeed, const int& xcoord, const int& ycoord)
-: map(altSeed, moistSeed, xcoord, ycoord), scrollspeed(5), playerFleet(fleet), mouseX(0), mouseY(0), mouseRightClick(false), redraw(false)
+: map(altSeed, moistSeed, xcoord, ycoord), scrollspeed(5), playerFleet(fleet), mouseX(0), mouseY(0), mouseRightClick(false), redraw(false),
+turn(0)
 {
     focusX = 100;
     focusY = 50;
@@ -393,6 +395,9 @@ void State_Combat::Render(TCODConsole *root)
 
     
     int line = 0;
+    root->setDefaultForeground(TCODColor::yellow);
+    root->print(0, line++, ("Turn " + to_string(turn/10.0f)).c_str());
+    root->setDefaultForeground(TCODColor::white);
     root->print(0, line++, ("Ship " + to_string(pageit+1)).c_str());
     root->print(0, line++, state.c_str());
     root->print(0, line++, "Speed: %.2f", playerShips[pageit].speed);
@@ -436,6 +441,13 @@ void State_Combat::KeyDown(const int &key, const int &unicode)
         focusY = (focusY + scrollspeed <= 200 - screenheight / 2) ? focusY + scrollspeed : 200 - screenheight / 2;
         redraw = true;
         break;
+    case SDLK_s:
+        nextState = new State_ShipStatus(playerFleet);
+        pushSomething = true;
+        break;
+    case SDLK_y:
+        lock = !lock;
+        break;
     default:
         break;
     }
@@ -452,9 +464,7 @@ void State_Combat::KeyDown(const int &key, const int &unicode)
         break;
     case '.':
         update = true;
-        break;
-    case 'Y':
-        lock = !lock;
+        turn++;
         break;
     case '>':
         playerShips[pageit].setTargetAngle(playerShips[pageit].getTargetAngle() + 0.05);
@@ -604,7 +614,7 @@ void State_Combat::blitShip(CombatShip& ship)
         x = coords.first;
         y = coords.second;
         // Since the ship presumably crashed into land, take some HP off, scaling w/square of speed.
-        ship.refToShip.durability -= int(ship.speed * ship.speed + 1);
+        ship.refToShip.durability -= int(ship.speed * ship.speed + 1) * 10;
         ship.speed = 0;
         ship.trail.clear();
     }
