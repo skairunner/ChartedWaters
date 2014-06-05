@@ -5,6 +5,42 @@
 
 using namespace std;
 
+BiomeDictionary BiomeDict;
+
+BiomeDictionary::BiomeDictionary()
+{
+    enum_nameMap[BIOME::none] = "none";
+    enum_nameMap[BIOME::tropicalForest] = "tropical forest";
+    enum_nameMap[BIOME::savanna] = "savanna";
+    enum_nameMap[BIOME::desert] = "desert";
+    enum_nameMap[BIOME::forest] = "forest";
+    enum_nameMap[BIOME::grassland] = "grassland";
+    enum_nameMap[BIOME::mediterranean] = "mediterranean";
+    enum_nameMap[BIOME::coniferousForest] = "coniferous forest";
+    enum_nameMap[BIOME::tundra] = "tundra";
+
+    for (auto it = enum_nameMap.begin(); it != enum_nameMap.end(); it++)
+        name_enumMap[it->second] = it->first;
+}
+
+BIOME BiomeDictionary::EnumFromName(const std::string& name)
+{
+    if (name_enumMap.find(name) == name_enumMap.end())
+        return BIOME::none;
+    return name_enumMap[name];
+}
+
+std::string BiomeDictionary::NameFromEnum(const BIOME& id)
+{
+    if (enum_nameMap.find(id) == enum_nameMap.end())
+        return "none";
+    return enum_nameMap[id];
+}
+
+////////////
+////////////
+////////////
+
 WorldMapClass::WorldMapClass(const int& width, const int& height)
   :w(width), h(height)
   {
@@ -69,14 +105,63 @@ void WorldMapClass::gen()
     for (int xcounter = 0; xcounter < w; xcounter++)
     {
 
-        double temp = getValue(moisture, xcounter, ycounter, zoom2);
-        if (ycounter > h * 0.32)
-            temp += 0.4;
+        double m = getValue(moisture, xcounter, ycounter, zoom2);
+        m += 1.0;
+        /*if (ycounter > h * 0.32)
+            m += 0.4;
         else if (ycounter > h * 0.6 && ycounter < h * 0.8)
-            temp += 0.7;
-        temp += 0.0;
-        // buffer[xcounter + ycounter * w] = temp > 0 ? temp * 20 : 0;
-        ref(xcounter, ycounter).moisture = temp;
+            m += 0.7;*/
+        ref(xcounter, ycounter).moisture = m;
+    }
+
+    // Next do biome assignment. Temperature is 45 * {1 - (distance from equator) / (distance from equator to top of map)} - 15
+    // as in, the further from the equator the colder it is.
+    // Moisture is x200.
+
+    for (int ycounter = 0; ycounter < h; ycounter++)
+    for (int xcounter = 0; xcounter < w; xcounter++)
+    {
+        auto& tile = ref(xcounter, ycounter);
+        double moisture = tile.moisture * 200;
+        double temp = (1 - abs(ycounter - getHeight() * 0.5) / (getHeight()/2.0)) * 45 - 15;
+        tile.temp = temp;
+
+        if (tile.altitude < 0) // oceans have no biomes.
+            tile.biome = BIOME::none;
+        // referencing forseth_biome.jpeg
+        else if (temp > 18)
+        {
+            if (moisture < 50)
+                tile.biome = BIOME::desert;
+            else if (moisture < 100)
+                tile.biome = BIOME::savanna;
+            else if (-12 / 250.0 * (moisture - 100) + 30 < temp)
+                tile.biome = BIOME::tropicalForest;
+            else
+                tile.biome = BIOME::savanna;
+        }
+        else if (temp > 0)
+        {
+            if (moisture < 40)
+                tile.biome = BIOME::desert;
+            else if (moisture < 80)
+                tile.biome = BIOME::mediterranean;
+            else if (moisture < 120)
+                tile.biome = BIOME::grassland;
+            else
+                tile.biome = BIOME::forest;
+        }
+        else if (temp > -5)
+        {
+            if (moisture < 10)
+                tile.biome = BIOME::desert;
+            else if (moisture < 50)
+                tile.biome = BIOME::mediterranean;
+            else
+                tile.biome = BIOME::coniferousForest;
+        }
+        else
+            tile.biome = BIOME::tundra;
     }
 
     setCoastFlags();

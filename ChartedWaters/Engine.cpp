@@ -37,8 +37,9 @@ TCODConsole* mapscreen;
 TCODConsole* ZOCscreen;
 TCODConsole* tooltip;
 TCODConsole* PathScreen;
-TCODConsole* AccessibleScreen;
+TCODConsole* MoistureScreen;
 TCODConsole* ShipScreen;
+TCODConsole* BiomeScreen;
 
 bool redo = false;
 typedef pair<int, int> coord;
@@ -50,6 +51,9 @@ bool pressedArrow = false; // ">"
 bool mouseRightClick = false;
 bool showTrails = false;
 bool showZOC = false;
+bool showMoisture = false;
+bool showBiomes = false;
+bool checkBiomeDebug = false;
 
 Fleet* lockedFleet;
 Ship* lockedShip;
@@ -104,14 +108,17 @@ bool Engine::EngineInit()
   trailsscreen->setKeyColor(TCODColor::magenta);
   trailsscreen->setDefaultBackground(TCODColor::magenta);
 
-  AccessibleScreen = new TCODConsole(width, height);
-  Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
+  MoistureScreen = new TCODConsole(width, height);
 
+  BiomeScreen = new TCODConsole(width, height);
+  BiomeScreen->setKeyColor(TCODColor::magenta);
+
+  Renderer::getMoistureBitmap(MoistureScreen, TheWorld->WorldMap);
   Renderer::getTerrainBitmap(mapscreen, TheWorld->WorldMap);
   Renderer::getCityBitmap(cityscreen, *TheWorld);
   Renderer::getTrailBitmap(trailsscreen, *TheWorld);
-  Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
   Renderer::getShipBitmap(ShipScreen, *TheWorld);
+  Renderer::getBiomeBitmap(BiomeScreen, TheWorld->WorldMap);
 
   ZOCscreen = new TCODConsole(width, height);
   for (int ycounter = 0; ycounter < height; ycounter++)
@@ -147,8 +154,11 @@ bool Engine::EngineInit()
 
 void Engine::Update()
   {
-  // combat testing
- 
+    if (checkBiomeDebug && mouseClick)
+    {
+        auto& tile = TheWorld->WorldMap.ref(mouseX, mouseY);
+        cout << "moisture: " << tile.moisture * 200 << " temp: " << tile.temp << "biome: " << BiomeDict.NameFromEnum(tile.biome) << "\n";        
+    }
 
   if (!newState)
     delete newState;
@@ -166,14 +176,17 @@ void Engine::Update()
     cityscreen->clear();
     trailsscreen->clear();
     mapscreen->clear();
-    AccessibleScreen->clear();
+    MoistureScreen->clear();
+    BiomeScreen->clear();
     PathScreen->clear();
     lockToShip();
     redo = false;
     Renderer::getTerrainBitmap(mapscreen, TheWorld->WorldMap);
     Renderer::getCityBitmap(cityscreen, *TheWorld);
     Renderer::getTrailBitmap(trailsscreen, *TheWorld);
-    Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
+    Renderer::getMoistureBitmap(MoistureScreen, TheWorld->WorldMap);
+    Renderer::getBiomeBitmap(BiomeScreen, TheWorld->WorldMap);
+
     for (int ycounter = 0; ycounter < height; ycounter++)
       for (int xcounter = 0; xcounter < width; xcounter++)
         if (TheWorld->WorldMap.ref(xcounter, ycounter).isInZOC > 0)
@@ -246,6 +259,10 @@ void Engine::Render(TCODConsole *root)
   TCODConsole::blit(cityscreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.5f);
   TCODConsole::blit(PathScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
   TCODConsole::blit(ShipScreen, focusX - screenwidth/2, focusY - screenheight/2, screenwidth, screenheight, root, 0, 0, 1.0f, 0.0f);
+  if (showMoisture)
+      TCODConsole::blit(MoistureScreen, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 0.0f, 1.0f);
+  if (showBiomes)
+      TCODConsole::blit(BiomeScreen, focusX - screenwidth / 2, focusY - screenheight / 2, screenwidth, screenheight, root, 0, 0, 0.0f, 1.0f);
   TCODConsole::blit(tooltip, 0, 0, 0, 0, root, 0, 0, 1.0f, 0.0f);
 
   Fleet& refToFleet = TheWorld->getPlayerFleet();
@@ -349,9 +366,21 @@ void Engine::KeyDown(const int &key, const int &unicode)
         pressedPeriod = true;
         break;
 
+    case 'b':
+        checkBiomeDebug = !checkBiomeDebug;
+        break;
+
+    case 'B':
+        showBiomes = !showBiomes;
+        break;
+
     case 'k':
         newState = new State_ShowSkills(TheWorld->getPlayerFleet().captain);
         PushState(newState);
+        break;
+
+    case 'm':
+        showMoisture = !showMoisture;
         break;
 
     case 'R': //Test button to give player 100k money

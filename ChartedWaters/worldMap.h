@@ -2,20 +2,38 @@
 #include <vector>
 #include "include/noise.h"
 #include <random>
+#include <map>
 
 typedef std::pair<int, int> coord;
 
+enum class BIOME {none = 0, tropicalForest, savanna, desert, forest, grassland, mediterranean, coniferousForest, tundra};
+
+class BiomeDictionary
+{
+public:
+    BiomeDictionary();
+    BIOME EnumFromName(const std::string& name);
+    std::string NameFromEnum(const BIOME& id);
+private:
+    std::map<BIOME, std::string> enum_nameMap;
+    std::map<std::string, BIOME> name_enumMap;
+};
+
+extern BiomeDictionary BiomeDict;
+
 struct maptile
-  {
-  maptile(): owner(0), moisture(0), altitude(0), isCity(false), isCoastal(false), isNull(false), isInZOC(0){}
-  float moisture;
-  float altitude;
-  int owner;
-  int isInZOC;
-  int isCity;
-  bool isCoastal;
-  bool isNull;
-  };
+{
+    maptile() : owner(0), moisture(0), altitude(0), isCity(false), isCoastal(false), isNull(false), isInZOC(0), biome(BIOME::none) {}
+    float moisture;
+    float altitude;
+    float temp;
+    int owner;
+    int isInZOC;
+    int isCity;
+    bool isCoastal;
+    bool isNull;
+    BIOME biome;
+};
 
 class randomBoat;
 

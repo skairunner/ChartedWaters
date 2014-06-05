@@ -68,7 +68,8 @@ class Renderer // Accesses World and returns bitmaps.
     static void getTrailBitmap(TCODConsole* cities, World& world);
     static TCODColor findFactionColor(const int& faction);
     static std::string findCityName(const coord& coords, World& world);
-    static void getAccessBitmap(TCODConsole* accessmap, PathMap& pm);
+    static void getMoistureBitmap(TCODConsole* accessmap, WorldMapClass& wm);
+    static void getBiomeBitmap(TCODConsole* biomemap, WorldMapClass& wm);
     static void getShipBitmap(TCODConsole* shipmap, World& world);
     static void getTooltip(TCODConsole* tooltip, World& world, const int& mouseX, const int& mouseY);
   private:

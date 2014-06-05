@@ -364,7 +364,7 @@ void World::pickSails(Ship& ship)
 
 void Renderer::getHighResTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
   {
-  const double thresholdMoisture = 0;
+  const double thresholdMoisture = 1.0;
   const TCODColor sandcolor = TCODColor(123, 107, 57);
   const TCODColor coastalBrown = TCODColor(141,124, 71);
 
@@ -406,7 +406,7 @@ void Renderer::getHighResTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
 
 void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
   {
-  const double thresholdMoisture = 0;
+  const double thresholdMoisture = 1.0;
   const TCODColor sandcolor = TCODColor(123, 107, 57);
   const TCODColor coastalBrown = TCODColor(141,124, 71);
 
@@ -486,16 +486,75 @@ void Renderer::getTrailBitmap(TCODConsole* cities, World& world)
     }
 }
 
-void Renderer::getAccessBitmap(TCODConsole* accessmap, PathMap& pm)
-  {
-  coord dimensions = pm.getDimensions();
-  for (int ycounter = 0; ycounter < dimensions.second; ycounter++)
-    for (int xcounter = 0; xcounter < dimensions.first; xcounter++)
-      {
-      if(!pm.ref(xcounter, ycounter).accessible)
-        accessmap->putCharEx(xcounter, ycounter, 249, TCODColor::red, TCODColor::black);
-      }
-  }
+void Renderer::getMoistureBitmap(TCODConsole* accessmap, WorldMapClass& wm)
+{
+
+    // Find max and min values.
+    double min = std::numeric_limits<double>::max();
+    double max = std::numeric_limits<double>::lowest();
+
+    for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
+    for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
+    {
+        int moisture = wm.ref(xcounter, ycounter).moisture;
+        if (moisture > max)
+            max = moisture;
+        if (moisture < min)
+            min = moisture;
+    }
+    std::cout << "min:" << min << std::endl;
+    double diff = max - min;
+    diff *= 1.1;
+
+    for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
+    for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
+    {
+        accessmap->putCharEx(xcounter, ycounter, ' ', TCODColor::black, TCODColor::lerp(TCODColor::black, TCODColor::blue, wm.ref(xcounter, ycounter).moisture / diff));
+    }
+}
+
+void Renderer::getBiomeBitmap(TCODConsole* biomemap, WorldMapClass& wm)
+{
+    for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
+    for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
+    {
+        TCODColor col = TCODColor::magenta;
+        switch (wm.ref(xcounter, ycounter).biome)
+        {
+        case BIOME::none:
+            break;
+        case BIOME::coniferousForest:
+            col = TCODColor(130, 127, 170);
+            break;
+        case BIOME::desert:
+            col = TCODColor(225, 130, 86);
+            break;
+        case BIOME::forest:
+            col = TCODColor(59, 115, 70);
+            break;
+        case BIOME::grassland:
+            col = TCODColor(114, 163, 84);
+            break;
+        case BIOME::mediterranean:
+            col = TCODColor(159, 178, 184);
+            break;
+        case BIOME::savanna:
+            col = TCODColor(191, 187, 162);
+            break;
+        case BIOME::tropicalForest:
+            col = TCODColor(44, 69, 30);
+            break;
+        case BIOME::tundra:
+            col = TCODColor(72, 142, 176);
+            break;
+        default:
+            col = TCODColor::black;
+            break;
+        }
+
+        biomemap->putCharEx(xcounter, ycounter, ' ', TCODColor::black, col);
+    }
+}
 
 void Renderer::getShipBitmap(TCODConsole* shipmap, World& world)
   {
