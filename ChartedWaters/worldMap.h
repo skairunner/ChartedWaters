@@ -24,12 +24,15 @@ class WorldMapClass
   public:
     friend class randomBoat;
     WorldMapClass(const int& width, const int& height);
+    
+    static double getValue(noise::module::Perlin& gen, const int& x, const int& y, const double& zoom); // To have all code that accesses a Perlin noise gen for a world gen coordinate work the same way.
     virtual void gen();
     virtual maptile& ref(const int& x, const int& y);
     int getWidth();
     int getHeight();
     std::vector<coord> cities;
-    long moistureSeed, altitudeSeed;
+    long moistureSeed, altitudeSeed, ampSeed; // Amp seed = seed for perlin noise that determines amplitude
+    long offsetSeed;
 
     std::vector<std::pair<coord, int>> boatpaths; // the paths and IDs of the boat settlers.
 

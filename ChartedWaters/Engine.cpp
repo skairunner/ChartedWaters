@@ -20,8 +20,11 @@ int mouseX, mouseY;
 const int width = 256;
 const int height = 256;
 
-const int screenwidth = 100;
-const int screenheight = 48;
+/*const int screenwidth = 100;
+const int screenheight = 48;*/
+
+const int screenwidth = 150;
+const int screenheight = 80;
 
 
 int playerMovement = 0;
@@ -37,7 +40,7 @@ TCODConsole* PathScreen;
 TCODConsole* AccessibleScreen;
 TCODConsole* ShipScreen;
 
-bool redo = true;
+bool redo = false;
 typedef pair<int, int> coord;
 GameState* newState;
 bool mouseClick = false;
@@ -110,9 +113,17 @@ bool Engine::EngineInit()
   Renderer::getAccessBitmap(AccessibleScreen, TheWorld->pathfinder->map);
   Renderer::getShipBitmap(ShipScreen, *TheWorld);
 
-
-
   ZOCscreen = new TCODConsole(width, height);
+  for (int ycounter = 0; ycounter < height; ycounter++)
+  for (int xcounter = 0; xcounter < width; xcounter++)
+  if (TheWorld->WorldMap.ref(xcounter, ycounter).isInZOC > 0)
+  {
+      int faction = TheWorld->WorldMap.ref(xcounter, ycounter).isInZOC;
+      auto color = Renderer::findFactionColor(faction);
+      ZOCscreen->putCharEx(xcounter, ycounter, 219, color, color);
+  }
+
+
   tooltip = new TCODConsole(30, 6);
 
   Fleet& fleet = TheWorld->getPlayerFleet();
@@ -268,11 +279,11 @@ void Engine::Render(TCODConsole *root)
     sailorcol = TCOD_COLCTRL_2;
 
   root->setDefaultForeground(TCODColor::lightestGrey);
-  root->print(0, 48, "Dur.: %c%d%c/%d   Storage %d/%d   Fatigue: %c%.1f%c/100%c   Rations: %c%.1f%c   Est. rations req.: %c%.1f%c", durabilitycol, durability, TCOD_COLCTRL_STOP, maxDurability, refToFleet.getTotalGoods(), refToFleet.getMaxGoods(),
+  root->print(0, screenheight-2, "Dur.: %c%d%c/%d   Storage %d/%d   Fatigue: %c%.1f%c/100%c   Rations: %c%.1f%c   Est. rations req.: %c%.1f%c", durabilitycol, durability, TCOD_COLCTRL_STOP, maxDurability, refToFleet.getTotalGoods(), refToFleet.getMaxGoods(),
       fatiguecol, fatigue / 10.0f, TCOD_COLCTRL_1, TCOD_COLCTRL_STOP, rationcol, refToFleet.getRations() / 10.0f, TCOD_COLCTRL_STOP,
     TCOD_COLCTRL_4, refToFleet.getEstimatedRationsNeeded()/10.0f, TCOD_COLCTRL_STOP);
 
-  root->print(0, 49, "Day %d   ETA: %c%d%c days   Sailors: %c%d%c(%d)%c/%d   Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToFleet.getETA(), TCOD_COLCTRL_STOP, 
+  root->print(0, screenheight-1, "Day %d   ETA: %c%d%c days   Sailors: %c%d%c(%d)%c/%d   Ducats: %c%d%c", daysPassed, TCOD_COLCTRL_4, refToFleet.getETA(), TCOD_COLCTRL_STOP, 
     sailorcol, refToFleet.getNumSailors(), TCOD_COLCTRL_1, refToFleet.getMinSailors(), TCOD_COLCTRL_STOP, refToFleet.getMaxSailors(),
     TCOD_COLCTRL_5, refToFleet.captain.ducats, TCOD_COLCTRL_STOP);
   }

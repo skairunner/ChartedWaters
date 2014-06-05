@@ -1,6 +1,7 @@
 #include "World.h"
 #include <cstdlib>
 #include <time.h>
+#include <limits>
 
 World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), first(true), entityMap(w, h)
@@ -413,6 +414,22 @@ void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
   /*const TCODColor sandcolor = TCODColor(193, 177, 127);
   const TCODColor coastalBrown = TCODColor(231,194,141);*/
 
+  // Find max and min values.
+  double min = std::numeric_limits<double>::max();
+  double max = std::numeric_limits<double>::lowest();
+  for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
+  for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
+  {
+      int altitude = wm.ref(xcounter, ycounter).altitude;
+      if (altitude > max)
+          max = altitude;
+      if (altitude < min)
+          min = altitude;
+  }
+
+  double landdiff = max * 1.2;
+  double seadiff = -min * 1.1;
+
   for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
     for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
       {
@@ -427,7 +444,7 @@ void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
           {
           fore = sandcolor;
           }
-        fore = TCODColor::lerp(fore, TCODColor::black, it.altitude / 40.0f);
+        fore = TCODColor::lerp(fore, TCODColor::black, it.altitude / landdiff);
         back = fore;
 
         if (it.isCoastal)
@@ -441,7 +458,7 @@ void Renderer::getTerrainBitmap(TCODConsole* map, WorldMapClass& wm)
         }
 
       else
-        map->putCharEx(xcounter, ycounter, 178, TCODColor::lerp(TCODColor::blue, TCODColor::black, -1 * it.altitude / 40.0f), TCODColor::darkBlue);
+        map->putCharEx(xcounter, ycounter, 178, TCODColor::lerp(TCODColor::blue, TCODColor::black, -1 * it.altitude / seadiff), TCODColor::darkBlue);
       }
   }
 

@@ -1,8 +1,7 @@
 #include "worldMap.h"
 #include <stdlib.h>
 #include <time.h>
-
-#pragma warning(disable : 4244)
+#include <iostream>
 
 using namespace std;
 
@@ -16,60 +15,73 @@ WorldMapClass::WorldMapClass(const int& width, const int& height)
   null.isNull = true;
   }
 
-void WorldMapClass::gen()
-  {
-  cities.clear();
-  boatpaths.clear();
-  noise::module::Perlin moisture;
-  noise::module::Perlin altitude;
-  moistureSeed = rand();
-  altitudeSeed = rand();
-  moisture.SetSeed(moistureSeed);
-  altitude.SetSeed(altitudeSeed);
+double WorldMapClass::getValue(noise::module::Perlin& gen, const int& x, const int& y, const double& zoom)
+{
+    return gen.GetValue((x + 1) * zoom + 0.01, (y + 1) * zoom + 0.01, 2.5);
+}
 
-  vector<float> buffer(w * h, 0);
-  double zoom = 0.07;
-  // altitude!
-  for (int ycounter = 0; ycounter < h; ycounter++)
+void WorldMapClass::gen()
+{
+    cities.clear();
+    boatpaths.clear();
+    noise::module::Perlin moisture;
+    noise::module::Perlin altitude;
+    noise::module::Perlin amplitude;
+    noise::module::Perlin offset;
+    moistureSeed = rand();
+    altitudeSeed = rand();
+    ampSeed = rand();
+    offsetSeed = rand();
+    moisture.SetSeed(moistureSeed);
+    moisture.SetNoiseQuality(noise::QUALITY_BEST);
+    altitude.SetSeed(altitudeSeed);
+    altitude.SetNoiseQuality(noise::QUALITY_BEST);
+    amplitude.SetSeed(ampSeed);
+    offset.SetSeed(offsetSeed);    
+
+    vector<float> buffer(w * h, 0);
+    double zoom = 0.09; // originally 0.07
+    // altitude!
+    for (int ycounter = 0; ycounter < h; ycounter++)
     for (int xcounter = 0; xcounter < w; xcounter++)
-      {
-      double temp = altitude.GetValue((xcounter+1) * zoom + 0.01, (ycounter+1) * zoom + 0.01, 2.5);
-      temp -= 0.25;
-      if (temp < 0)
+    {
+        double temp = getValue(altitude, xcounter, ycounter, zoom) * abs(getValue(amplitude, xcounter, ycounter, zoom / 10));
+        temp -= 0.25;
+        if (temp < 0)
         {
-        if (-temp > 0.3)
-          temp *= 20;
-        else
-          temp *= 10;
-        buffer[xcounter+ycounter*w] = temp;
+            if (-temp > 0.3)
+                temp *= 20;
+            else
+                temp *= 10;
+            buffer[xcounter + ycounter*w] = temp;
         }
-      else
-        buffer[xcounter + ycounter * w] = temp * 20;// > 0 ? temp * 20 : 0; // we don't need buffer right now
-      ref(xcounter, ycounter).altitude = buffer[xcounter + ycounter * w];
-      ref(xcounter, ycounter).isCoastal = false;
-      ref(xcounter, ycounter).isCity = false;
-      ref(xcounter, ycounter).isInZOC = false;
-      }
+        else
+            buffer[xcounter + ycounter * w] = temp * 20;
+        ref(xcounter, ycounter).altitude = buffer[xcounter + ycounter * w];
+        ref(xcounter, ycounter).isCoastal = false;
+        ref(xcounter, ycounter).isCity = false;
+        ref(xcounter, ycounter).isInZOC = false;
+    }
 
     // moisture!
     double zoom2 = 0.05;
-  for (int ycounter = 0; ycounter < h; ycounter++)
+    for (int ycounter = 0; ycounter < h; ycounter++)
     for (int xcounter = 0; xcounter < w; xcounter++)
-      {
-      
-      double temp = moisture.GetValue((xcounter+1) * zoom2 + 0.01, (ycounter+1) * zoom2 + 0.01, 0.5);
-      if (ycounter > h * 0.32)
-        temp += 0.4;
-      else if (ycounter > h * 0.6 && ycounter < h * 0.8)
-        temp += 0.7;
-      temp += 0.0;
-      // buffer[xcounter + ycounter * w] = temp > 0 ? temp * 20 : 0;
-      ref(xcounter, ycounter).moisture = temp;
-      }
+    {
+
+        double temp = getValue(moisture, xcounter, ycounter, zoom2);
+        if (ycounter > h * 0.32)
+            temp += 0.4;
+        else if (ycounter > h * 0.6 && ycounter < h * 0.8)
+            temp += 0.7;
+        temp += 0.0;
+        // buffer[xcounter + ycounter * w] = temp > 0 ? temp * 20 : 0;
+        ref(xcounter, ycounter).moisture = temp;
+    }
 
     setCoastFlags();
     setCityFlags();
-  }
+}
 
 maptile& WorldMapClass::ref(const int& x, const int& y)
   {
