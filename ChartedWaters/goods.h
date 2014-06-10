@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "worldMap.h"
 
 
 class ItemDictionary;
@@ -32,6 +33,8 @@ class ItemDictionary
     std::string findItemDesc(const std::string& ID);
     std::string findItemCategory(const std::string& ID);
 
+    Item getItemForBiome(const std::string& category, const BIOME& biome, bool forceRaw, bool isCoastal); 
+
     Item& getItemTemplate(const std::string& itemID);
     void sortIntoLists(); // Make a map of vector of item IDs.
     std::vector<std::string>& getItemsPerCategory(const std::string& category);
@@ -39,18 +42,31 @@ class ItemDictionary
     void addCityToItem(const std::string& itemID, const std::pair<int,int>& city);
     std::vector<std::pair<int,int>> getCitiesForItem(const std::string& itemID);
     void clearCitiesList();
-    std::vector<std::string> getCategories();
 
+    std::vector<std::string> getCategories();
     std::map<std::string, std::vector<std::string>> itemsPerCategory;
 
   private:
     std::map<std::string, Item> ItemList;
     std::map<std::string, std::string> InitialList;
     std::map<std::string, std::vector<std::string>> categories;
-    
+
+    std::map<std::string, std::map<BIOME, std::vector<Item*>>> itemsByBiome; // first key is category, then biome.
+    std::map<std::string, std::vector<Item*>> recipeItems; // first key category
+    std::map<std::string, std::vector<Item*>> nonBiomeItems; // first key category
+
+    std::mt19937 gen;
     std::map<std::string, std::vector<std::pair<int,int>>> citiesPerItem;
+    bool hasBiome(const std::vector<BIOME>& biomes, const BIOME& biome, bool isCoastal); // check if a vector of biomes has a specified biome.
     bool sorted;
   };
+
+struct Ingredient // a grouping of optional ingredients that can be swapped for each other.
+{
+    Ingredient();
+    Ingredient(const std::string& items); // colon delimited
+    std::vector<std::string> ingredients;
+};
 
 extern ItemDictionary ItemDict;
 
@@ -71,6 +87,13 @@ class Item
     std::string desc;
     std::string category;
     std::string type;
+
+    bool isProduced; // if true, use the recipe. Else use the biome list.
+    int multiplier;
+    std::vector<BIOME> biomes;
+    std::vector<Ingredient> recipe;
+    std::string facility; // name of the facility that produces this item.
+
    
     int basePrice;
     double decayRatePositive; // When the demand > supply

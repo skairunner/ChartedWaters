@@ -16,10 +16,14 @@ void drawPageDots(TCODConsole* console, const int& X, const int& Y, const int& p
 void invertLine(TCODConsole* console, const int& line);
 int printEquipment(TCODConsole* console, Ship& ship, int line); // line to start drawing from.
 
+std::vector<std::string> splitstr(const std::string& string, const char& delim = ' ');
 template<typename T> void removeInPlace(const int& i, std::vector<T>& v);
 template<typename K, typename T> std::vector<K> getKeys(std::map<K, T>& mp);
 
+// required because templated functions have to be in the same file as the declaration. At least I can keep the header looking clean.
 #include "utility.tpp"
+
+
 
 int stringToDecimal(const std::string& input);
 typedef std::pair<int, int> coord;
@@ -37,7 +41,7 @@ namespace vectornumbers
     extern std::vector<int> zero;
     extern std::vector<int> one;
     extern std::vector<int> two;
-    extern std::vector<int> three ;
+    extern std::vector<int> three;
     extern std::vector<int> four;
     extern std::vector<int> five;
     extern std::vector<std::vector<int>> indexes;

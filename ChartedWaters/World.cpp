@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <time.h>
 #include <limits>
+#include <fstream>
 
 World::World(const int& w, const int& h)
   : width(w), height(h), WorldMap(w, h), first(true), entityMap(w, h)
@@ -144,13 +145,14 @@ void World::populateCities()
     ///// Use z= 10.5 for population.
     const double zoom = 0.01;
 
-    auto foodlist = ItemDict.getItemsPerCategory(std::string("Food"));
-    auto otherlist = ItemDict.getItemsPerCategory(std::string("Other"));
-    auto industlist = ItemDict.getItemsPerCategory(std::string("Raw materials"));
-    auto luxurylist = ItemDict.getItemsPerCategory(std::string("Luxury"));
+    // TEST
+    std::fstream file;
+    file.open("outputs/citylog.txt", std::fstream::out | std::fstream::trunc);
+    file << "Item\tNumber\n";
+    std::map<std::string, int> itemtable;
+    
     for (auto it = cityList.begin(); it != cityList.end(); it++)
     {
-
         auto pos = it->first;
 
         // Pick ships to stock in the drydocks.
@@ -209,14 +211,23 @@ void World::populateCities()
         if (other >= 4)
             it->second.isOther = true;
 
-
+        coord xy = it->first;
+        BIOME biome = WorldMap.ref(xy.first, xy.second).biome;
+        bool isCoastal = WorldMap.ref(xy.first, xy.second).isCoastal;
+        food *= 2;
+        double median = floor(food / 2);
         while (food > 0)
         {
             food -= 1;
-            int number = random(0, foodlist.size() - 1);
-            it->second.spawnList.push_back(foodlist.at(number));
+            Item& item = ItemDict.getItemForBiome("Food", biome, food > median, isCoastal); // force half of the food to be non-recipes
+            if (item.name != "Null")
+                it->second.spawnList.push_back(item.ID);
+            if (itemtable.find(item.name) == itemtable.end())
+                itemtable[item.name] = 1;
+            else
+                itemtable[item.name]++;
         }
-        while (indust > 0)
+       /* while (indust > 0)
         {
             indust -= 1;
             int number = random(0, industlist.size() - 1);
@@ -233,13 +244,18 @@ void World::populateCities()
             luxury -= 1;
             int number = random(0, luxurylist.size() - 1);
             it->second.spawnList.push_back(luxurylist.at(number));
-        }
+        }*/
 
         for (auto itemID = it->second.spawnList.begin(); itemID < it->second.spawnList.end(); itemID++)
         {
             ItemDict.addCityToItem(*itemID, it->first);
-        }
+        }        
     }
+
+
+    for (auto it = itemtable.begin(); it != itemtable.end(); it++)
+        file << it->first << "\t" << it->second << "\n";
+    file.close();
 }
 
 void World::populateShips()
@@ -509,7 +525,7 @@ void Renderer::getMoistureBitmap(TCODConsole* accessmap, WorldMapClass& wm)
     for (int ycounter = 0; ycounter < wm.getHeight(); ycounter++)
     for (int xcounter = 0; xcounter < wm.getWidth(); xcounter++)
     {
-        accessmap->putCharEx(xcounter, ycounter, ' ', TCODColor::black, TCODColor::lerp(TCODColor::black, TCODColor::blue, wm.ref(xcounter, ycounter).moisture / diff));
+        accessmap->putCharEx(xcounter, ycounter, ' ', TCODColor::black, TCODColor::lerp(TCODColor::black, TCODColor::blue, abs(wm.ref(xcounter, ycounter).moisture) / (diff+0.1)));
     }
 }
 

@@ -1,6 +1,8 @@
 #include "utility.h"
 #include <regex>
 #include <iostream>
+#include <sstream>
+
 
 using namespace std;
 
@@ -14,7 +16,7 @@ namespace vectornumbers
     std::vector<int> two = { 0, 1 };
     std::vector<int> three = { 0, 1, 2 };
     std::vector<int> four = { 0, 1, 2, 3 };
-    std::vector<int> five = { 0, 1, 2, 3, 4, 5 };
+    std::vector<int> five = { 0, 1, 2, 3, 4 };
     std::vector<std::vector<int>> indexes = { zero, one, two, three, four, five };
 }
 
@@ -175,4 +177,16 @@ void invertLine(TCODConsole* console, const int& line)
         console->setCharBackground(i, line, back);
         console->setCharForeground(i, line, fore);
     }
+}
+
+std::vector<std::string> splitstr(const std::string& string, const char& delim)
+{
+    std::stringstream ss(string);
+    std::string item;
+    std::vector<std::string> output;
+    while (std::getline(ss, item, delim)) 
+    {
+        output.push_back(item);
+    }
+    return output;
 }

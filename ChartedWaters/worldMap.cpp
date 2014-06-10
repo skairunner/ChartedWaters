@@ -49,6 +49,7 @@ WorldMapClass::WorldMapClass(const int& width, const int& height)
     for (int xcounter = 0; xcounter < w; xcounter++)
       grid.push_back(maptile());
   null.isNull = true;
+  null.moisture = 0;
   }
 
 double WorldMapClass::getValue(noise::module::Perlin& gen, const int& x, const int& y, const double& zoom)
@@ -75,13 +76,13 @@ void WorldMapClass::gen()
     amplitude.SetSeed(ampSeed);
     offset.SetSeed(offsetSeed);    
 
-    vector<float> buffer(w * h, 0);
     double zoom = 0.09; // originally 0.07
     // altitude!
     for (int ycounter = 0; ycounter < h; ycounter++)
     for (int xcounter = 0; xcounter < w; xcounter++)
     {
-        double temp = getValue(altitude, xcounter, ycounter, zoom) * abs(getValue(amplitude, xcounter, ycounter, zoom / 10));
+        float buffer;
+        float temp = getValue(altitude, xcounter, ycounter, zoom) * abs(getValue(amplitude, xcounter, ycounter, zoom / 10));
         temp -= 0.25;
         if (temp < 0)
         {
@@ -89,11 +90,11 @@ void WorldMapClass::gen()
                 temp *= 20;
             else
                 temp *= 10;
-            buffer[xcounter + ycounter*w] = temp;
+            buffer = temp;
         }
         else
-            buffer[xcounter + ycounter * w] = temp * 20;
-        ref(xcounter, ycounter).altitude = buffer[xcounter + ycounter * w];
+            buffer = temp * 20;
+        ref(xcounter, ycounter).altitude = buffer;
         ref(xcounter, ycounter).isCoastal = false;
         ref(xcounter, ycounter).isCity = false;
         ref(xcounter, ycounter).isInZOC = false;
@@ -107,11 +108,7 @@ void WorldMapClass::gen()
 
         double m = getValue(moisture, xcounter, ycounter, zoom2);
         m += 1.0;
-        /*if (ycounter > h * 0.32)
-            m += 0.4;
-        else if (ycounter > h * 0.6 && ycounter < h * 0.8)
-            m += 0.7;*/
-        ref(xcounter, ycounter).moisture = m;
+        ref(xcounter, ycounter).moisture = abs(m);
     }
 
     // Next do biome assignment. Temperature is 45 * {1 - (distance from equator) / (distance from equator to top of map)} - 15
@@ -122,8 +119,8 @@ void WorldMapClass::gen()
     for (int xcounter = 0; xcounter < w; xcounter++)
     {
         auto& tile = ref(xcounter, ycounter);
-        double moisture = tile.moisture * 200;
-        double temp = (1 - abs(ycounter - getHeight() * 0.5) / (getHeight()/2.0)) * 45 - 15;
+        float moisture = tile.moisture * 200;
+        float temp = (1 - abs(ycounter - getHeight() * 0.5) / (getHeight()/2.0)) * 45 - 15;
         tile.temp = temp;
 
         if (tile.altitude < 0) // oceans have no biomes.
@@ -220,7 +217,7 @@ bool WorldMapClass::setCoastal(const int& xcounter, const int& ycounter)
     return false;
   }
 
-void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCities, const unsigned long int& seed)
+void WorldMapClass::setFactionsCity(const int& faction, const int& numberOfCities, const long long& seed)
 { // Set faction cities.
     int tries = 0;
     randomBoat f(coord(w, h), faction, seed);

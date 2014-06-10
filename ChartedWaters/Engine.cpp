@@ -20,11 +20,8 @@ int mouseX, mouseY;
 const int width = 256;
 const int height = 256;
 
-/*const int screenwidth = 100;
-const int screenheight = 48;*/
-
-const int screenwidth = 150;
-const int screenheight = 80;
+const int screenwidth = 100;
+const int screenheight = 48;
 
 
 int playerMovement = 0;
@@ -82,8 +79,6 @@ bool Engine::EngineInit()
   partparser.readCannons(ShipPartDict);
 
   TheWorld = new World(width, height);
-
-  TheWorld->regen();
 
   ShipScreen = new TCODConsole(width, height);
 

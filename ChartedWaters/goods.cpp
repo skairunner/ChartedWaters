@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fstream>
 #include "json/json.h"
+#include "utility.h"
 
 ItemDictionary ItemDict;
 using namespace std;
@@ -63,36 +64,65 @@ void JSONToItem::readItems()
   }
 
 void JSONToItem::slurpItems(const std::string& filename, ItemDictionary& dict)
-  {
-  string itemlist;
-  Json::Value root;
-  Json::Reader reader;
-  itemlist = slurp(filename);
-  bool parsingSuccess = reader.parse(itemlist, root);
-  if (!parsingSuccess)
+{
+    string itemlist;
+    Json::Value root;
+    Json::Reader reader;
+    itemlist = slurp(filename);
+    bool parsingSuccess = reader.parse(itemlist, root);
+    if (!parsingSuccess)
     {
-    cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
-    cin.ignore();
-    return;
+        cout << "Didn't succeed: " << reader.getFormattedErrorMessages();
+        cin.ignore();
+        return;
     }
-  int counter = 0;
+    int counter = 0;
 
-  while (!root[counter].isNull())
+    while (!root[counter].isNull())
     {
-    Json::Value item = root[counter];
-    Item buffer;
-    buffer.ID = item["ID"].asString();
-    buffer.name = item["name"].asString();
-    buffer.basePrice = item["base price"].asInt();
-    if (!item["desc"].isNull())
-      buffer.desc = item["desc"].asString();
-    buffer.type = item["type"].asString();
-    buffer.category = item["category"].asString();
-    dict.ItemList[buffer.ID] = buffer;
- 
-    counter++;
+        Json::Value item = root[counter];
+        Item buffer;
+        buffer.ID = item["ID"].asString();
+        buffer.name = item["name"].asString();
+        buffer.basePrice = item["base price"].asInt();
+        if (!item["desc"].isNull())
+            buffer.desc = item["desc"].asString();
+        buffer.type = item["type"].asString();
+        buffer.category = item["category"].asString();
+        buffer.facility = item["facility name"].asString();
+        auto method = item["method"].asString();
+        if (method == "raw")
+            buffer.isProduced = false;
+        else
+            buffer.isProduced = true;
+
+        auto rawstr = item["specifics"].asString();
+        if (buffer.isProduced) // from other items.
+        {
+            auto strings = splitstr(rawstr, ',');
+            for (auto s : strings)
+            {
+                buffer.recipe.push_back(Ingredient(s));
+            }
+            buffer.multiplier = item["multiplier"].asInt();
+        }
+        else
+        {
+            auto strings = splitstr(rawstr, ',');
+            for (auto s : strings)
+            {
+                if (s == "coastal")
+                    buffer.biomes.push_back(BIOME::coastal);
+                else
+                    buffer.biomes.push_back(BiomeDict.EnumFromName(s));
+            }
+        }
+
+        dict.ItemList[buffer.ID] = buffer;
+
+        counter++;
     }
-  }
+}
 
 void JSONToItem::slurpItemsAndPrint(const std::string& filename)
   {
@@ -137,6 +167,22 @@ string JSONToItem::slurp(const string& filename)
   }
 
 
+//////////
+//////////
+//////////
+
+Ingredient::Ingredient()
+{
+
+}
+
+Ingredient::Ingredient(const std::string& items)
+{
+    auto itemlist = splitstr(items, ':');
+    for (auto s : itemlist)
+        ingredients.push_back(s);
+}
+
 ///////////////////////
 //////////
 //////////  ItemDictionary
@@ -144,72 +190,71 @@ string JSONToItem::slurp(const string& filename)
 ///////////////////////
 
 ItemDictionary::ItemDictionary()
-  : sorted(false)
+: sorted(false), gen(rand())
   {
   vector<string> types;
-  types.push_back(string("Alcohol"));
-  types.push_back(string("Foodstuffs"));
-  types.push_back(string("Seasonings"));
-  types.push_back(string("Livestock"));
-  types.push_back(string("Luxury food"));
-  categories[string("Food")] = types;
+  types.push_back("Alcohol");
+  types.push_back("Foodstuffs");
+  types.push_back("Seasonings");
+  types.push_back("Livestock");
+  types.push_back("Luxury food");
+  categories["Food"] = types;
   types.clear();
 
-  types.push_back(string("Fibers"));
-  types.push_back(string("Fabric"));
-  types.push_back(string("Dyes"));
-  //types.push_back(string("Ores"));
-  types.push_back(string("Industrial goods"));
-  categories[string("Raw materials")] = types;
+  types.push_back("Fibers");
+  types.push_back("Fabric");
+  types.push_back("Dyes");
+  types.push_back("Industrial goods");
+  categories["Raw materials"] = types;
   types.clear();
 
-  types.push_back(string("Medicine"));
-  types.push_back(string("Sundries"));
-  types.push_back(string("Weapons"));
-  types.push_back(string("Firearms"));
-  types.push_back(string("Crafts"));
-  categories[string("Other")] = types;
+  types.push_back("Medicine");
+  types.push_back("Sundries");
+  types.push_back("Weapons");
+  types.push_back("Firearms");
+  types.push_back("Crafts");
+  categories["Other"] = types;
   types.clear();
 
-  types.push_back(string("Artwork"));
-  types.push_back(string("Spices"));
-  types.push_back(string("Precious metals"));
-  types.push_back(string("Fragrances"));
-  types.push_back(string("Jewellery"));
-  types.push_back(string("Precious stones"));
-  categories[string("Luxury")] = types;
+  types.push_back("Artwork");
+  types.push_back("Spices");
+  types.push_back("Precious metals");
+  types.push_back("Fragrances");
+  types.push_back("Jewellery");
+  types.push_back("Precious stones");
+  categories["Luxury"] = types;
 
   Item buffer;
-  buffer.ID = string("null");
-  buffer.category = string("null");
+  buffer.ID = "null";
+  buffer.category = "null";
   buffer.basePrice = 0;
   buffer.decayRateNegative = buffer.decayRatePositive = 0;
-  buffer.desc = string("No description.");
-  buffer.name = string("invalid item");
-  ItemList[string("null")] = buffer;
+  buffer.desc = "No description.";
+  buffer.name = "invalid item";
+  ItemList["null"] = buffer;
 
   ///////// now let's do the initials stuff
-  InitialList[string("Alcohol")] = string("Alc");
-  InitialList[string("Foodstuffs")] = string("Fds");
-  InitialList[string("Seasonings")] = string("Sea");
-  InitialList[string("Livestock")] = string("Liv");
-  InitialList[string("Luxury food")] = string("Lux");
-  InitialList[string("Fiber")] = string("Fib");
-  InitialList[string("Fabric")] = string("Fab");
-  InitialList[string("Dyes")] = string("Dye");
-  InitialList[string("Industrial goods")] = string("Ind");
-  InitialList[string("Medicine")] = string("Med");
-  InitialList[string("Sundries")] = string("Etc");
-  InitialList[string("Weapons")] = string("Wea");
-  InitialList[string("Firearms")] = string("Fir");
-  InitialList[string("Crafts")] = string("Cra");
-  InitialList[string("Artwork")] = string("Art");
-  InitialList[string("Spices")] = string("Spi");
-  InitialList[string("Precious metals")] = string("P.M");
-  InitialList[string("Fragrances")] = string("Fra");
-  InitialList[string("Jewellery")] = string("Jwl");
-  InitialList[string("Precious stones")] = string("P.S");
-  InitialList[string("null")] = string("!!!");
+  InitialList["Alcohol"] = "Alc";
+  InitialList["Foodstuffs"] = "Fds";
+  InitialList["Seasonings"] = "Sea";
+  InitialList["Livestock"] = "Liv";
+  InitialList["Luxury food"] = "Lux";
+  InitialList["Fiber"] = "Fib";
+  InitialList["Fabric"] = "Fab";
+  InitialList["Dyes"] = "Dye";
+  InitialList["Industrial goods"] = "Ind";
+  InitialList["Medicine"] = "Med";
+  InitialList["Sundries"] = "Etc";
+  InitialList["Weapons"] = "Wea";
+  InitialList["Firearms"] = "Fir";
+  InitialList["Crafts"] = "Cra";
+  InitialList["Artwork"] = "Art";
+  InitialList["Spices"] = "Spi";
+  InitialList["Precious metals"] = "P.M";
+  InitialList["Fragrances"] = "Frg";
+  InitialList["Jewellery"] = "Jwl";
+  InitialList["Precious stones"] = "P.S";
+  InitialList["null"] = "!!!";
   }
 
 string ItemDictionary::findItemName(const std::string& ID)
@@ -268,6 +313,31 @@ pair<double, double> ItemDictionary::findDecayRates(const std::string& ID)
     return pair<double,double>(it->second.decayRateNegative, it->second.decayRatePositive);
   }
 
+Item ItemDictionary::getItemForBiome(const std::string& category, const BIOME& biome, bool forceRaw, bool isCoastal)
+{
+    std::vector<std::vector<Item*>*> candidates; // To compute a join on the required item lists.
+    if (!forceRaw)
+        candidates.push_back(&recipeItems[category]);
+    if (isCoastal)
+        candidates.push_back(&itemsByBiome[category][BIOME::coastal]);
+    if (biome == BIOME::none)
+        candidates.push_back(&nonBiomeItems[category]);
+    else
+        candidates.push_back(&itemsByBiome[category][biome]);
+    int totalsize = 0;
+    for (auto it = candidates.begin(); it < candidates.end(); it++)
+        totalsize += (*it)->size();
+    std::uniform_int_distribution<> dist(0, totalsize - 1);
+    int itemindex = dist(gen);
+    auto itemlist = candidates.begin();
+    while (itemindex >= (*itemlist)->size())
+    {
+        itemindex -= (*itemlist)->size();
+        itemlist++;
+    }
+    return *(*itemlist)->operator[](itemindex);
+}
+
 Item& ItemDictionary::getItemTemplate(const string& ID)
   {
   auto it = ItemList.find(ID);
@@ -278,19 +348,36 @@ Item& ItemDictionary::getItemTemplate(const string& ID)
   }
 
 void ItemDictionary::sortIntoLists()
-  {
-  // Clear existing.
-  itemsPerCategory.clear();
-  for (auto it = categories.begin(); it != categories.end(); it++) // Make buffers for each.
+{
+    // Clear existing.
+    itemsPerCategory.clear();
+    for (auto it = categories.begin(); it != categories.end(); it++) // Make buffers for each.
     {
-    itemsPerCategory[it->first] = vector<string>();
+        itemsPerCategory[it->first] = vector<string>();
     }
-  for (auto it = ItemList.begin(); it != ItemList.end(); it++)
+    for (auto it = ItemList.begin(); it != ItemList.end(); it++)
     {
-    itemsPerCategory[it->second.category].push_back(it->second.ID);
+        itemsPerCategory[it->second.category].push_back(it->second.ID);
     }
-  sorted = true;
-  }
+    sorted = true;
+
+    // Also sort per biome.    
+    for (auto it = ItemList.begin(); it != ItemList.end(); it++)
+    {
+        Item& i = it->second;
+        if (i.isProduced) // recipe items go into the recipe item index.
+            recipeItems[i.category].push_back(&i);
+        else for (auto b = it->second.biomes.begin(); b != it->second.biomes.end(); b++) // otherwise sort by category, then biome
+        {
+            if (*b == BIOME::none)
+            {
+                nonBiomeItems[i.category].push_back(&i); // having a none biome means all biomes can have it.
+                break;
+            }
+            itemsByBiome[i.category][*b].push_back(&i);
+        }
+    }
+}
 
 vector<string>& ItemDictionary::getItemsPerCategory(const string& category)
   {
@@ -322,6 +409,25 @@ std::vector<std::string> ItemDictionary::getCategories()
     return keys;
 }
 
+bool ItemDictionary::hasBiome(const std::vector<BIOME>& biomes, const BIOME& biome, bool isCoastal)
+{
+    if (isCoastal)
+    {
+        for (auto it = biomes.begin(); it < biomes.end(); it++)
+        {
+            if (*it == biome || *it == BIOME::coastal || *it == BIOME::none)
+                return true;
+        }
+        return false;
+    }
+
+    for (auto it = biomes.begin(); it < biomes.end(); it++)
+    {
+        if (*it == biome || *it == BIOME::none)
+            return true;
+    }
+    return false;
+}
 
 
 ///////////////////////
@@ -331,14 +437,18 @@ std::vector<std::string> ItemDictionary::getCategories()
 ///////////////////////
 
 Item::Item()
-  : name(string("Null")), basePrice(0), decayRatePositive(0), decayRateNegative(0)
+: name(string("Null")), basePrice(0), decayRatePositive(0), decayRateNegative(0), multiplier(0)
   {
   }
 
 Item::Item(const Item& item)
-  :ID(item.ID),name(item.name), desc(item.desc), basePrice(item.basePrice), type(item.type), category(item.category)
+: ID(item.ID), name(item.name), desc(item.desc), basePrice(item.basePrice), type(item.type), category(item.category)
   {
-
+    multiplier = item.multiplier;
+    isProduced = item.isProduced;
+    biomes = item.biomes;
+    recipe = item.recipe;
+    facility = item.facility;
   }
 
 Item::Item(const std::string& newID)

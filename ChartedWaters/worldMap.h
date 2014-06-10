@@ -6,7 +6,8 @@
 
 typedef std::pair<int, int> coord;
 
-enum class BIOME {none = 0, tropicalForest, savanna, desert, forest, grassland, mediterranean, coniferousForest, tundra};
+// coastal is not quite a biome.
+enum class BIOME {coastal = -1, none = 0, tropicalForest, savanna, desert, forest, grassland, mediterranean, coniferousForest, tundra};
 
 class BiomeDictionary
 {
@@ -45,7 +46,7 @@ class WorldMapClass
     
     static double getValue(noise::module::Perlin& gen, const int& x, const int& y, const double& zoom); // To have all code that accesses a Perlin noise gen for a world gen coordinate work the same way.
     virtual void gen();
-    virtual maptile& ref(const int& x, const int& y);
+    virtual maptile& ref(const int& x, const int& y); // wraps west-east.
     int getWidth();
     int getHeight();
     std::vector<coord> cities;
@@ -62,7 +63,7 @@ class WorldMapClass
     int w, h;
     maptile null;
     std::vector<maptile> grid;
-    void setFactionsCity(const int& faction, const int& numberOfCities, const unsigned long int& seed);
+    void setFactionsCity(const int& faction, const int& numberOfCities, const long long& seed);
   };
 
 class randomBoat // randomly walks.
